@@ -34,11 +34,11 @@
   <ItemGroup>
     <Reference Include="PlayerIOClient, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\ostbotlibs\PlayerIOClient.dll</HintPath>
     </Reference>
     <Reference Include="Skylight, Version=1.0.4940.25734, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\Skylight.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\ostbotlibs\Skylight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
