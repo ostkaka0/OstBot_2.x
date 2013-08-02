@@ -22,8 +22,8 @@ namespace OstBot_2_
         public static HashSet<Block> blockSet = new HashSet<Block>();
         object blockSetLock = 0;
 
-        int width;
-        int height;
+        public int width;
+        public int height;
         int drawSleep = 8;
 
         bool blockDrawerEnabled = false;

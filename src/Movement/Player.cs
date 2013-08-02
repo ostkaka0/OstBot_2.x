@@ -485,17 +485,17 @@ namespace OstBot_2_
                     lastPortal = new Point(cx << 4, cy << 4);
 
                     //current = Form1.blockMap[cx, cy].ID;
-                    Block currentBlock = Form1.blockMap[cx, cy];
-                    int currentTarget = currentBlock.targetID;
+                    Block currentBlock = OstBot.room.getMapBlock(0, cx, cy, 0);
+                    int currentTarget = currentBlock.pt_target;
                     //Console.WriteLine("entered portal with id " + currentBlock.thisID + " and target id " + currentTarget + " and rotation " + currentBlock.rotation);
 
                     //targetPortalList = world.getPortals(world.getPortal(cx, cy).target);
-                    for (int x = 1; x < Form1.worldSize.X; x++)
+                    for (int x = 1; x < OstBot.room.width; x++)
                     {
-                        for (int y = 1; y < Form1.worldSize.Y; y++)
+                        for (int y = 1; y < OstBot.room.height; y++)
                         {
-                            Block block = Form1.blockMap[x, y];
-                            if (block.isPortal && block.thisID == currentTarget)
+                            Block block = OstBot.room.getMapBlock(0, x, y, 0);
+                            if (block.isPortal() && block.blockId == currentTarget)
                             {
                                 //Console.WriteLine("found portal target " + block.targetID);
                                 targetPortalList.Add(new Point(x << 4, y << 4));
