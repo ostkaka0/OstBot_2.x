@@ -55,6 +55,11 @@ namespace OstBot_2_
                 blockQueue.Enqueue(block);
         }
 
+        public Block getMapBlock(int layer, int x, int y)
+        {
+            return getMapBlock(layer, x, y, 0);
+        }
+
         public Block getMapBlock(int layer, int x, int y, int rollbacks)
         {
             lock (blockMapLock)

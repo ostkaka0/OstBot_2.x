@@ -8,6 +8,14 @@ namespace OstBot_2_
 {
     class Dig : SubBot
     {
+        public class Generator
+        {
+            public static void Generate()
+            {
+
+            }
+        }
+
         void SubBot.onMessage(object sender, PlayerIOClient.Message m)
         {
             switch (m.Type)
