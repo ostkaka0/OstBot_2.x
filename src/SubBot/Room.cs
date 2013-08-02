@@ -155,31 +155,16 @@ namespace OstBot_2_
 
                 case "br":
                     goto case "bc";
-                case "m":
+                case "clear":
                     {
-                        BotPlayer player;
-                        int playerID;
-                        playerID = int.Parse(m[0].ToString());
-                        float playerXPos = float.Parse(m[1].ToString());
-                        float playerYPos = float.Parse(m[2].ToString());
-                        float playerXSpeed = float.Parse(m[3].ToString());
-                        float playerYSpeed = float.Parse(m[4].ToString());
-                        float modifierX = float.Parse(m[5].ToString());
-                        float modifierY = float.Parse(m[6].ToString());
-                        int xDir = int.Parse(m[7].ToString());
-                        int yDir = int.Parse(m[8].ToString());
-                        if (OstBot.playerList.ContainsKey(playerID))
+                        //Redstone.ClearLists();
+                        for (int x = 1; x < width; x++)
                         {
-                            player = OstBot.playerList[playerID];
-                            player.x = playerXPos;
-                            player.y = playerYPos;
-                            player.speedX = playerXSpeed;
-                            player.speedY = playerYSpeed;
-                            player.modifierX = modifierX;
-                            player.modifierY = modifierY;
-                            player.horizontal = xDir;
-                            player.vertical = yDir;
-                            OstBot.playerList[playerID] = player;
+                            for (int y = 1; y < height; y++)
+                            {
+                                for(int i = 0; i < blockMap.Length; i++)
+                                    blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
+                            }
                         }
                     }
                     break;

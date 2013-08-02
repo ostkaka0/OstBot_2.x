@@ -143,6 +143,34 @@ namespace OstBot_2_
                     Program.form1.WriteLine("Code Cracked!");
                     //connection.Send("say", "I know the code.");
                     break;
+                case "m":
+                    {
+                        BotPlayer player;
+                        int playerID;
+                        playerID = int.Parse(m[0].ToString());
+                        float playerXPos = float.Parse(m[1].ToString());
+                        float playerYPos = float.Parse(m[2].ToString());
+                        float playerXSpeed = float.Parse(m[3].ToString());
+                        float playerYSpeed = float.Parse(m[4].ToString());
+                        float modifierX = float.Parse(m[5].ToString());
+                        float modifierY = float.Parse(m[6].ToString());
+                        int xDir = int.Parse(m[7].ToString());
+                        int yDir = int.Parse(m[8].ToString());
+                        if (OstBot.playerList.ContainsKey(playerID))
+                        {
+                            player = OstBot.playerList[playerID];
+                            player.x = playerXPos;
+                            player.y = playerYPos;
+                            player.speedX = playerXSpeed;
+                            player.speedY = playerYSpeed;
+                            player.modifierX = modifierX;
+                            player.modifierY = modifierY;
+                            player.horizontal = xDir;
+                            player.vertical = yDir;
+                            OstBot.playerList[playerID] = player;
+                        }
+                    }
+                    break;
 
             }
         }
