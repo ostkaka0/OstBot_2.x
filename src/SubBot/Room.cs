@@ -126,8 +126,6 @@ namespace OstBot_2_
                 case "b":
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
-
-                    DrawBlock(getMapBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), 1));
                     break;
 
                 case "bc":
