@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PlayerIOClient;
+using System.Diagnostics;
 
 namespace OstBot_2_
 {
@@ -17,6 +18,7 @@ namespace OstBot_2_
         public static bool isOwner = false;
         public static string worldKey = "";
         public static Room room = new Room();
+        Stopwatch playerTickTimer = new Stopwatch();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
@@ -24,7 +26,21 @@ namespace OstBot_2_
 
         public OstBot()
         {
-
+            playerTickTimer.Start();
+            new System.Threading.Thread(() =>
+            {
+                while (true)
+                {
+                    if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                    {
+                        playerTickTimer.Restart();
+                        foreach (Player player in OstBot.playerList.Values)
+                        {
+                            player.tick();
+                        }
+                    }
+                }
+            }).Start();
         }
 
         public static void Login(string server, string email, string password)
