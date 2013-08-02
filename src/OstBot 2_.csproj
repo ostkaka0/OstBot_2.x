@@ -32,6 +32,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="libnoise">
+      <HintPath>..\..\..\..\..\..\ostbotlibs\libnoise.dll</HintPath>
+    </Reference>
     <Reference Include="PlayerIOClient, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\ostbotlibs\PlayerIOClient.dll</HintPath>
