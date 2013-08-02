@@ -9,6 +9,11 @@ namespace OstBot_2_
         string blockType;
         object[] dataArray;
 
+        public bool isPortal()
+        {
+            return (blockType == "pt");
+        }
+
         public int x
         {
             get { return (int)dataArray[1]; }
