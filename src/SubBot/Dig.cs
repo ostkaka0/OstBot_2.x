@@ -10,9 +10,22 @@ namespace OstBot_2_
     {
         public class Generator
         {
-            public static void Generate()
+            public static void Generate(int width, int height)
             {
+                Random random = new Random();
 
+                for (int x = 1; x < width-1; x++)
+                {
+                    for (int y = 30; y < height-1; y++)
+                    {
+                        OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, 16, -1));
+                    }
+                }
+
+                Queue<Block> blockQueue = new Queue<Block>();
+
+                //for (int i = 0; i < 64; i++)
+                 //   blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width-1), random.Next(1, height-1)
             }
         }
 
