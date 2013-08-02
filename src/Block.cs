@@ -17,21 +17,25 @@ namespace OstBot_2_
         public int x
         {
             get { return (int)dataArray[1]; }
+            set { dataArray[1] = value; }
         }
 
         public int y
         {
             get { return (int)dataArray[2]; }
+            set { dataArray[2] = value; }
         }
 
         public int layer
         {
             get { return (int)dataArray[0]; }
+            set { dataArray[0] = value; }
         }
 
         public int blockId
         {
             get { return (int)dataArray[3]; }
+            set { dataArray[3] = value; }
         }
 
         public int b_userId
