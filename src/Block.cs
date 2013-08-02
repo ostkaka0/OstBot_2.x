@@ -148,6 +148,9 @@ namespace OstBot_2_
 
         public static bool Compare(Block a, Block b)
         {
+            if (a == null || b == null)
+                return false;
+
             if (a.blockType != b.blockType)
                 return false;
 

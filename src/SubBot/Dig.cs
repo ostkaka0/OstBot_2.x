@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace OstBot_2_
 {
@@ -10,6 +11,8 @@ namespace OstBot_2_
     {
         private void Generate(int width, int height)
         {
+
+            Console.WriteLine("sdfsdfsfdrgsadrgdsgsdfsdf");
             Block[,] blockMap = new Block[width, height];
 
             Random random = new Random();
@@ -24,10 +27,19 @@ namespace OstBot_2_
 
             Queue<Block> blockQueue = new Queue<Block>();
 
-            for (int i = 0; i < 64; i++)
-                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), 14, -1));
+            for (int i = 0; i < 32; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Glass.RED, -1));
 
-            int amount = 1024;
+            for (int i = 0; i < 32; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.GREEN, -1));
+
+            for (int i = 0; i < 32; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.ORANGE, -1));
+
+            for (int i = 0; i < 32; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), 9, -1));
+
+            int amount = 2048;
 
             while (blockQueue.Count > 0 && amount > 0)
             {
@@ -41,15 +53,18 @@ namespace OstBot_2_
 
                     switch (random.Next(4))
                     {
-                        case 0: block2.x++; break;
-                        case 1: block2.y++; break;
-                        case 2: block2.x--; break;
-                        case 3: block2.y--; break;
+                        case 0: block2.x = block2.x + 1; break;
+                        case 1: block2.y = block2.y + 1; break;
+                        case 2: block2.x = block2.x - 1; break;
+                        case 3: block2.y = block2.y - 1; break;
                     }
 
-                    if (!Block.Compare(blockMap[block2.x, block2.y], block2))
+                    Console.WriteLine("s");
+
+                    if (!Block.Compare(blockMap[block2.x, block2.y], block2) && block2.x > 1 && block2.y > 1 && block2.x < width-1 && block2.y < height-1)
                     {
-                        blockQueue.Enqueue(block);
+                        blockQueue.Enqueue(block2);
+                        blockMap[block2.x, block2.y] = block2;
                         amount--;
                         Console.WriteLine(amount);
                     }
@@ -62,13 +77,15 @@ namespace OstBot_2_
             {
                 for (int y = 30; y < height - 1; y++)
                 {
-                    OstBot.room.DrawBlock(blockMap[x, y]);
+                    if (blockMap[x, y] != null)
+                        OstBot.room.DrawBlock(blockMap[x, y]);
                 }
             }
         }
 
         public void onMessage(object sender, PlayerIOClient.Message m)
         {
+            Console.WriteLine("sfsddf");
             switch (m.Type)
             {
                 case "init":
@@ -86,7 +103,10 @@ namespace OstBot_2_
                             switch (arg[0])
                             {
                                 case "!betadig":
-                                    //lock(OstBot.playerListLock
+                                    new Thread(() =>
+                                        {
+                                            Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerListLock
+                                        }).Start();
                                     break;
                             }
                         }
