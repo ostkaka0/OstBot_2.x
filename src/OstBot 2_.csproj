@@ -32,11 +32,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PlayerIOClient">
-      <HintPath>D:\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
+    <Reference Include="PlayerIOClient, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\PlayerIOClient.dll</HintPath>
     </Reference>
-    <Reference Include="Skylight">
-      <HintPath>D:\Seist-Skylight-9edd1f2\Skylight\bin\Debug\Skylight.dll</HintPath>
+    <Reference Include="Skylight, Version=1.0.4940.25734, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Seist-Skylight-9edd1f2\Skylight\bin\Debug\Skylight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
