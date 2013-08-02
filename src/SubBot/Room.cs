@@ -151,7 +151,7 @@ namespace OstBot_2_
             }
         }
 
-        private static void onDisconnect(object sender, string reason)
+        public void onDisconnect(object sender, string reason)
         {
         }
 

@@ -7,7 +7,7 @@ using PlayerIOClient;
 
 namespace OstBot_2_
 {
-    class Player
+    public class Player
     {
         public int userID;
         public string name = "";

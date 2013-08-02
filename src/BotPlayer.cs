@@ -4,14 +4,15 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using PlayerIOClient;
 
 namespace OstBot_2_
 {
-    class BotPlayer : Player
+    public class BotPlayer : Player
     {
         Stopwatch betaDigTimer = new Stopwatch();
 
-        public Player(PlayerIOClient.Message m) : Player(m)
+        public BotPlayer(PlayerIOClient.Message m) : base(m)
         {
 
         }

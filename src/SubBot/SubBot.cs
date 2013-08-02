@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    interface SubBot
+    public interface SubBot
     {
-        public void onMessage(object sender, PlayerIOClient.Message m);
-        public void onDisconnect(object sender, string reason);
+        void onMessage(object sender, PlayerIOClient.Message m);
+        void onDisconnect(object sender, string reason);
     }
 }
