@@ -18,6 +18,7 @@ namespace OstBot_2_
         public static bool isOwner = false;
         public static string worldKey = "";
         public static Room room = new Room();
+        public static Dig dig = new Dig();
         Stopwatch playerTickTimer = new Stopwatch();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
@@ -39,7 +40,7 @@ namespace OstBot_2_
                             foreach (Player player in OstBot.playerList.Values)
                             {
                                 player.tick();
-                                Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
                             }
                         }
                         catch (Exception e) { }
@@ -73,6 +74,7 @@ namespace OstBot_2_
                 connected = true;
                 connection.OnMessage += new MessageReceivedEventHandler(onMessage);
                 connection.OnMessage += new MessageReceivedEventHandler(room.onMessage);
+                connection.OnMessage += new MessageReceivedEventHandler(dig.onMessage);
                 connection.OnDisconnect += onDisconnect; //=> this.onDisconnect();
 
                 connection.Send("init");
