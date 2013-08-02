@@ -112,7 +112,7 @@ namespace OstBot_2_
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x / 16 < 0 || param1.y / 16 < 0 || param1.x / 16 >= Form1.worldSize.X || param1.y / 16 >= Form1.worldSize.Y)
+            if (param1.x / 16 < 0 || param1.y / 16 < 0 || param1.x / 16 >= OstBot.room.width || param1.y / 16 >= OstBot.room.height)
             {
                 //Console.WriteLine("returning 1, worldborder");
                 return 1;
@@ -135,7 +135,7 @@ namespace OstBot_2_
             {
                 for (int yy = -2; yy < 1; yy++)
                 {
-                    if (_loc_3 + xx > 0 && _loc_3 + xx < Form1.worldSize.X && _loc_4 + yy > 0 && _loc_4 + yy <= Form1.worldSize.Y)
+                    if (_loc_3 + xx > 0 && _loc_3 + xx < OstBot.room.width && _loc_4 + yy > 0 && _loc_4 + yy <= OstBot.room.height)
                     {
                         for (int xTest = 0; xTest < 16; xTest++)
                         {
@@ -144,7 +144,7 @@ namespace OstBot_2_
                                 if (hitTest((int)(xTest + _loc_2.x + xx * 16), (int)(yTest + _loc_2.y + yy * 16)))
                                 {
                                     double _loc_9 = _loc_4;
-                                    _loc_11 = Form1.blockMap[(int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16)].ID;
+                                    _loc_11 = OstBot.room.getMapBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16), 0).blockId;
                                     if (ItemId.isSolid(_loc_11))
                                     {
                                         switch (_loc_11)
@@ -508,10 +508,10 @@ namespace OstBot_2_
                         //Console.WriteLine("iter: " + loopIterator);
                         currentLoopPortal = targetPortalList[loopIterator];
                         //_loc_4 = world.getPortal(lastPortal.x >> 4, lastPortal.y >> 4).rotation;
-                        _loc_4 = Form1.blockMap[lastPortal.X >> 4, lastPortal.Y >> 4].rotation;
+                        _loc_4 = OstBot.room.getMapBlock(0, lastPortal.X >> 4, lastPortal.Y >> 4, 0).pt_rotation;
                         //Console.WriteLine("1: " + _loc_4);
                         //_loc_5 = world.getPortal(currentLoopPortal.x >> 4, currentLoopPortal.y >> 4).rotation;
-                        _loc_5 = Form1.blockMap[currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4].rotation;
+                        _loc_5 = OstBot.room.getMapBlock(0, currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4, 0).pt_rotation;
                         //Console.WriteLine("2: " + _loc_5);
                         if (_loc_4 < _loc_5)
                         {
@@ -621,9 +621,9 @@ namespace OstBot_2_
                 delayed = this.queue[0];
                 queue.Remove(delayed);
             }
-            if (cx > 0 && cy > 0 && cx < Form1.worldSize.X && cy < Form1.worldSize.Y)
+            if (cx > 0 && cy > 0 && cx < OstBot.room.width && cy < OstBot.room.height)
             {
-                this.current = Form1.blockMap[cx, cy].ID;
+                this.current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
             }
             queue.Add(this.current);
             if (this.current == 4 || ItemId.isClimbable(this.current))
@@ -901,7 +901,7 @@ namespace OstBot_2_
                             if (!this.hasCrown && !isgodmod)
                             {
                                 //this.connection.send(Bl.data.m + "k");
-                                Form1.connection.Send("say", this.name + " hit a crown!" + i);
+                                OstBot.connection.Send("say", this.name + " hit a crown!" + i);
                                 //Console.WriteLine(name + " crown");
                             }
                             break;
@@ -911,7 +911,7 @@ namespace OstBot_2_
                             //this.connection.send(Bl.data.m + "r");
                             //this.state.showRed();
                             //Console.WriteLine("red");
-                            Form1.connection.Send("say", this.name + " hit a red key!" + i);
+                            OstBot.connection.Send("say", this.name + " hit a red key!" + i);
                             //Console.WriteLine(name + " red");
                             break;
                         }
@@ -919,7 +919,7 @@ namespace OstBot_2_
                         {
                             //this.connection.send(Bl.data.m + "g");
                             //this.state.showGreen();
-                            Form1.connection.Send("say", this.name + " hit a green key!" + i);
+                            OstBot.connection.Send("say", this.name + " hit a green key!" + i);
                             //Console.WriteLine(name + " green");
                             break;
                         }
@@ -927,7 +927,7 @@ namespace OstBot_2_
                         {
                             //this.connection.send(Bl.data.m + "b");
                             //this.state.showBlue();
-                            Form1.connection.Send("say", this.name + " hit a blue key!" + i);
+                            OstBot.connection.Send("say", this.name + " hit a blue key!" + i);
                             //Console.WriteLine(name + " blue");
                             break;
                         }
