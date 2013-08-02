@@ -127,6 +127,23 @@ namespace OstBot_2_
                         int Coins = m.GetInt(9);
                         bool purple = m.GetBoolean(10);
                         bool hasLevitation = m.GetBoolean(11);
+
+                        int blockX = (int)(playerPosX/16+0.5) + (int)modifierX;
+                        int blockY = (int)(playerPosY/16+0.5) + (int)modifierY;
+
+                        for(int x = -1; x < 2; x++)
+                        {
+                            for(int y = -1; y < 2; y++)
+                            {
+                                if (OstBot.room.getMapBlock(0, blockX + x, blockY+y, 0).blockId == Skylight.BlockIds.Blocks.Brick.ORANGE)
+                                {
+                                    float disance = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+
+                                    //if (disance < 1.41421356)
+                                    OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
+                                }
+                            }
+                        }
                     }
                     break;
 

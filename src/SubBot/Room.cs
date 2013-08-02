@@ -45,8 +45,19 @@ namespace OstBot_2_
 
             lock (blockSetLock)
             {
-                if (blockSet.Contains(block))
-                    return;
+                //if (blockSet.Contains(block))
+                //    return;
+                foreach (Block b in blockSet)
+                {
+                    if (b == block)
+                        return;
+                    else if (b.layer == block.layer && b.x == block.x && b.y == block.y)
+                    {
+                        blockSet.Remove(b);
+                        break;
+                    }
+                }
+
 
                 blockSet.Add(block);
             }
@@ -283,9 +294,16 @@ namespace OstBot_2_
                             {
                                 lock (blockQueueLock)
                                 {
-                                    blockQueue.Peek().Send(OstBot.connection);
-                                    lock (blockRepairQueue)
-                                        blockRepairQueue.Enqueue(blockQueue.Dequeue());
+                                    if (blockSet.Contains(blockQueue.Peek()))
+                                    {
+                                        blockQueue.Peek().Send(OstBot.connection);
+                                        lock (blockRepairQueue)
+                                            blockRepairQueue.Enqueue(blockQueue.Dequeue());
+                                    }
+                                    else
+                                    {
+                                        continue;
+                                    }
                                 }
                             }
                             else if (blockRepairQueue.Count != 0)
