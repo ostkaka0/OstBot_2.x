@@ -105,6 +105,8 @@ namespace OstBot_2_
             //this.comboBox_Email.Items.Clear();
             //this.comboBox_RoomType.Items.Clear();
 
+            if (!File.Exists("login.txt"))
+                File.Create("login.txt").Close();
             StreamReader reader = new StreamReader(System.Environment.CurrentDirectory + @"\login.txt");
 
             List<string> lines = new List<string>();

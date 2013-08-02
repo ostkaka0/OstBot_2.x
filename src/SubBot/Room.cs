@@ -55,11 +55,6 @@ namespace OstBot_2_
                 blockQueue.Enqueue(block);
         }
 
-        public Block getMapBlock(int layer, int x, int y)
-        {
-            return getMapBlock(layer, x, y, 0);
-        }
-
         public Block getMapBlock(int layer, int x, int y, int rollbacks)
         {
             lock (blockMapLock)
@@ -132,7 +127,7 @@ namespace OstBot_2_
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
 
-                    DrawBlock(getMapBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), 1)); 
+                    DrawBlock(getMapBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), 1));
                     break;
 
                 case "bc":
@@ -151,8 +146,36 @@ namespace OstBot_2_
 
                 case "br":
                     goto case "bc";
+                case "m":
+                    {
+                        BotPlayer player;
+                        int playerID;
+                        playerID = int.Parse(m[0].ToString());
+                        float playerXPos = float.Parse(m[1].ToString());
+                        float playerYPos = float.Parse(m[2].ToString());
+                        float playerXSpeed = float.Parse(m[3].ToString());
+                        float playerYSpeed = float.Parse(m[4].ToString());
+                        float modifierX = float.Parse(m[5].ToString());
+                        float modifierY = float.Parse(m[6].ToString());
+                        int xDir = int.Parse(m[7].ToString());
+                        int yDir = int.Parse(m[8].ToString());
+                        if (OstBot.playerList.ContainsKey(playerID))
+                        {
+                            player = OstBot.playerList[playerID];
+                            player.x = playerXPos;
+                            player.y = playerYPos;
+                            player.speedX = playerXSpeed;
+                            player.speedY = playerYSpeed;
+                            player.modifierX = modifierX;
+                            player.modifierY = modifierY;
+                            player.horizontal = xDir;
+                            player.vertical = yDir;
+                            OstBot.playerList[playerID] = player;
+                        }
+                    }
+                    break;
 
-                
+
             }
         }
 
@@ -244,7 +267,7 @@ namespace OstBot_2_
 
         private void BlockDrawer()
         {
-            OstBot.connection.Send(OstBot.worldKey+"k", true);
+            OstBot.connection.Send(OstBot.worldKey + "k", true);
             if (!blockDrawerEnabled)
             {
                 blockDrawerEnabled = true;
@@ -264,7 +287,7 @@ namespace OstBot_2_
                                 {
                                     blockQueue.Peek().Send(OstBot.connection);
                                     lock (blockRepairQueue)
-                                    blockRepairQueue.Enqueue(blockQueue.Dequeue());
+                                        blockRepairQueue.Enqueue(blockQueue.Dequeue());
                                 }
                             }
                             else if (blockRepairQueue.Count != 0)

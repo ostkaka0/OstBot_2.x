@@ -34,10 +34,15 @@ namespace OstBot_2_
                     if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                     {
                         playerTickTimer.Restart();
-                        foreach (Player player in OstBot.playerList.Values)
+                        try
                         {
-                            player.tick();
+                            foreach (Player player in OstBot.playerList.Values)
+                            {
+                                player.tick();
+                                Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                            }
                         }
+                        catch (Exception e) { }
                     }
                 }
             }).Start();
@@ -105,9 +110,8 @@ namespace OstBot_2_
                         hasCode = m.GetBoolean(10);
                         isOwner = m.GetBoolean(11);
                     }
-                    break;
-
                     hasCode = isOwner;
+                    break;
 
                 case "say":
                     lock (playerListLock)
