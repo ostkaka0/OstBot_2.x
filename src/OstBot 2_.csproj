@@ -62,7 +62,7 @@
     <Compile Include="Movement\Player.cs" />
     <Compile Include="Movement\SynchronizedObject.cs" />
     <Compile Include="Movement\SynchronizedSprite.cs" />
-    <Compile Include="SubBot\Dig.cs" />
+    <Compile Include="SubBot\Dig\Dig.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -11,8 +11,20 @@ namespace OstBot_2_
     public class BotPlayer : Player
     {
         Stopwatch betaDigTimer = new Stopwatch();
+        private int xp = 0;
+        private int level = 0;
+        bool betaDig;
+        bool fastDig = true;
 
-        public int digRange = 2;
+        public int digRange
+        {
+            get { return ((level > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); }
+        }
+
+        public int digStrength
+        {
+            get { return 
+        }
 
         public BotPlayer(PlayerIOClient.Message m)
             : base(m.GetInt(0), m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0)

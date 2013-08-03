@@ -198,5 +198,19 @@ namespace OstBot_2_
         {
 
         }
+
+        private int getDugBlockId(int blockId)
+        {
+            if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                return 4;
+
+            switch (blockId)
+            {
+                case Skylight.BlockIds.Blocks.Sand.BROWN:
+                    return 4;
+                default:
+                    return blockId;
+            }
+        }
     }
 }
