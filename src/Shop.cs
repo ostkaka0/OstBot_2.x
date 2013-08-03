@@ -1,5 +1,4 @@
-﻿using OstBot_2_.Inventory;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,22 +20,32 @@ namespace OstBot_2_
             }, "Stone"));
 
             shopInventory.Add("Iron", new InventoryItem(new object[]{
-            1, //XPGAIN
-            1, //SHOPBUY
+            2, //XPGAIN
+            2, //SHOPBUY
             0, //SHOPSELL
             1, //HARDNESS
             0  //LEVELREQ
             }, "Iron"));
+
+            shopInventory.Add("Gold", new InventoryItem(new object[]{
+            5, //XPGAIN
+            5, //SHOPBUY
+            0, //SHOPSELL
+            2, //HARDNESS
+            0  //LEVELREQ
+            }, "Gold"));
         }
 
-        public InventoryItem Buy(string itemName)
+        public InventoryItem Buy(string itemName, int amount)
         {
-            return null;
+            InventoryItem temp = shopInventory[itemName];
+            temp.SetAmount(amount);
+            return temp;
         }
 
-        public int Sell(string itemName)
+        public int Sell(string itemName, int amount)
         {
-            return 0;
+            return ((int)shopInventory[itemName].GetDataAt(2)) * amount;
         }
     }
 }

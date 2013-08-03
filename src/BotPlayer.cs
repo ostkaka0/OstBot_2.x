@@ -11,8 +11,9 @@ namespace OstBot_2_
     public class BotPlayer : Player
     {
         Stopwatch betaDigTimer = new Stopwatch();
+        public Inventory inventory = new Inventory(100);
         private int xp = 0;
-        private int level = 1;
+        private int level = 0;
         bool betaDig;
         bool fastDig = true;
 

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OstBot_2_.Inventory
+namespace OstBot_2_
 {
     class InventoryItem
     {

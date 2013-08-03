@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace OstBot_2_.Inventory
+namespace OstBot_2_
 {
     class Inventory
     {
@@ -56,7 +56,7 @@ namespace OstBot_2_.Inventory
             }
         }
 
-        public bool SetItem(InventoryItem item, int slot)
+        /*public bool SetItem(InventoryItem item, int slot)
         {
             lock (storedItems)
             {
@@ -67,7 +67,7 @@ namespace OstBot_2_.Inventory
                 }
                 return false;
             }
-        }
+        }*/
 
         public bool RemoveItem(int slot)
         {
@@ -75,7 +75,10 @@ namespace OstBot_2_.Inventory
             {
                 if (storedItems[slot] != null)
                 {
-                    storedItems.RemoveAt(slot);
+                    if (storedItems[slot].GetAmount() > 1)
+                        storedItems[slot].SetAmount(storedItems[slot].GetAmount() - 1);
+                    else
+                        storedItems.RemoveAt(slot);
                     return true;
                 }
                 return false;
@@ -88,7 +91,8 @@ namespace OstBot_2_.Inventory
             {
                 if (storedItems.Contains(item))
                 {
-                    storedItems[storedItems.IndexOf(item)]]
+                    storedItems[storedItems.IndexOf(item)].SetAmount(storedItems[storedItems.IndexOf(item)].GetAmount() + 1);
+                    return true;
                 }
                 if (storedItems.Count != storedItems.Capacity)
                 {
