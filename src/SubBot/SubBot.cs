@@ -8,12 +8,15 @@ using System.Threading;
 
 namespace OstBot_2_
 {
-    public interface SubBot
+    public abstract class SubBot
     {
-        SubBot()
+        public SubBot()
         {
             new Thread(() =>
                 {
+                    while (!OstBot.connected)
+                        Thread.Sleep(100);
+
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
                     while (OstBot.connected)
