@@ -53,7 +53,7 @@ namespace OstBot_2_
                         return;
                     else if (b.layer == block.layer && b.x == block.x && b.y == block.y)
                     {
-                        blockSet.Remove(b);
+                        //blockSet.Remove(b);
                         break;
                     }
                 }
@@ -68,6 +68,8 @@ namespace OstBot_2_
 
         public Block getMapBlock(int layer, int x, int y, int rollbacks)
         {
+            while (blockMap == null) ;
+
             lock (blockMapLock)
             {
                 if (blockMap[layer][x, y].Count > 0)
@@ -135,6 +137,9 @@ namespace OstBot_2_
                     break;
 
                 case "b":
+                    while (blockMap == null)
+                        Thread.Sleep(5);
+
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
                     break;
@@ -279,14 +284,17 @@ namespace OstBot_2_
                             {
                                 lock (blockQueueLock)
                                 {
+                                    
                                     if (blockSet.Contains(blockQueue.Peek()))
                                     {
+                                        Console.WriteLine("moo!");
                                         blockQueue.Peek().Send(OstBot.connection);
                                         lock (blockRepairQueue)
                                             blockRepairQueue.Enqueue(blockQueue.Dequeue());
                                     }
                                     else
                                     {
+                                        Console.WriteLine("wtf moo!");
                                         continue;
                                     }
                                 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using Graphics.Tools.Noise;
 
 namespace OstBot_2_
 {
@@ -11,35 +12,31 @@ namespace OstBot_2_
     {
         private void Generate(int width, int height)
         {
-
+            Random random = new Random();
+            Graphics.Tools.Noise.Primitive.SimplexPerlin noise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(random.Next(), NoiseQuality.Best);
+            //f.Heightmap.
             Console.WriteLine("sdfsdfsfdrgsadrgdsgsdfsdf");
             Block[,] blockMap = new Block[width, height];
-
-            Random random = new Random();
+            
 
             for (int x = 1; x < width - 1; x++)
             {
                 for (int y = 30; y < height - 1; y++)
                 {
-                    blockMap[x, y] = Block.CreateBlock(0, x, y, 16, -1);
+                    if (noise.GetValue(x * 0.0625F, y * 0.0625F) < 0.5 - y/height*64)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
+                    else
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
                 }
             }
 
             Queue<Block> blockQueue = new Queue<Block>();
 
-            for (int i = 0; i < 32; i++)
-                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Glass.RED, -1));
+            for (int j = 0; j < 7; j++ )
+                for (int i = 0; i < 4; i++)
+                    blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.RED+j, -1));
 
-            for (int i = 0; i < 32; i++)
-                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.GREEN, -1));
-
-            for (int i = 0; i < 32; i++)
-                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.ORANGE, -1));
-
-            for (int i = 0; i < 32; i++)
-                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), 9, -1));
-
-            int amount = 2048;
+            int amount = 512;
 
             while (blockQueue.Count > 0 && amount > 0)
             {
@@ -99,15 +96,27 @@ namespace OstBot_2_
                         if (text.StartsWith("!"))
                         {
                             string[] arg = text.ToLower().Split(' ');
+                            string name = "";
+                            lock (OstBot.playerListLock)
+                            {
+                                if (OstBot.playerList.ContainsKey(userId))
+                                    name = OstBot.playerList[userId].name;
+                            }
 
                             switch (arg[0])
                             {
-                                case "!betadig":
-                                    new Thread(() =>
-                                        {
-                                            Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerListLock
-                                        }).Start();
+                                case "!generate":
+                                    if (name == "ostkaka" || name == "gustav9797")
+                                    {
+                                        new Thread(() =>
+                                            {
+                                                Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerListLock
+                                            }).Start();
+                                    }
                                     break;
+
+                                //case "!cheat":
+
                             }
                         }
                     }
@@ -131,16 +140,27 @@ namespace OstBot_2_
                         int blockX = (int)(playerPosX/16+0.5) + (int)modifierX;
                         int blockY = (int)(playerPosY/16+0.5) + (int)modifierY;
 
-                        for(int x = -1; x < 2; x++)
-                        {
-                            for(int y = -1; y < 2; y++)
-                            {
-                                if (OstBot.room.getMapBlock(0, blockX + x, blockY+y, 0).blockId == Skylight.BlockIds.Blocks.Brick.ORANGE)
-                                {
-                                    float disance = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+                        BotPlayer player;
 
-                                    //if (disance < 1.41421356)
-                                    OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
+                        lock (OstBot.playerListLock)
+                        {
+                            if (!OstBot.playerList.ContainsKey(userId))
+                                return;
+                            else
+                                player = OstBot.playerList[userId];
+                        }
+
+                        for (int x = (horizontal == 1) ? -1 : -2; x < ((horizontal == -1) ? 2 : 3); x++)
+                        {
+                            for (int y = (vertical == 1) ? -1 : -2; y < ((vertical == -1) ? 2 : 3); y++)
+                            {
+                                int blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY+y, 0).blockId);
+                                if  (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN-5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                {
+                                    float distance = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+
+                                    if (distance < 1.41421356*0.5*player.digRange)
+                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
                                 }
                             }
                         }

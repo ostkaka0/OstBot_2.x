@@ -23,7 +23,7 @@ namespace OstBot_2_
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
-        static object playerListLock = 0;
+        public static object playerListLock = 0;
 
         public OstBot()
         {
