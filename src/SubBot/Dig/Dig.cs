@@ -169,21 +169,24 @@ namespace OstBot_2_
                                                 Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
 
                                                 blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY + y, 0).blockId);
-                                                if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                                if (true)//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                                 {
                                                     float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
 
                                                     if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
-                                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
+                                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, getDugBlockId(blockId), -1));
                                                 }
                                             }
                                         }
                                     }
                                     else
                                     {
-                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX, blockY, 4, -1));
                                         if (horizontal == 0 || vertical == 0)
-                                            OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + (int)horizontal, blockY + (int)vertical, 4, -1));
+                                            OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + (int)horizontal, blockY + (int)vertical, getDugBlockId(blockId), -1));
+
+                                        blockId = OstBot.room.getMapBlock(0, blockX, blockY, 0).blockId;
+                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX, blockY, getDugBlockId(blockId), -1));
+                                        
                                     }
 
                                 }
@@ -208,8 +211,10 @@ namespace OstBot_2_
             {
                 case Skylight.BlockIds.Blocks.Sand.BROWN:
                     return 4;
+                case Skylight.BlockIds.Blocks.Sand.GRAY:
+                    return 119;
                 default:
-                    return blockId;
+                    return 4;
             }
         }
     }
