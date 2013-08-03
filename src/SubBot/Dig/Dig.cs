@@ -24,7 +24,7 @@ namespace OstBot_2_
 
             for (int x = 1; x < width - 1; x++)
             {
-                for (int y = 10; y < height - 1; y++)
+                for (int y = 1; y < height - 1; y++)
                 {
                     if (noise.GetValue(x * 0.0625F, y * 0.0625F) < 0.5 - y/height*64)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
@@ -72,9 +72,11 @@ namespace OstBot_2_
                 blockQueue.Enqueue(block);
             }
 
+            blockMap[width / 2, height / 2 - 1] = Block.CreateBlock(0, width << 1, (height << 1) - 1, 255, -1);
+
             for (int x = 1; x < width - 1; x++)
             {
-                for (int y = 10; y < height - 1; y++)
+                for (int y = 1; y < height - 1; y++)
                 {
                     if (blockMap[x, y] != null)
                         OstBot.room.DrawBlock(blockMap[x, y]);
@@ -176,7 +178,7 @@ namespace OstBot_2_
                                                     float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
 
                                                     if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
-                                                        DigBlock(blockX + x + (int)horizontal, blockY + y + (int)vertical, player, false);
+                                                        DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, false);
                                                 }
                                             }
                                         }
