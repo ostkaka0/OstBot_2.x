@@ -96,6 +96,7 @@ namespace OstBot_2_
                 }
                 if (storedItems.Count != storedItems.Capacity)
                 {
+                    item.SetAmount(amount);
                     storedItems.Add(item);
                     return true;
                 }

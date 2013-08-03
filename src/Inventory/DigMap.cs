@@ -6,11 +6,13 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    class DigBlockMap
+    public class DigBlockMap
     {
+        public static Dictionary<int, string> blockTranslator = new Dictionary<int, string>();
         public DigBlockMap()
         {
-
+            blockTranslator.Add((int)Blocks.Stone, "Stone");
+            blockTranslator.Add((int)Blocks.Iron, "Iron");
         }
     }
     public enum Blocks

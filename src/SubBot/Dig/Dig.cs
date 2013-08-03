@@ -89,7 +89,7 @@ namespace OstBot_2_
             switch (m.Type)
             {
                 case "init":
-                    Generate(m.GetInt(10), m.GetInt(11));
+                    //Generate(m.GetInt(10), m.GetInt(11));
                     break;
 
                 case "say":
@@ -220,6 +220,8 @@ namespace OstBot_2_
         private void DigBlock(int x, int y, BotPlayer player)
         {
             Block block = OstBot.room.getMapBlock(0, x, y, 0);
+            if(DigBlockMap.blockTranslator.ContainsKey(block.blockId))
+                player.inventory.AddItem(Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]], 1);
 
             int blockId;
 
