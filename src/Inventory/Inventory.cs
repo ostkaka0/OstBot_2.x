@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    class Inventory
+    public class Inventory
     {
         public List<InventoryItem> storedItems;
 
@@ -101,6 +101,11 @@ namespace OstBot_2_
                 }
                 return false;
             }
+        }
+
+        public string GetContents()
+        {
+            return "";
         }
     }
 

@@ -8,6 +8,8 @@ namespace OstBot_2_
 {
     public class Shop
     {
+        static int shopX = 0;
+        static int shopY = 0;
         static Dictionary<string, InventoryItem> shopInventory = new Dictionary<string, InventoryItem>();
         static Shop()
         {

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    class InventoryItem
+    public class InventoryItem
     {
         private object[] data;
         private string itemName;
