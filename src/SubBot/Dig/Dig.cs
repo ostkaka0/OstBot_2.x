@@ -209,9 +209,10 @@ namespace OstBot_2_
         {
             lock (dugBlocksToPlaceQueueLock)
             {
-                while (dugBlocksToPlaceQueue.Count < OstBot.room.width * OstBot.room.height / 10)
+                while (dugBlocksToPlaceQueue.Count > OstBot.room.width * OstBot.room.height / 10)
                 {
                     OstBot.room.DrawBlock(dugBlocksToPlaceQueue.Dequeue());
+                    Console.WriteLine("jag surar!");
                 }
             }
         }

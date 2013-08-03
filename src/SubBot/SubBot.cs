@@ -15,7 +15,7 @@ namespace OstBot_2_
             new Thread(() =>
                 {
                     while (!OstBot.connected)
-                        Thread.Sleep(100);
+                        Thread.Sleep(1000);
 
                     Stopwatch stopwatch = new Stopwatch();
                     stopwatch.Start();
@@ -23,8 +23,8 @@ namespace OstBot_2_
                     {
                         Update();
                         int time = (int)stopwatch.ElapsedMilliseconds;
-                        if (time < 50)
-                            Thread.Sleep(50 - time);
+                        if (time < 5000)
+                            Thread.Sleep(5000 - time);
                         stopwatch.Reset();
                     }
                 }).Start();
