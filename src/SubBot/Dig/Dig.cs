@@ -83,7 +83,7 @@ namespace OstBot_2_
             }
         }
 
-        public void onMessage(object sender, PlayerIOClient.Message m)
+        public override void onMessage(object sender, PlayerIOClient.Message m)
         {
             Console.WriteLine("sfsddf");
             switch (m.Type)
@@ -200,12 +200,12 @@ namespace OstBot_2_
             }
         }
 
-        public void onDisconnect(object sender, string reason)
+        public override void onDisconnect(object sender, string reason)
         {
 
         }
 
-        public void Update()
+        public override void Update()
         {
             lock (dugBlocksToPlaceQueueLock)
             {

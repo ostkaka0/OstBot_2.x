@@ -29,8 +29,8 @@ namespace OstBot_2_
                     }
                 }).Start();
         }
-        void onMessage(object sender, PlayerIOClient.Message m);
-        void onDisconnect(object sender, string reason);
-        void Update();
+        public abstract void onMessage(object sender, PlayerIOClient.Message m);
+        public abstract void onDisconnect(object sender, string reason);
+        public abstract void Update();
     }
 }

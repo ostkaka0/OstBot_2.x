@@ -28,7 +28,7 @@ namespace OstBot_2_
 
         bool blockDrawerEnabled = false;
 
-        public Room()
+        public Room() : base()
         {
 
         }
@@ -86,7 +86,7 @@ namespace OstBot_2_
             return Block.CreateBlock(layer, x, y, 0, -1);
         }
 
-        public void onMessage(object sender, PlayerIOClient.Message m)
+        public override void onMessage(object sender, PlayerIOClient.Message m)
         {
             switch (m.Type)
             {
@@ -187,11 +187,11 @@ namespace OstBot_2_
             }
         }
 
-        public void onDisconnect(object sender, string reason)
+        public override void onDisconnect(object sender, string reason)
         {
         }
 
-        public void Update()
+        public override void Update()
         {
 
         }
