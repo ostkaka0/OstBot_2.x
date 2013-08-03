@@ -5,11 +5,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
 using Graphics.Tools.Noise;
+using Skylight;
 
 namespace OstBot_2_
 {
     public class Dig : SubBot
     {
+        protected Queue<Block> dugBlocksToPlaceQueue = new Queue<Block>();
+        protected object dugBlocksToPlaceQueueLock = 0;
+
         private void Generate(int width, int height)
         {
             Random random = new Random();
@@ -17,11 +21,10 @@ namespace OstBot_2_
             //f.Heightmap.
             Console.WriteLine("sdfsdfsfdrgsadrgdsgsdfsdf");
             Block[,] blockMap = new Block[width, height];
-            
 
             for (int x = 1; x < width - 1; x++)
             {
-                for (int y = 30; y < height - 1; y++)
+                for (int y = 10; y < height - 1; y++)
                 {
                     if (noise.GetValue(x * 0.0625F, y * 0.0625F) < 0.5 - y/height*64)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
@@ -72,7 +75,7 @@ namespace OstBot_2_
 
             for (int x = 1; x < width - 1; x++)
             {
-                for (int y = 30; y < height - 1; y++)
+                for (int y = 10; y < height - 1; y++)
                 {
                     if (blockMap[x, y] != null)
                         OstBot.room.DrawBlock(blockMap[x, y]);
@@ -141,8 +144,8 @@ namespace OstBot_2_
                                 bool purple = m.GetBoolean(10);
                                 bool hasLevitation = m.GetBoolean(11);
 
-                                int blockX = (int)(playerPosX / 16 + 0.5) + (int)horizontal;
-                                int blockY = (int)(playerPosY / 16 + 0.5) + (int)vertical;
+                                int blockX = (int)(playerPosX / 16 + 0.5);
+                                int blockY = (int)(playerPosY / 16 + 0.5);
 
                                 BotPlayer player;
 
@@ -168,13 +171,13 @@ namespace OstBot_2_
                                             {
                                                 Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
 
-                                                blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY + y, 0).blockId);
+                                                
                                                 if (true)//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                                 {
                                                     float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
 
                                                     if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
-                                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, getDugBlockId(blockId), -1));
+                                                        DigBlock(blockX + x + (int)horizontal, blockY + y + (int)vertical, player);
                                                 }
                                             }
                                         }
@@ -182,10 +185,10 @@ namespace OstBot_2_
                                     else
                                     {
                                         if (horizontal == 0 || vertical == 0)
-                                            OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + (int)horizontal, blockY + (int)vertical, getDugBlockId(blockId), -1));
+                                            DigBlock(blockX + (int)horizontal, blockY + (int)vertical, player);
 
                                         blockId = OstBot.room.getMapBlock(0, blockX, blockY, 0).blockId;
-                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX, blockY, getDugBlockId(blockId), -1));
+                                        DigBlock(blockX, blockY, player);
                                         
                                     }
 
@@ -202,20 +205,42 @@ namespace OstBot_2_
 
         }
 
-        private int getDugBlockId(int blockId)
+        public void Update()
         {
-            if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
-                return 4;
-
-            switch (blockId)
+            lock (dugBlocksToPlaceQueueLock)
             {
-                case Skylight.BlockIds.Blocks.Sand.BROWN:
-                    return 4;
-                case Skylight.BlockIds.Blocks.Sand.GRAY:
-                    return 119;
-                default:
-                    return 4;
+                while (dugBlocksToPlaceQueue.Count < OstBot.room.width * OstBot.room.height / 10)
+                {
+                    OstBot.room.DrawBlock(dugBlocksToPlaceQueue.Dequeue());
+                }
             }
         }
+
+        private void DigBlock(int x, int y, BotPlayer player)
+        {
+            Block block = OstBot.room.getMapBlock(0, x, y, 0);
+
+            int blockId;
+
+            switch (block.blockId)
+            {
+                case BlockIds.Blocks.Sand.BROWN:
+                    blockId = 4;
+                    break;
+
+                case BlockIds.Blocks.Sand.GRAY:
+                    blockId = 119;
+                    break;
+
+                default:
+                    return;
+            }
+
+
+            OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, blockId, -1));
+            lock (dugBlocksToPlaceQueueLock)
+                dugBlocksToPlaceQueue.Enqueue(block);
+        }
+
     }
 }

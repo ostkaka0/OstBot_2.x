@@ -191,6 +191,11 @@ namespace OstBot_2_
         {
         }
 
+        public void Update()
+        {
+
+        }
+
         private void LoadMap(Message m, uint position)
         {
             lock (blockMapLock)

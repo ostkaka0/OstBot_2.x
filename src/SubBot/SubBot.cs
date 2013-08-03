@@ -10,5 +10,6 @@ namespace OstBot_2_
     {
         void onMessage(object sender, PlayerIOClient.Message m);
         void onDisconnect(object sender, string reason);
+        void Update();
     }
 }
