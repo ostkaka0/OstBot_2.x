@@ -23,7 +23,7 @@ namespace OstBot_2_
 
         public int digStrength
         {
-            get { return 
+            get { return 0; }
         }
 
         public BotPlayer(PlayerIOClient.Message m)
