@@ -137,8 +137,8 @@ namespace OstBot_2_
                         bool purple = m.GetBoolean(10);
                         bool hasLevitation = m.GetBoolean(11);
 
-                        int blockX = (int)(playerPosX/16+0.5) + (int)modifierX;
-                        int blockY = (int)(playerPosY/16+0.5) + (int)modifierY;
+                        int blockX = (int)(playerPosX/16+0.5) + (int)horizontal;
+                        int blockY = (int)(playerPosY/16+0.5) + (int)vertical;
 
                         BotPlayer player;
 
@@ -149,17 +149,21 @@ namespace OstBot_2_
                             else
                                 player = OstBot.playerList[userId];
                         }
+                        if (player.name == "ostkaka")
+                            Console.WriteLine(horizontal.ToString() + " " + vertical.ToString());
 
-                        for (int x = (horizontal == 1) ? -1 : -2; x < ((horizontal == -1) ? 2 : 3); x++)
+                        for (int x = (horizontal == 1) ? -1 : -player.digRange; x < ((horizontal == -1) ? 2 : player.digRange+1); x++)
                         {
-                            for (int y = (vertical == 1) ? -1 : -2; y < ((vertical == -1) ? 2 : 3); y++)
+                            for (int y = (vertical == 1) ? -1 : -player.digRange; y < ((vertical == -1) ? 2 : player.digRange+1); y++)
                             {
+                                Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
+
                                 int blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY+y, 0).blockId);
                                 if  (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN-5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                 {
-                                    float distance = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+                                    float distance = (float)Math.Sqrt(Math.Pow(x+horizontal, 2) + Math.Pow(y+vertical, 2));
 
-                                    if (distance < 1.41421356*0.5*player.digRange)
+                                    //if (distance < 1.4142*(player.digRange-1) ||distance < 1.4142)
                                         OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
                                 }
                             }
