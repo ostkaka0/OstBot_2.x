@@ -28,7 +28,7 @@ namespace OstBot_2_.Inventory
             }, "Iron"));
         }
     }
-    static enum Blocks
+    public enum Blocks
     {
         Stone = Skylight.BlockIds.Blocks.Basic.GRAY,
         Iron = Skylight.BlockIds.Blocks.Metal.SILVER,
