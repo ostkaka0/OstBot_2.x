@@ -17,8 +17,8 @@ namespace OstBot_2_
         public static bool hasCode = false;
         public static bool isOwner = false;
         public static string worldKey = "";
-        public static Room room = new Room();
-        public static Dig dig = new Dig();
+        public static Room room;
+        public static Dig dig;
         Stopwatch playerTickTimer = new Stopwatch();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
@@ -73,6 +73,10 @@ namespace OstBot_2_
                 connection = client.Multiplayer.CreateJoinRoom(Program.form1.comboBox_WorldId.Text , Program.form1.comboBox_RoomType.Text, true, roomData, joinData);
                 connected = true;
                 connection.OnMessage += new MessageReceivedEventHandler(onMessage);
+
+                room = new Room();
+                dig = new Dig();
+
                 connection.OnMessage += new MessageReceivedEventHandler(room.onMessage);
                 connection.OnMessage += new MessageReceivedEventHandler(dig.onMessage);
                 connection.OnDisconnect += onDisconnect; //=> this.onDisconnect();
