@@ -9,7 +9,7 @@ namespace OstBot_2_
     public class DigBlockMap
     {
         public static Dictionary<int, string> blockTranslator = new Dictionary<int, string>();
-        public DigBlockMap()
+        static DigBlockMap()
         {
             blockTranslator.Add((int)Blocks.Stone, "Stone");
             blockTranslator.Add((int)Blocks.Iron, "Iron");
@@ -17,7 +17,7 @@ namespace OstBot_2_
     }
     public enum Blocks
     {
-        Stone = Skylight.BlockIds.Blocks.Basic.GRAY,
+        Stone = Skylight.BlockIds.Blocks.Castle.BRICK,
         Iron = Skylight.BlockIds.Blocks.Metal.SILVER,
         Copper = Skylight.BlockIds.Blocks.Metal.BRONZE,
         Gold = Skylight.BlockIds.Blocks.Metal.GOLD,

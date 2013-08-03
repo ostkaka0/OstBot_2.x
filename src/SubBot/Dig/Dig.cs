@@ -35,9 +35,8 @@ namespace OstBot_2_
 
             Queue<Block> blockQueue = new Queue<Block>();
 
-            for (int j = 0; j < 7; j++ )
-                for (int i = 0; i < 4; i++)
-                    blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), Skylight.BlockIds.Blocks.Minerals.RED+j, -1));
+            for (int i = 0; i < 16; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Stone, -1));
 
             int amount = 512;
 
@@ -171,26 +170,25 @@ namespace OstBot_2_
                                             {
                                                 Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
 
-                                                
+
                                                 if (true)//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                                 {
                                                     float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
 
                                                     if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
-                                                        DigBlock(blockX + x + (int)horizontal, blockY + y + (int)vertical, player);
+                                                        DigBlock(blockX + x + (int)horizontal, blockY + y + (int)vertical, player, false);
                                                 }
                                             }
                                         }
+                                        return;
                                     }
-                                    else
-                                    {
-                                        if (horizontal == 0 || vertical == 0)
-                                            DigBlock(blockX + (int)horizontal, blockY + (int)vertical, player);
+                                }
+                                {
+                                    if (horizontal == 0 || vertical == 0)
+                                        DigBlock(blockX + (int)horizontal, blockY + (int)vertical, player, true);
 
-                                        blockId = OstBot.room.getMapBlock(0, blockX, blockY, 0).blockId;
-                                        DigBlock(blockX, blockY, player);
-                                        
-                                    }
+                                    blockId = OstBot.room.getMapBlock(0, blockX, blockY, 0).blockId;
+                                    DigBlock(blockX, blockY, player, true);
 
                                 }
                             }).Start();
@@ -209,7 +207,7 @@ namespace OstBot_2_
         {
             lock (dugBlocksToPlaceQueueLock)
             {
-                while (dugBlocksToPlaceQueue.Count > OstBot.room.width * OstBot.room.height / 10)
+                while (false && dugBlocksToPlaceQueue.Count > OstBot.room.width * OstBot.room.height / 10)
                 {
                     OstBot.room.DrawBlock(dugBlocksToPlaceQueue.Dequeue());
                     Console.WriteLine("jag surar!");
@@ -217,26 +215,42 @@ namespace OstBot_2_
             }
         }
 
-        private void DigBlock(int x, int y, BotPlayer player)
+        private void DigBlock(int x, int y, BotPlayer player, bool mining)
         {
             Block block = OstBot.room.getMapBlock(0, x, y, 0);
-            if(DigBlockMap.blockTranslator.ContainsKey(block.blockId))
-                player.inventory.AddItem(Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]], 1);
 
             int blockId;
 
-            switch (block.blockId)
+            if (mining)
             {
-                case BlockIds.Blocks.Sand.BROWN:
+                if (DigBlockMap.blockTranslator.ContainsKey(block.blockId))
+                {
+                    //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
+
+                    player.inventory.AddItem(Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]], 1);
                     blockId = 4;
-                    break;
 
-                case BlockIds.Blocks.Sand.GRAY:
-                    blockId = 119;
-                    break;
-
-                default:
+                }
+                else
+                {
                     return;
+                }
+            }
+            else
+            {
+                switch (block.blockId)
+                {
+                    case BlockIds.Blocks.Sand.BROWN:
+                        blockId = 4;
+                        break;
+
+                    case BlockIds.Blocks.Sand.GRAY:
+                        blockId = 119;
+                        break;
+
+                    default:
+                        return;
+                }
             }
 
 
