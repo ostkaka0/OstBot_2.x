@@ -69,7 +69,7 @@ namespace OstBot_2_
             }
         }*/
 
-        public bool RemoveItem(int slot)
+        public bool RemoveItem(int slot, int amount)
         {
             lock (storedItems)
             {
@@ -85,13 +85,13 @@ namespace OstBot_2_
             }
         }
 
-        public bool AddItem(InventoryItem item)
+        public bool AddItem(InventoryItem item, int amount)
         {
             lock (storedItems)
             {
                 if (storedItems.Contains(item))
                 {
-                    storedItems[storedItems.IndexOf(item)].SetAmount(storedItems[storedItems.IndexOf(item)].GetAmount() + 1);
+                    storedItems[storedItems.IndexOf(item)].SetAmount(storedItems[storedItems.IndexOf(item)].GetAmount() + amount);
                     return true;
                 }
                 if (storedItems.Count != storedItems.Capacity)
@@ -105,7 +105,12 @@ namespace OstBot_2_
 
         public string GetContents()
         {
-            return "";
+            string contents = "Inventory: ";
+            foreach (InventoryItem i in storedItems)
+            {
+                contents += i.GetAmount() + " " + i.GetName() + ",";
+            }
+            return contents;
         }
     }
 

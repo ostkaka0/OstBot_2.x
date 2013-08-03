@@ -123,6 +123,16 @@ namespace OstBot_2_
                     lock (playerListLock)
                     {
                         Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
+                        int playerId = m.GetInt(0);
+                        string[] message = m.GetString(1).Split(' ');
+                        switch (message[0])
+                        {
+                            case "!inventory":
+                                {
+                                    connection.Send("say", playerList[m.GetInt(0)].inventory.GetContents());
+                                }
+                                break;
+                        }
                     }
                     break;
 

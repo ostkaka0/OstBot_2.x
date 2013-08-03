@@ -10,7 +10,7 @@ namespace OstBot_2_
     {
         static int shopX = 0;
         static int shopY = 0;
-        static Dictionary<string, InventoryItem> shopInventory = new Dictionary<string, InventoryItem>();
+        public static Dictionary<string, InventoryItem> shopInventory = new Dictionary<string, InventoryItem>();
         static Shop()
         {
             shopInventory.Add("Stone", new InventoryItem(new object[]{
