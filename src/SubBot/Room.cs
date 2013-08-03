@@ -145,6 +145,12 @@ namespace OstBot_2_
 
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
+
+                    Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
+
+                    if (blockSet.Contains(block))
+                        blockSet.Remove(block);
+
                     break;
 
                 case "bc":
@@ -290,14 +296,12 @@ namespace OstBot_2_
                                     
                                     if (blockSet.Contains(blockQueue.Peek()))
                                     {
-                                        Console.WriteLine("moo!");
                                         blockQueue.Peek().Send(OstBot.connection);
                                         lock (blockRepairQueue)
                                             blockRepairQueue.Enqueue(blockQueue.Dequeue());
                                     }
                                     else
                                     {
-                                        Console.WriteLine("wtf moo!");
                                         continue;
                                     }
                                 }
