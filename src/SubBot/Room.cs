@@ -70,14 +70,17 @@ namespace OstBot_2_
         {
             while (blockMap == null) ;
 
-            lock (blockMapLock)
+            if (x > 0 && y > 0 && x < width && y < height)
             {
-                if (blockMap[layer][x, y].Count > 0)
+                lock (blockMapLock)
                 {
-                    if (blockMap[layer][x, y].Count <= rollbacks)
-                        return blockMap[layer][x, y][0];
-                    else
-                        return blockMap[layer][x, y][blockMap[layer][x, y].Count - 1 - rollbacks];
+                    if (blockMap[layer][x, y].Count > 0)
+                    {
+                        if (blockMap[layer][x, y].Count <= rollbacks)
+                            return blockMap[layer][x, y][0];
+                        else
+                            return blockMap[layer][x, y][blockMap[layer][x, y].Count - 1 - rollbacks];
+                    }
                 }
             }
             return Block.CreateBlock(layer, x, y, 0, -1);

@@ -34,7 +34,7 @@ namespace OstBot_2_
 
         public int blockId
         {
-            get { return (int)dataArray[3]; }
+            get { return Convert.ToInt32(dataArray[3]); }
             set { dataArray[3] = value; }
         }
 

@@ -124,50 +124,70 @@ namespace OstBot_2_
 
                 case "m":
                     {
-                        int userId = m.GetInt(0);
-                        float playerPosX = m.GetFloat(1);
-                        float playerPosY = m.GetFloat(2);
-                        float speedX = m.GetFloat(3);
-                        float speedY = m.GetFloat(4);
-                        float modifierX = m.GetFloat(5);
-                        float modifierY = m.GetFloat(6);
-                        float horizontal = m.GetFloat(7);
-                        float vertical = m.GetFloat(8);
-                        int Coins = m.GetInt(9);
-                        bool purple = m.GetBoolean(10);
-                        bool hasLevitation = m.GetBoolean(11);
+                        
 
-                        int blockX = (int)(playerPosX/16+0.5) + (int)horizontal;
-                        int blockY = (int)(playerPosY/16+0.5) + (int)vertical;
-
-                        BotPlayer player;
-
-                        lock (OstBot.playerListLock)
-                        {
-                            if (!OstBot.playerList.ContainsKey(userId))
-                                return;
-                            else
-                                player = OstBot.playerList[userId];
-                        }
-                        if (player.name == "ostkaka")
-                            Console.WriteLine(horizontal.ToString() + " " + vertical.ToString());
-
-                        for (int x = (horizontal == 1) ? -1 : -player.digRange; x < ((horizontal == -1) ? 2 : player.digRange+1); x++)
-                        {
-                            for (int y = (vertical == 1) ? -1 : -player.digRange; y < ((vertical == -1) ? 2 : player.digRange+1); y++)
+                        new Thread(() =>
                             {
-                                Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
+                                int userId = m.GetInt(0);
+                                float playerPosX = m.GetFloat(1);
+                                float playerPosY = m.GetFloat(2);
+                                float speedX = m.GetFloat(3);
+                                float speedY = m.GetFloat(4);
+                                float modifierX = m.GetFloat(5);
+                                float modifierY = m.GetFloat(6);
+                                float horizontal = m.GetFloat(7);
+                                float vertical = m.GetFloat(8);
+                                int Coins = m.GetInt(9);
+                                bool purple = m.GetBoolean(10);
+                                bool hasLevitation = m.GetBoolean(11);
 
-                                int blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY+y, 0).blockId);
-                                if  (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN-5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                int blockX = (int)(playerPosX / 16 + 0.5) + (int)horizontal;
+                                int blockY = (int)(playerPosY / 16 + 0.5) + (int)vertical;
+
+                                BotPlayer player;
+
+                                lock (OstBot.playerListLock)
                                 {
-                                    float distance = (float)Math.Sqrt(Math.Pow(x+horizontal, 2) + Math.Pow(y+vertical, 2));
-
-                                    //if (distance < 1.4142*(player.digRange-1) ||distance < 1.4142)
-                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
+                                    if (!OstBot.playerList.ContainsKey(userId))
+                                        return;
+                                    else
+                                        player = OstBot.playerList[userId];
                                 }
-                            }
-                        }
+                                if (player.name == "ostkaka")
+                                    Console.WriteLine(horizontal.ToString() + " " + vertical.ToString());
+
+                                int blockId = (OstBot.room.getMapBlock(0, blockX + (int)horizontal, blockY + (int)vertical, 0).blockId);
+                                if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                {
+
+                                    if (player.digRange > 1)
+                                    {
+                                        for (int x = (horizontal == 1) ? -1 : -player.digRange + 1; x < ((horizontal == -1) ? 2 : player.digRange); x++)
+                                        {
+                                            for (int y = (vertical == 1) ? -1 : -player.digRange + 1; y < ((vertical == -1) ? 2 : player.digRange); y++)
+                                            {
+                                                Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
+
+                                                blockId = (OstBot.room.getMapBlock(0, blockX + x, blockY + y, 0).blockId);
+                                                if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                                {
+                                                    float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
+
+                                                    if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
+                                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + x, blockY + y, 4, -1));
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        OstBot.room.DrawBlock(Block.CreateBlock(0, blockX, blockY, 4, -1));
+                                        if (horizontal == 0 || vertical == 0)
+                                            OstBot.room.DrawBlock(Block.CreateBlock(0, blockX + (int)horizontal, blockY + (int)vertical, 4, -1));
+                                    }
+
+                                }
+                            }).Start();
                     }
                     break;
 
