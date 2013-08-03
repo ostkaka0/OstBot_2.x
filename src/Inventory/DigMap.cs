@@ -8,24 +8,9 @@ namespace OstBot_2_.Inventory
 {
     class DigBlockMap
     {
-        static Dictionary<int, InventoryItem> IdToItem = new Dictionary<int, InventoryItem>();
         public DigBlockMap()
         {
-            IdToItem.Add((int)Blocks.Stone, new InventoryItem(new object[]{
-            1, //XPGAIN
-            1, //SHOPBUY
-            0, //SHOPSELL
-            1, //HARDNESS
-            0  //LEVELREQ
-            }, "Stone"));
 
-            IdToItem.Add((int)Blocks.Iron, new InventoryItem(new object[]{
-            1, //XPGAIN
-            1, //SHOPBUY
-            0, //SHOPSELL
-            1, //HARDNESS
-            0  //LEVELREQ
-            }, "Iron"));
         }
     }
     public enum Blocks

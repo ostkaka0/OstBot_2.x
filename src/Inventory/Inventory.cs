@@ -23,6 +23,18 @@ namespace OstBot_2_.Inventory
             }
         }
 
+        public int GetItems(int slot)
+        {
+            lock (storedItems)
+            {
+                if (storedItems[slot] != null)
+                {
+                    return storedItems[slot].GetAmount();
+                }
+                return 0;
+            }
+        }
+
         public InventoryItem GetItemByName(string name)
         {
             lock (storedItems)
@@ -36,7 +48,7 @@ namespace OstBot_2_.Inventory
             }
         }
 
-        public List<InventoryItem> GetItems()
+        public List<InventoryItem> GetAllItems()
         {
             lock (storedItems)
             {
@@ -70,10 +82,14 @@ namespace OstBot_2_.Inventory
             }
         }
 
-        public bool Add(InventoryItem item)
+        public bool AddItem(InventoryItem item)
         {
             lock (storedItems)
             {
+                if (storedItems.Contains(item))
+                {
+                    storedItems[storedItems.IndexOf(item)]]
+                }
                 if (storedItems.Count != storedItems.Capacity)
                 {
                     storedItems.Add(item);

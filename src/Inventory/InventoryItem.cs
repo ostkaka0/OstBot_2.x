@@ -10,6 +10,7 @@ namespace OstBot_2_.Inventory
     {
         private object[] data;
         private string itemName;
+        private int amount = 1;
         public InventoryItem(object[] data, string itemName)
         {
             this.data = data;
@@ -21,34 +22,34 @@ namespace OstBot_2_.Inventory
             return itemName;
         }
 
+        public void SetAmount(int amount)
+        {
+            this.amount = amount;
+        }
+
+        public int GetAmount()
+        {
+            return amount;
+        }
+
         public object[] GetData()
         {
             return data;
         }
 
-        public int GetXPGain()
+        public object GetDataAt(int index)
         {
-            return (int)data[0];
+            return (data[index]);
         }
 
-        public int GetShopBuyPrice()
+        public void SetData(object[] data)
         {
-            return (int)data[1];
+            this.data = data;
         }
 
-        public int GetShopSellPrice()
+        public void SetDataAt(object data, int index)
         {
-            return (int)data[2];
-        }
-
-        public float GetHardness()
-        {
-            return (float)data[3];
-        }
-
-        public int GetLevelRequired()
-        {
-            return (int)data[4];
+            this.data[index] = data;
         }
     }
 }
