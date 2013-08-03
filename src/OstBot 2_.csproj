@@ -56,6 +56,9 @@
   <ItemGroup>
     <Compile Include="Block.cs" />
     <Compile Include="BotPlayer.cs" />
+    <Compile Include="Inventory\DigMap.cs" />
+    <Compile Include="Inventory\Inventory.cs" />
+    <Compile Include="Inventory\InventoryItem.cs" />
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
     <Compile Include="Movement\ItemLayer.cs" />
