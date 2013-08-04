@@ -17,7 +17,7 @@ namespace OstBot_2_
                 1, //XPGAIN
                 10, //SHOPBUY
                 1, //SHOPSELL
-                4, //HARDNESS
+                5, //HARDNESS
                 0  //LEVELREQ
             }));
 
@@ -26,7 +26,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 2, //SHOPSELL
-                8, //HARDNESS
+                13, //HARDNESS
                 2  //LEVELREQ
             }));
 
@@ -35,7 +35,7 @@ namespace OstBot_2_
                 6, //XPGAIN
                 8, //SHOPBUY
                 3, //SHOPSELL
-                16, //HARDNESS
+                34, //HARDNESS
                 4  //LEVELREQ
             }));
 
@@ -45,7 +45,7 @@ namespace OstBot_2_
                 15, //XPGAIN
                 15, //SHOPBUY
                 14, //SHOPSELL
-                18, //HARDNESS
+                38, //HARDNESS
                 8  //LEVELREQ
             }));
 
@@ -54,7 +54,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                2, //HARDNESS
+                55, //HARDNESS
                 12  //LEVELREQ
             }));
 
@@ -63,7 +63,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                2, //HARDNESS
+                89, //HARDNESS
                 16  //LEVELREQ
             }));
 
@@ -72,7 +72,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                2, //HARDNESS
+                89, //HARDNESS
                 20  //LEVELREQ
             }));
 
@@ -81,7 +81,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                2, //HARDNESS
+                134, //HARDNESS
                 24  //LEVELREQ
             }));
 

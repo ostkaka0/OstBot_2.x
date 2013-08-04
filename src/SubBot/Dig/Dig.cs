@@ -13,7 +13,7 @@ namespace OstBot_2_
     {
         protected Queue<Block> dugBlocksToPlaceQueue = new Queue<Block>();
         protected object dugBlocksToPlaceQueueLock = 0;
-        protected int[,] digHardness;
+        protected float[,] digHardness;
 
         private void Generate(int width, int height)
         {
@@ -54,6 +54,14 @@ namespace OstBot_2_
 
             for (int i = 0; i < 16; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Stone, -1));
+            for (int i = 0; i < 16; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Copper, -1));
+            for (int i = 0; i < 16; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Iron, -1));
+            for (int i = 0; i < 16; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Gold, -1));
+            for (int i = 0; i < 16; i++)
+                blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Emerald, -1));
 
             int amount = 512;
 
@@ -96,7 +104,12 @@ namespace OstBot_2_
                 for (int y = 1; y < height - 1; y++)
                 {
                     if (blockMap[x, y] != null)
+                    {
                         OstBot.room.DrawBlock(blockMap[x, y]);
+                        resetBlockHardness(x, y, blockMap[x, y].blockId);
+                    }
+
+                    
                 }
             }
         }
@@ -108,7 +121,13 @@ namespace OstBot_2_
             {
                 case "init":
                     //Generate(m.GetInt(10), m.GetInt(11));
-                    digHardness = new int[OstBot.room.width, OstBot.room.height];
+                    digHardness = new float[OstBot.room.width, OstBot.room.height];
+
+                    resetDigHardness();
+                    break;
+
+                case "reset":
+                    resetDigHardness();
                     break;
 
                 case "say":
@@ -221,15 +240,7 @@ namespace OstBot_2_
                         int x = m.GetInt(1);
                         int y = m.GetInt(2);
 
-
-                        if (isDigable(blockId))
-                        {
-                            digHardness[x, y] = 1;
-                        }
-                        else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
-                        {
-                            digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(3));
-                        }
+                        resetBlockHardness(x, y, blockId);
                     }
                     break;
 
@@ -323,6 +334,29 @@ namespace OstBot_2_
                 OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, blockId, -1));
                 lock (dugBlocksToPlaceQueueLock)
                     dugBlocksToPlaceQueue.Enqueue(block);
+            }
+        }
+
+        private void resetDigHardness()
+        {
+            for (int y = 0; y < OstBot.room.height; y++)
+            {
+                for (int x = 0; x < OstBot.room.width; x++)
+                {
+                    resetBlockHardness(x, y, OstBot.room.getMapBlock(0, x, y ,0).blockId);
+                }
+            }
+        }
+
+        private void resetBlockHardness(int x, int y, int blockId)
+        {
+            if (isDigable(blockId))
+            {
+                digHardness[x, y] = 1;
+            }
+            else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
+            {
+                digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(3));
             }
         }
 
