@@ -68,7 +68,12 @@ namespace OstBot_2_
 
         public Block getMapBlock(int layer, int x, int y, int rollbacks)
         {
-            while (blockMap == null) ;
+            while (blockMap == null)
+                Thread.Sleep(100);
+
+            while (blockMap[layer] == null)
+                Thread.Sleep(100);
+
 
             if (x > 0 && y > 0 && x < width && y < height)
             {
@@ -317,6 +322,7 @@ namespace OstBot_2_
                         {
                             if (blockQueue.Count != 0)
                             {
+                                Console.WriteLine("??");
                                 lock (blockQueueLock)
                                 {
                                     
@@ -326,9 +332,11 @@ namespace OstBot_2_
                                         blockQueue.Peek().Send(OstBot.connection);
                                         lock (blockRepairQueue)
                                             blockRepairQueue.Enqueue(blockQueue.Dequeue());
+                                        Console.WriteLine("!!");
                                     }
                                     else
                                     {
+                                        blockQueue.Dequeue();
                                         continue;
                                     }
                                 }

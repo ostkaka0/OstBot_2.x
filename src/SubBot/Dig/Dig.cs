@@ -16,6 +16,9 @@ namespace OstBot_2_
 
         private void Generate(int width, int height)
         {
+            while (width == 0 || height == 0)
+                Thread.Sleep(100);
+
             Random random = new Random();
             Graphics.Tools.Noise.Primitive.SimplexPerlin noise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(random.Next(), NoiseQuality.Best);
             //f.Heightmap.
