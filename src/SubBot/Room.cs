@@ -168,7 +168,7 @@ namespace OstBot_2_
                     {
                         foreach (Block b in blockSet)
                         {
-                            /*if (block.Equals(b))
+                            if (block.Equals(b))
                             {
                                 blockSet.Remove(b);
                                 break;
