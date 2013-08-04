@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PlayerIOClient;
+using System.IO;
 
 namespace OstBot_2_
 {
@@ -31,11 +32,14 @@ namespace OstBot_2_
         public BotPlayer(PlayerIOClient.Message m)
             : base(m.GetInt(0), m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0)
         {
-
+            if(File.Exists(@"data\" + name))
+                inventory.Load(@"data\" + name);
         }
 
-        void Update()
+        ~BotPlayer()
         {
+            inventory.Save(@"data\" + name);
         }
+
     }
 }

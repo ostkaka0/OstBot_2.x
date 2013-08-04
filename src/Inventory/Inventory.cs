@@ -96,19 +96,6 @@ namespace OstBot_2_
             }
         }
 
-        /*public bool SetItem(InventoryItem item, int slot)
-        {
-            lock (storedItems)
-            {
-                if (storedItems[slot] != null)
-                {
-                    storedItems[slot] = item;
-                    return true;
-                }
-                return false;
-            }
-        }*/
-
         public bool RemoveItem(InventoryItem item, int amount)
         {
             InventoryItem itemToRemove = null;
