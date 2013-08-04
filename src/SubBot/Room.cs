@@ -148,8 +148,29 @@ namespace OstBot_2_
 
                     Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
 
-                    if (blockSet.Contains(block))
-                        blockSet.Remove(block);
+                    /*lock (blockSetLock)
+                    {
+                        if (blockSet.Contains(block))
+                            blockSet.Remove(block);
+                    }*/
+
+                    lock (blockSetLock)
+                    {
+                        foreach (Block b in blockSet)
+                        {
+                            if (block.Equals(b))
+                            {
+                                blockSet.Remove(b);
+                            }
+                            /*if (Block.Compare(block, b))
+                            {
+                                if (b.x == block.x && b.y == block.y)
+                                {
+                                    blockSet.Remove(b);
+                                }
+                            }*/
+                        }
+                    }
 
                     break;
 

@@ -146,15 +146,57 @@ namespace OstBot_2_
 
         }
 
+        public override bool Equals(object obj)
+        {
+ 	        if (obj.GetType() != this.GetType())
+                return false;
+
+            Block block = obj as Block;
+
+            if (block.GetType() == this.GetType())
+            {
+                if (block.blockId == this.blockId)
+                {
+                    switch (this.blockType)
+                    {
+                        case "b":
+                            return true;
+
+                        case "bc":
+                            return this.dataArray[3] == block.dataArray[3];
+
+                        case "bs":
+                            goto case "bc";
+
+                        case "pt":
+                            return this.dataArray[3] == block.dataArray[3] && this.dataArray[4] == block.dataArray[4] && this.dataArray[5] == block.dataArray[5];
+
+                        case "lb":
+                            goto case "bc";
+
+                        case "br":
+                            goto case "bc";
+
+                        default:
+                            return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         public static bool Compare(Block a, Block b)
         {
             if (a == null || b == null)
                 return false;
 
+            if (a == b)
+                return true;
+
             if (a.blockType != b.blockType)
                 return false;
 
-            if (a.dataArray[3] != b.dataArray[3])
+            if (Convert.ToInt32(a.dataArray[3]) != Convert.ToInt32(b.dataArray[3]))
                 return false;
 
             /*object[] dataArrayA = new object[a.dataArray.Length];
