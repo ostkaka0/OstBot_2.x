@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
+    [Serializable]
     public class InventoryItem
     {
         private object[] data;

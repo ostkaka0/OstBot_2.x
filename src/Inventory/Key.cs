@@ -7,6 +7,7 @@ using System.Web;
 
 namespace OstBot_2_
 {
+    [Serializable]
     public class Pair<A, B>
     {
         public A first { get; set; }

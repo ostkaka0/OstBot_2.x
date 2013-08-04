@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -185,6 +189,25 @@ namespace OstBot_2_
                 }
                 return -1;
             }
+        }
+
+        public void Save(string path)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+            formatter.Serialize(stream, "Version: 0");
+            formatter.Serialize(stream, storedItems);
+            stream.Close();
+        }
+
+        public void Load(string path)
+        {
+            IFormatter formatter = new BinaryFormatter();
+            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+            int version = (int)formatter.Deserialize(stream);
+            Console.WriteLine("Loaded inventory version: " + version);
+            storedItems = (Dictionary<int, Pair<InventoryItem, int>>)formatter.Deserialize(stream);
+            stream.Close();
         }
     }
 

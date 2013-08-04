@@ -132,6 +132,11 @@ namespace OstBot_2_
                                     connection.Send("say", playerList[m.GetInt(0)].inventory.GetContents());
                                 }
                                 break;
+                            case "!save":
+                                {
+                                    playerList[playerId].inventory.Save(@"data\" + playerList[playerId].name);
+                                }
+                                break;
 
                             case "!setshop":
                                 {
