@@ -195,7 +195,7 @@ namespace OstBot_2_
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, "Version: 0");
+            formatter.Serialize(stream, (string)"Version: 0");
             formatter.Serialize(stream, storedItems);
             stream.Close();
         }
@@ -204,7 +204,7 @@ namespace OstBot_2_
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-            int version = (int)formatter.Deserialize(stream);
+            string version = (string)formatter.Deserialize(stream);
             Console.WriteLine("Loaded inventory version: " + version);
             storedItems = (Dictionary<int, Pair<InventoryItem, int>>)formatter.Deserialize(stream);
             stream.Close();

@@ -137,6 +137,11 @@ namespace OstBot_2_
                                     playerList[playerId].inventory.Save(@"data\" + playerList[playerId].name);
                                 }
                                 break;
+                            case "!load":
+                                {
+                                    playerList[playerId].inventory.Load(@"data\" + playerList[playerId].name);
+                                }
+                                break;
 
                             case "!setshop":
                                 {
