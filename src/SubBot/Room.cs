@@ -158,11 +158,11 @@ namespace OstBot_2_
 
                     Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
 
-                    /*lock (blockSetLock)
+                    lock (blockSetLock)
                     {
                         if (blockSet.Contains(block))
                             blockSet.Remove(block);
-                    }*/
+                    }
 
                     lock (blockSetLock)
                     {
