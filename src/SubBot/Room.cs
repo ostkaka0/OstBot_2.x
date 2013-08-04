@@ -326,12 +326,13 @@ namespace OstBot_2_
                     {
                         while (OstBot.hasCode)
                         {
-                            if (blockQueue.Count != 0)
+
+                            Console.WriteLine("??");
+                            lock (blockQueueLock)
                             {
-                                Console.WriteLine("??");
-                                lock (blockQueueLock)
+                                if (blockQueue.Count != 0)
                                 {
-                                    
+
                                     if (blockSet.Contains(blockQueue.Peek()))
                                     {
                                         Console.WriteLine("jag är en sjuk sak");
@@ -346,10 +347,7 @@ namespace OstBot_2_
                                         continue;
                                     }
                                 }
-                            }
-                            else if (blockRepairQueue.Count != 0)
-                            {
-                                lock (blockRepairQueue)
+                                else if (blockRepairQueue.Count != 0)
                                 {
                                     while (!blockSet.Contains(blockRepairQueue.Peek()))
                                     {
@@ -364,18 +362,18 @@ namespace OstBot_2_
                                     blockRepairQueue.Peek().Send(OstBot.connection);
                                     blockRepairQueue.Enqueue(blockRepairQueue.Dequeue());
                                 }
+                                else
+                                {
+                                    Thread.Sleep(5);
+                                    continue;
+                                }
+                                double sleepTime = drawSleep - stopwatch.Elapsed.TotalMilliseconds;
+                                if (sleepTime >= 0.5)
+                                {
+                                    Thread.Sleep((int)sleepTime);
+                                }
+                                stopwatch.Reset();
                             }
-                            else
-                            {
-                                Thread.Sleep(5);
-                                continue;
-                            }
-                            double sleepTime = drawSleep - stopwatch.Elapsed.TotalMilliseconds;
-                            if (sleepTime >= 0.5)
-                            {
-                                Thread.Sleep((int)sleepTime);
-                            }
-                            stopwatch.Reset();
                         }
                         Thread.Sleep(100);
                     }

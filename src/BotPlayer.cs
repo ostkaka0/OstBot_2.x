@@ -14,7 +14,7 @@ namespace OstBot_2_
         public Inventory inventory = new Inventory(100);
         public int xp = 0;
         public int digLevel = 1;
-        public int money = 10000;
+        public int money = 0;
         bool betaDig = false;
         bool fastDig = true;
 
