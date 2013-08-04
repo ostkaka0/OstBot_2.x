@@ -27,7 +27,7 @@ namespace OstBot_2_
             return (int)item.GetDataAt(2);
         }
 
-        static public InventoryItem Buy(string itemName, int amount)
+        /*static public InventoryItem Buy(string itemName, int amount)
         {
             InventoryItem temp = shopInventory[itemName];
             temp.SetAmount(amount);
@@ -37,7 +37,7 @@ namespace OstBot_2_
         static public int Sell(string itemName, int amount)
         {
             return ((int)shopInventory[itemName].GetDataAt(2)) * amount;
-        }
+        }*/
 
         static public void SetLocation(int x, int y)
         {

@@ -18,7 +18,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             1, //HARDNESS
             0  //LEVELREQ
-            }, "stone", 1));
+            }, "stone"));
 
             blockTranslator.Add((int)Blocks.Iron, new InventoryItem(new object[]{
             2, //XPGAIN
@@ -26,7 +26,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             1, //HARDNESS
             0  //LEVELREQ
-            }, "iron", 1));
+            }, "iron"));
 
             blockTranslator.Add((int)Blocks.Copper, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -34,7 +34,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "copper", 1));
+            }, "copper"));
 
             blockTranslator.Add((int)Blocks.Gold, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -42,7 +42,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "gold", 1));
+            }, "gold"));
 
             blockTranslator.Add((int)Blocks.Diamond, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -50,7 +50,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "diamond", 1));
+            }, "diamond"));
 
             blockTranslator.Add((int)Blocks.Ruby, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -58,7 +58,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "ruby", 1));
+            }, "ruby"));
 
             blockTranslator.Add((int)Blocks.Sapphire, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -66,7 +66,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "sapphire", 1));
+            }, "sapphire"));
 
             blockTranslator.Add((int)Blocks.Emerald, new InventoryItem(new object[]{
             5, //XPGAIN
@@ -74,7 +74,7 @@ namespace OstBot_2_
             0, //SHOPSELL
             2, //HARDNESS
             0  //LEVELREQ
-            }, "emerald", 1));
+            }, "emerald"));
 
 
             foreach (InventoryItem i in blockTranslator.Values)

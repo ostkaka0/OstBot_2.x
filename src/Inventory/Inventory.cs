@@ -8,28 +8,64 @@ namespace OstBot_2_
 {
     public class Inventory
     {
-        public List<InventoryItem> storedItems;
+        public Dictionary<int, Pair<InventoryItem, int>> storedItems;
+        public int capacity { get; set; }
 
         public Inventory(int size)
         {
-            storedItems = new List<InventoryItem>(size);
+            storedItems = new Dictionary<int, Pair<InventoryItem, int>>(size);
+            capacity = size;
+        }
+
+        public int GetFreeSlot()
+        {
+            for (int i = 0; i < capacity; i++)
+            {
+                if (!storedItems.ContainsKey(i))
+                    return i;
+            }
+            return -1;
+        }
+
+        public int GetSlot(InventoryItem item)
+        {
+            lock (storedItems)
+            {
+                foreach (KeyValuePair<int, Pair<InventoryItem, int>> i in storedItems)
+                {
+                    if (i.Value.first == item)
+                        return i.Key;
+                }
+                return -1;
+            }
         }
 
         public InventoryItem GetItem(int slot)
         {
             lock (storedItems)
             {
-                return storedItems[slot];
+                return storedItems[slot].first;
             }
         }
 
-        public int GetItems(int slot)
+        public int GetItemCount(int slot)
         {
             lock (storedItems)
             {
-                if (storedItems[slot] != null)
+                return storedItems[slot].second;
+            }
+        }
+
+        public int GetItemCount(InventoryItem item)
+        {
+            lock (storedItems)
+            {
+                foreach (Pair<InventoryItem, int> i in storedItems.Values)
                 {
-                    return storedItems[slot].GetAmount();
+                    if (i.first == item)
+                    {
+                        return i.second;
+                    }
                 }
                 return 0;
             }
@@ -39,20 +75,20 @@ namespace OstBot_2_
         {
             lock (storedItems)
             {
-                foreach (InventoryItem i in storedItems)
+                foreach (Pair<InventoryItem, int> i in storedItems.Values)
                 {
-                    if (i.GetName() == name)
-                        return (i);
+                    if (i.first.GetName() == name)
+                        return (i.first);
                 }
                 return null;
             }
         }
 
-        public List<InventoryItem> GetAllItems()
+        public List<Pair<InventoryItem, int>> GetItems()
         {
             lock (storedItems)
             {
-                return storedItems;
+                return storedItems.Values.ToList();
             }
         }
 
@@ -75,47 +111,49 @@ namespace OstBot_2_
             bool removeAll = false;
             lock (storedItems)
             {
-                foreach (InventoryItem i in storedItems)
+                foreach (Pair<InventoryItem, int> i in storedItems.Values)
                 {
-                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
+                    if (i.first == item)
                     {
-                        if (i.GetAmount() > amount)
+                        if (i.second > amount)
                         {
-                            i.SetAmount(i.GetAmount() - amount);
+                            i.second -= amount;
                             return true;
                         }
                         else
                         {
-                            itemToRemove = new InventoryItem(i.GetData(), i.GetName(), item.GetAmount());
+                            itemToRemove = i.first;
                             removeAll = true;
                         }
                     }
                 }
                 if (removeAll)
                 {
-                    storedItems.Remove(item);
+                    storedItems.Remove(GetSlot(item));
                     return true;
                 }
                 return false;
             }
         }
 
-        public bool AddItem(InventoryItem item)
+        public bool AddItem(InventoryItem item, int amount)
         {
             lock (storedItems)
             {
-                foreach (InventoryItem i in storedItems)
+                int slot = Contains(item);
+                if (slot != -1)
                 {
-                    if (i.GetData() == item.GetData() && i.GetName() == item.GetName())
+                    storedItems[slot].second += amount;
+                    return true;
+                }
+                else if (storedItems.Count != capacity)
+                {
+                    int freeSlot = GetFreeSlot();
+                    if (freeSlot != -1)
                     {
-                        storedItems[storedItems.IndexOf(i)].SetAmount(storedItems[storedItems.IndexOf(i)].GetAmount() + item.GetAmount());
+                        storedItems.Add(freeSlot, new Pair<InventoryItem, int>(item, amount));
                         return true;
                     }
-                }
-                if (storedItems.Count != storedItems.Capacity)
-                {
-                    storedItems.Add(item);
-                    return true;
                 }
                 return false;
             }
@@ -126,39 +164,26 @@ namespace OstBot_2_
             lock (storedItems)
             {
                 string contents = "Inventory: ";
-                foreach (InventoryItem i in storedItems)
+                foreach (Pair<InventoryItem, int> i in storedItems.Values)
                 {
-                    contents += i.GetAmount() + " " + i.GetName() + ",";
+                    contents += i.second + " " + i.first.GetName() + ", ";
                 }
                 return contents;
             }
         }
 
-        public bool Contains(InventoryItem item)
+        public int Contains(InventoryItem item)
         {
             lock (storedItems)
             {
-                foreach (InventoryItem i in storedItems)
+                foreach (KeyValuePair<int, Pair<InventoryItem, int>> i in storedItems)
                 {
-                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
-                        return true;
-                }
-                return false;
-            }
-        }
-
-        public int GetAmount(InventoryItem item)
-        {
-            lock (storedItems)
-            {
-                foreach (InventoryItem i in storedItems)
-                {
-                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
+                    if (i.Value.first == item)
                     {
-                        return i.GetAmount();
+                        return i.Key;
                     }
                 }
-                return 0;
+                return -1;
             }
         }
     }

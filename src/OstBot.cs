@@ -166,11 +166,14 @@ namespace OstBot_2_
                                                     {
                                                         InventoryItem item = DigBlockMap.itemTranslator[message[1].ToLower()];
                                                         int itemPrice = Shop.GetBuyPrice(item);
-                                                        int amount = int.Parse(message[2]);
+
+                                                        int amount = 1; 
+                                                        if(message.Length >= 3)
+                                                            int.TryParse(message[2], out amount);
                                                         if (p.money >= (itemPrice * amount))
                                                         {
                                                             p.money -= itemPrice;
-                                                            p.inventory.AddItem(new InventoryItem(item.GetData(), item.GetName(), amount));
+                                                            p.inventory.AddItem(new InventoryItem(item.GetData(), item.GetName()), amount);
                                                             connection.Send("say", "Item bought!");
                                                         }
                                                         else
@@ -203,8 +206,10 @@ namespace OstBot_2_
                                                     {
                                                         InventoryItem item = DigBlockMap.itemTranslator[itemName];
                                                         int itemSellPrice = Shop.GetSellPrice(item);
-                                                        int amount = int.Parse(message[2]);
-                                                        if (p.inventory.Contains(item) && p.inventory.GetAmount(item) >= amount)
+                                                        int amount = 1;
+                                                        if (message.Length >= 3)
+                                                            int.TryParse(message[2], out amount);
+                                                        if (p.inventory.Contains(item) != -1 && p.inventory.GetItemCount(item) >= amount)
                                                         {
                                                             p.money += itemSellPrice * amount;
                                                             if (!p.inventory.RemoveItem(item, amount))
