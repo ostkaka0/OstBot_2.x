@@ -13,9 +13,9 @@ namespace OstBot_2_
         Stopwatch betaDigTimer = new Stopwatch();
         public Inventory inventory = new Inventory(100);
         public int xp = 0;
-        public int level = 1;
+        public int digLevel = 1;
         public int money = 10000;
-        bool betaDig;
+        bool betaDig = false;
         bool fastDig = true;
 
         public int digRange

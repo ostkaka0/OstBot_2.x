@@ -8,7 +8,7 @@ namespace OstBot_2_
 {
     public class Inventory
     {
-        public Dictionary<int, Pair<InventoryItem, int>> storedItems;
+        private Dictionary<int, Pair<InventoryItem, int>> storedItems;
         public int capacity { get; set; }
 
         public Inventory(int size)

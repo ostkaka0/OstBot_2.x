@@ -9,27 +9,21 @@ namespace OstBot_2_
     public class InventoryItem
     {
         private object[] data;
-        private string itemName;
-        public InventoryItem(object[] data, string itemName)
+
+        public InventoryItem(object[] data)
         {
             this.data = data;
-            this.itemName = itemName;
+        }
+
+        public InventoryItem(InventoryItem item)
+        {
+            this.data = item.data;
         }
 
         public string GetName()
         {
-            return itemName;
+            return (string)this.data[0];
         }
-
-        /*public void SetAmount(int amount)
-        {
-            this.amount = amount;
-        }
-
-        public int GetAmount()
-        {
-            return amount;
-        }*/
 
         public object[] GetData()
         {
@@ -49,6 +43,27 @@ namespace OstBot_2_
         public void SetDataAt(object data, int index)
         {
             this.data[index] = data;
+        }
+
+        public override bool Equals(object obj)
+        {
+            InventoryItem item = obj as InventoryItem;
+            return item.GetData() == GetData() && item.GetName() == GetName();
+        }
+
+        public bool Equals(InventoryItem item)
+        {
+            return item.GetData() == GetData() && item.GetName() == GetName();
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 64;
+                hash = hash * 21 + data.GetHashCode();
+                return hash;
+            }
         }
 
         public static bool operator !=(InventoryItem a, InventoryItem b)
