@@ -49,11 +49,14 @@ namespace OstBot_2_
                 //    return;
                 foreach (Block b in blockSet)
                 {
-                    if (b == block)
+                    if (block == b)//(false && block.Equals(b))
+                    {
+                        Console.WriteLine("== failar inte>.<");
                         return;
+                    }
                     else if (b.layer == block.layer && b.x == block.x && b.y == block.y)
                     {
-                        //blockSet.Remove(b);
+                        blockSet.Remove(b);
                         break;
                     }
                 }
@@ -61,6 +64,8 @@ namespace OstBot_2_
 
                 blockSet.Add(block);
             }
+
+            Console.WriteLine("boo");
 
             lock (blockQueue)
                 blockQueue.Enqueue(block);
@@ -166,6 +171,7 @@ namespace OstBot_2_
                             /*if (block.Equals(b))
                             {
                                 blockSet.Remove(b);
+                                break;
                             }
                             /*if (Block.Compare(block, b))
                             {

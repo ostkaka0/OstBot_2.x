@@ -16,19 +16,19 @@ namespace OstBot_2_
 
         public int x
         {
-            get { return (int)dataArray[1]; }
+            get { return Convert.ToInt32(dataArray[1]); }
             set { dataArray[1] = value; }
         }
 
         public int y
         {
-            get { return (int)dataArray[2]; }
+            get { return Convert.ToInt32(dataArray[2]); }
             set { dataArray[2] = value; }
         }
 
         public int layer
         {
-            get { return (int)dataArray[0]; }
+            get { return Convert.ToInt32(dataArray[0]); }
             set { dataArray[0] = value; }
         }
 
@@ -148,37 +148,41 @@ namespace OstBot_2_
 
         public override bool Equals(object obj)
         {
- 	        if (obj.GetType() != this.GetType())
+            if (obj == null)
                 return false;
 
             Block block = obj as Block;
 
             if (block.GetType() == this.GetType())
             {
-                if (block.blockId == this.blockId)
+                if (this.layer == block.layer && this.x == block.x && this.y == block.y)
                 {
-                    switch (this.blockType)
+
+                    if (block.blockId == this.blockId)
                     {
-                        case "b":
-                            return true;
+                        switch (this.blockType)
+                        {
+                            case "b":
+                                return true;
 
-                        case "bc":
-                            return this.dataArray[3] == block.dataArray[3];
+                            case "bc":
+                                return this.dataArray[3] == block.dataArray[3];
 
-                        case "bs":
-                            goto case "bc";
+                            case "bs":
+                                goto case "bc";
 
-                        case "pt":
-                            return this.dataArray[3] == block.dataArray[3] && this.dataArray[4] == block.dataArray[4] && this.dataArray[5] == block.dataArray[5];
+                            case "pt":
+                                return this.dataArray[3] == block.dataArray[3] && this.dataArray[4] == block.dataArray[4] && this.dataArray[5] == block.dataArray[5];
 
-                        case "lb":
-                            goto case "bc";
+                            case "lb":
+                                goto case "bc";
 
-                        case "br":
-                            goto case "bc";
+                            case "br":
+                                goto case "bc";
 
-                        default:
-                            return true;
+                            default:
+                                return true;
+                        }
                     }
                 }
             }
@@ -196,7 +200,7 @@ namespace OstBot_2_
             if (a.blockType != b.blockType)
                 return false;
 
-            if (Convert.ToInt32(a.dataArray[3]) != Convert.ToInt32(b.dataArray[3]))
+            if (a.blockId != b.blockId)
                 return false;
 
             /*object[] dataArrayA = new object[a.dataArray.Length];
@@ -308,5 +312,32 @@ namespace OstBot_2_
                 connection.Send(OstBot.worldKey, dataArray);
             }
         }
+
+        public static bool operator !=(Block a, Block b)
+        {
+            if ((object)a == null)
+                return ((object)b == null);
+
+            return !a.Equals(b);
+        }
+
+        public static bool operator ==(Block a, Block b)
+        {
+            if ((object)a == null)
+                return ((object)b == null);
+
+            return a.Equals(b);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 64;
+                hash = hash * 27 + dataArray.GetHashCode() + blockType.GetHashCode() - 2;
+                return hash;
+            }
+        }
+
     }
 }

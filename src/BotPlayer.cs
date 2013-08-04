@@ -20,12 +20,12 @@ namespace OstBot_2_
 
         public int digRange
         {
-            get { return ((level > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); }
+            get { return ((digLevel > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); }
         }
 
         public int digStrength
         {
-            get { return 0; }
+            get { return 1; }
         }
 
         public BotPlayer(PlayerIOClient.Message m)

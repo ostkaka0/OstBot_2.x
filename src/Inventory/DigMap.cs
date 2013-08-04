@@ -15,18 +15,9 @@ namespace OstBot_2_
             blockTranslator.Add((int)Blocks.Stone, new InventoryItem(new object[]{
                 "stone",
                 1, //XPGAIN
-                1, //SHOPBUY
-                0, //SHOPSELL
-                1, //HARDNESS
-                0  //LEVELREQ
-            }));
-
-            blockTranslator.Add((int)Blocks.Iron, new InventoryItem(new object[]{
-                "iron",
-                2, //XPGAIN
-                2, //SHOPBUY
-                0, //SHOPSELL
-                1, //HARDNESS
+                10, //SHOPBUY
+                1, //SHOPSELL
+                4, //HARDNESS
                 0  //LEVELREQ
             }));
 
@@ -34,45 +25,28 @@ namespace OstBot_2_
                 "copper",
                 5, //XPGAIN
                 5, //SHOPBUY
-                0, //SHOPSELL
-                2, //HARDNESS
-                0  //LEVELREQ
+                2, //SHOPSELL
+                8, //HARDNESS
+                2  //LEVELREQ
             }));
+
+            blockTranslator.Add((int)Blocks.Iron, new InventoryItem(new object[]{
+                "iron",
+                6, //XPGAIN
+                8, //SHOPBUY
+                3, //SHOPSELL
+                16, //HARDNESS
+                4  //LEVELREQ
+            }));
+
 
             blockTranslator.Add((int)Blocks.Gold, new InventoryItem(new object[]{
                 "gold",
-                5, //XPGAIN
-                5, //SHOPBUY
-                0, //SHOPSELL
-                2, //HARDNESS
-                0  //LEVELREQ
-            }));
-
-            blockTranslator.Add((int)Blocks.Diamond, new InventoryItem(new object[]{
-                "diamond",
-                5, //XPGAIN
-                5, //SHOPBUY
-                0, //SHOPSELL
-                2, //HARDNESS
-                0  //LEVELREQ
-            }));
-
-            blockTranslator.Add((int)Blocks.Ruby, new InventoryItem(new object[]{
-                "ruby",
-                5, //XPGAIN
-                5, //SHOPBUY
-                0, //SHOPSELL
-                2, //HARDNESS
-                0  //LEVELREQ
-            }));
-
-            blockTranslator.Add((int)Blocks.Sapphire, new InventoryItem(new object[]{
-                "sapphire",
-                5, //XPGAIN
-                5, //SHOPBUY
-                0, //SHOPSELL
-                2, //HARDNESS
-                0  //LEVELREQ
+                15, //XPGAIN
+                15, //SHOPBUY
+                14, //SHOPSELL
+                18, //HARDNESS
+                8  //LEVELREQ
             }));
 
             blockTranslator.Add((int)Blocks.Emerald, new InventoryItem(new object[]{
@@ -81,8 +55,37 @@ namespace OstBot_2_
                 5, //SHOPBUY
                 0, //SHOPSELL
                 2, //HARDNESS
-                0  //LEVELREQ
+                12  //LEVELREQ
             }));
+
+            blockTranslator.Add((int)Blocks.Ruby, new InventoryItem(new object[]{
+                "ruby",
+                5, //XPGAIN
+                5, //SHOPBUY
+                0, //SHOPSELL
+                2, //HARDNESS
+                16  //LEVELREQ
+            }));
+
+            blockTranslator.Add((int)Blocks.Sapphire, new InventoryItem(new object[]{
+                "sapphire",
+                5, //XPGAIN
+                5, //SHOPBUY
+                0, //SHOPSELL
+                2, //HARDNESS
+                20  //LEVELREQ
+            }));
+
+            blockTranslator.Add((int)Blocks.Diamond, new InventoryItem(new object[]{
+                "diamond",
+                5, //XPGAIN
+                5, //SHOPBUY
+                0, //SHOPSELL
+                2, //HARDNESS
+                24  //LEVELREQ
+            }));
+
+
 
 
             foreach (InventoryItem i in blockTranslator.Values)

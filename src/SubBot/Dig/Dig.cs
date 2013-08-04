@@ -13,6 +13,7 @@ namespace OstBot_2_
     {
         protected Queue<Block> dugBlocksToPlaceQueue = new Queue<Block>();
         protected object dugBlocksToPlaceQueueLock = 0;
+        protected int[,] digHardness;
 
         private void Generate(int width, int height)
         {
@@ -107,6 +108,7 @@ namespace OstBot_2_
             {
                 case "init":
                     //Generate(m.GetInt(10), m.GetInt(11));
+                    digHardness = new int[OstBot.room.width, OstBot.room.height];
                     break;
 
                 case "say":
@@ -213,6 +215,24 @@ namespace OstBot_2_
                     }
                     break;
 
+                case "b":
+                    {
+                        int blockId = m.GetInt(3);
+                        int x = m.GetInt(1);
+                        int y = m.GetInt(2);
+
+
+                        if (isDigable(blockId))
+                        {
+                            digHardness[x, y] = 1;
+                        }
+                        else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
+                        {
+                            digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(3));
+                        }
+                    }
+                    break;
+
             }
         }
 
@@ -245,51 +265,65 @@ namespace OstBot_2_
 
         private void DigBlock(int x, int y, BotPlayer player, bool mining)
         {
+            if (digHardness == null)
+                return;
+
+            if (!(x > 0 && y > 0 && x < OstBot.room.width && y < OstBot.room.height))
+                return;
+
+            if (digHardness[x,y] <= 0)
+                return;
+
             Block block = OstBot.room.getMapBlock(0, x, y, 0);
 
-            int blockId;
+            int blockId = -1;
 
             if (mining)
             {
                 if (DigBlockMap.blockTranslator.ContainsKey(block.blockId))
                 {
-                    //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
-                    InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
-                    InventoryItem newsak = new InventoryItem(temp.GetData());
-                    player.inventory.AddItem(newsak, 1);
                     blockId = 4;
 
-                }
-                else
-                {
-                    return;
+                    //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
+                    if (digHardness[x, y] <= player.digStrength)
+                    {
+                        InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
+                        InventoryItem newsak = new InventoryItem(temp.GetData());
+                        player.inventory.AddItem(newsak, 1);
+                    }
+                    
                 }
             }
-            else
+
+            switch (block.blockId)
             {
-                switch (block.blockId)
-                {
-                    case BlockIds.Blocks.Sand.BROWN:
-                        blockId = 4;
-                        break;
+                case BlockIds.Blocks.Sand.BROWN:
+                    blockId = 4;
+                    break;
 
-                    case BlockIds.Blocks.Sand.GRAY:
-                        blockId = BlockIds.Action.Liquids.WATER;
-                        break;
+                case BlockIds.Blocks.Sand.GRAY:
+                    blockId = BlockIds.Action.Liquids.WATER;
+                    break;
 
-                    case 21:
-                        blockId = 369;//BlockIds.Action.Liquids.MUD;
-                        break;
+                case 21:
+                    blockId = 369;//BlockIds.Action.Liquids.MUD;
+                    break;
 
-                    default:
+                default:
+                    if (blockId == -1)
                         return;
-                }
+                    else
+                        break;
             }
 
+            digHardness[x, y] -= player.digStrength;
 
-            OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, blockId, -1));
-            lock (dugBlocksToPlaceQueueLock)
-                dugBlocksToPlaceQueue.Enqueue(block);
+            if (digHardness[x, y] <= 0)
+            {
+                OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, blockId, -1));
+                lock (dugBlocksToPlaceQueueLock)
+                    dugBlocksToPlaceQueue.Enqueue(block);
+            }
         }
 
     }
