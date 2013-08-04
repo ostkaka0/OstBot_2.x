@@ -322,6 +322,7 @@ namespace OstBot_2_
                                     
                                     if (blockSet.Contains(blockQueue.Peek()))
                                     {
+                                        Console.WriteLine("jag är en sjuk sak");
                                         blockQueue.Peek().Send(OstBot.connection);
                                         lock (blockRepairQueue)
                                             blockRepairQueue.Enqueue(blockQueue.Dequeue());
