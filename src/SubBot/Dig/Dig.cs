@@ -26,10 +26,23 @@ namespace OstBot_2_
             {
                 for (int y = 1; y < height - 1; y++)
                 {
-                    if (noise.GetValue(x * 0.0625F, y * 0.0625F) < 0.5 - y/height*64)
-                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
-                    else
+                    if (noise.GetValue(x * 0.0625F, y * 0.0625F, 0) > 0.635)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
+
+                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 32) > 0.635)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
+
+                    else if (noise.GetValue(x * 0.0078125F, y * 0.0078125F, 64) > 0.5)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
+
+                    else if (noise.GetValue(x * 0.0625F, y * 0.0625F, 96) > 0.5)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
+
+                    else if (noise.GetValue(x * 0.03125F, y * 0.03125F, 128) > 0.75)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, (int)Blocks.Stone, -1);
+
+                    else
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
                 }
             }
 
@@ -161,7 +174,7 @@ namespace OstBot_2_
                                     Console.WriteLine(horizontal.ToString() + " " + vertical.ToString());
 
                                 int blockId = (OstBot.room.getMapBlock(0, blockX + (int)horizontal, blockY + (int)vertical, 0).blockId);
-                                if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                                if (isDigable(blockId))//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                 {
 
                                     if (player.digRange > 1)
@@ -217,6 +230,16 @@ namespace OstBot_2_
             }
         }
 
+        private bool isDigable(int blockId)
+        {
+            if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+                return true;
+            else if (blockId >= 16 && blockId <= 21)
+                return true;
+            else
+                return false;
+        }
+
         private void DigBlock(int x, int y, BotPlayer player, bool mining)
         {
             Block block = OstBot.room.getMapBlock(0, x, y, 0);
@@ -248,7 +271,11 @@ namespace OstBot_2_
                         break;
 
                     case BlockIds.Blocks.Sand.GRAY:
-                        blockId = 119;
+                        blockId = BlockIds.Action.Liquids.WATER;
+                        break;
+
+                    case 21:
+                        blockId = 369;//BlockIds.Action.Liquids.MUD;
                         break;
 
                     default:
