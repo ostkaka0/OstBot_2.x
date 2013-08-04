@@ -6,46 +6,44 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    public class Shop
+    public static class Shop
     {
-        public static Dictionary<string, InventoryItem> shopInventory = new Dictionary<string, InventoryItem>();
+        public static int xPos = 0;
+        public static int yPos = 0;
+
+        public static Dictionary<string, InventoryItem> shopInventory = new Dictionary<string, InventoryItem>(DigBlockMap.itemTranslator);
         static Shop()
         {
-            shopInventory.Add("Stone", new InventoryItem(new object[]{
-            1, //XPGAIN
-            1, //SHOPBUY
-            0, //SHOPSELL
-            1, //HARDNESS
-            0  //LEVELREQ
-            }, "Stone"));
 
-            shopInventory.Add("Iron", new InventoryItem(new object[]{
-            2, //XPGAIN
-            2, //SHOPBUY
-            0, //SHOPSELL
-            1, //HARDNESS
-            0  //LEVELREQ
-            }, "Iron"));
-
-            shopInventory.Add("Gold", new InventoryItem(new object[]{
-            5, //XPGAIN
-            5, //SHOPBUY
-            0, //SHOPSELL
-            2, //HARDNESS
-            0  //LEVELREQ
-            }, "Gold"));
         }
 
-        public InventoryItem Buy(string itemName, int amount)
+        static public int GetBuyPrice(InventoryItem item)
+        {
+            return (int)item.GetDataAt(1);
+        }
+
+        static public int GetSellPrice(InventoryItem item)
+        {
+            return (int)item.GetDataAt(2);
+        }
+
+        static public InventoryItem Buy(string itemName, int amount)
         {
             InventoryItem temp = shopInventory[itemName];
             temp.SetAmount(amount);
             return temp;
         }
 
-        public int Sell(string itemName, int amount)
+        static public int Sell(string itemName, int amount)
         {
             return ((int)shopInventory[itemName].GetDataAt(2)) * amount;
         }
+
+        static public void SetLocation(int x, int y)
+        {
+            xPos = x;
+            yPos = y;
+        }
+
     }
 }

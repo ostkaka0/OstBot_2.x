@@ -69,34 +69,51 @@ namespace OstBot_2_
             }
         }*/
 
-        public bool RemoveItem(int slot, int amount)
+        public bool RemoveItem(InventoryItem item, int amount)
         {
+            InventoryItem itemToRemove = null;
+            bool removeAll = false;
             lock (storedItems)
             {
-                if (storedItems[slot] != null)
+                foreach (InventoryItem i in storedItems)
                 {
-                    if (storedItems[slot].GetAmount() > 1)
-                        storedItems[slot].SetAmount(storedItems[slot].GetAmount() - 1);
-                    else
-                        storedItems.RemoveAt(slot);
+                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
+                    {
+                        if (i.GetAmount() > amount)
+                        {
+                            i.SetAmount(i.GetAmount() - amount);
+                            return true;
+                        }
+                        else
+                        {
+                            itemToRemove = new InventoryItem(i.GetData(), i.GetName(), item.GetAmount());
+                            removeAll = true;
+                        }
+                    }
+                }
+                if (removeAll)
+                {
+                    storedItems.Remove(item);
                     return true;
                 }
                 return false;
             }
         }
 
-        public bool AddItem(InventoryItem item, int amount)
+        public bool AddItem(InventoryItem item)
         {
             lock (storedItems)
             {
-                if (storedItems.Contains(item))
+                foreach (InventoryItem i in storedItems)
                 {
-                    storedItems[storedItems.IndexOf(item)].SetAmount(storedItems[storedItems.IndexOf(item)].GetAmount() + amount);
-                    return true;
+                    if (i.GetData() == item.GetData() && i.GetName() == item.GetName())
+                    {
+                        storedItems[storedItems.IndexOf(i)].SetAmount(storedItems[storedItems.IndexOf(i)].GetAmount() + item.GetAmount());
+                        return true;
+                    }
                 }
                 if (storedItems.Count != storedItems.Capacity)
                 {
-                    item.SetAmount(amount);
                     storedItems.Add(item);
                     return true;
                 }
@@ -106,12 +123,43 @@ namespace OstBot_2_
 
         public string GetContents()
         {
-            string contents = "Inventory: ";
-            foreach (InventoryItem i in storedItems)
+            lock (storedItems)
             {
-                contents += i.GetAmount() + " " + i.GetName() + ",";
+                string contents = "Inventory: ";
+                foreach (InventoryItem i in storedItems)
+                {
+                    contents += i.GetAmount() + " " + i.GetName() + ",";
+                }
+                return contents;
             }
-            return contents;
+        }
+
+        public bool Contains(InventoryItem item)
+        {
+            lock (storedItems)
+            {
+                foreach (InventoryItem i in storedItems)
+                {
+                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        public int GetAmount(InventoryItem item)
+        {
+            lock (storedItems)
+            {
+                foreach (InventoryItem i in storedItems)
+                {
+                    if (i.GetName() == item.GetName() && i.GetData() == item.GetData())
+                    {
+                        return i.GetAmount();
+                    }
+                }
+                return 0;
+            }
         }
     }
 

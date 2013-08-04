@@ -228,9 +228,9 @@ namespace OstBot_2_
                 if (DigBlockMap.blockTranslator.ContainsKey(block.blockId))
                 {
                     //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
-                    InventoryItem temp = Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]];
-                    InventoryItem newsak = new InventoryItem(temp.GetData(), temp.GetName());
-                    player.inventory.AddItem(newsak, 1);
+                    InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
+                    InventoryItem newsak = new InventoryItem(temp.GetData(), temp.GetName(), 1);
+                    player.inventory.AddItem(newsak);
                     blockId = 4;
 
                 }

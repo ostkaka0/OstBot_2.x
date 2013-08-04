@@ -11,10 +11,11 @@ namespace OstBot_2_
         private object[] data;
         private string itemName;
         private int amount = 1;
-        public InventoryItem(object[] data, string itemName)
+        public InventoryItem(object[] data, string itemName, int amount)
         {
             this.data = data;
             this.itemName = itemName;
+            this.amount = amount;
         }
 
         public string GetName()

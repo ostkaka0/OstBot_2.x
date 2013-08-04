@@ -54,11 +54,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AdminList.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="BotPlayer.cs" />
     <Compile Include="Inventory\DigMap.cs" />
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
+    <Compile Include="Inventory\Key.cs" />
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
     <Compile Include="Movement\ItemLayer.cs" />
