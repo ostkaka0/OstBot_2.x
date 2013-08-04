@@ -252,7 +252,7 @@ namespace OstBot_2_
                 {
                     //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
                     InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
-                    InventoryItem newsak = new InventoryItem(temp.GetData(), temp.GetName());
+                    InventoryItem newsak = new InventoryItem(temp.GetData());
                     player.inventory.AddItem(newsak, 1);
                     blockId = 4;
 

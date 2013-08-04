@@ -173,7 +173,7 @@ namespace OstBot_2_
                                                         if (p.money >= (itemPrice * amount))
                                                         {
                                                             p.money -= itemPrice;
-                                                            p.inventory.AddItem(new InventoryItem(item.GetData(), item.GetName()), amount);
+                                                            p.inventory.AddItem(new InventoryItem(item.GetData()), amount);
                                                             connection.Send("say", "Item bought!");
                                                         }
                                                         else
