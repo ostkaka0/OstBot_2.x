@@ -300,13 +300,22 @@ namespace OstBot_2_
                 {
                     blockId = 4;
 
-                    //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
-                    if (digHardness[x, y] <= digStrength)
+                    InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
+
+                    if (player.level >= Convert.ToInt32(temp.GetDataAt(5)))
                     {
-                        InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
-                        InventoryItem newsak = new InventoryItem(temp.GetData());
-                        player.inventory.AddItem(newsak, 1);
-                        player.digXp += Convert.ToInt32(temp.GetDataAt(1));
+                        //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
+                        if (digHardness[x, y] <= digStrength)
+                        {
+
+                            InventoryItem newsak = new InventoryItem(temp.GetData());
+                            player.inventory.AddItem(newsak, 1);
+                            player.digXp += Convert.ToInt32(temp.GetDataAt(1));
+                        }
+                    }
+                    else
+                    {
+                        return;
                     }
                     
                 }
