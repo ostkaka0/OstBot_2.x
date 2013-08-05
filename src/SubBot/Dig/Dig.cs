@@ -120,7 +120,6 @@ namespace OstBot_2_
 
         public override void onMessage(object sender, PlayerIOClient.Message m)
         {
-            Console.WriteLine("sfsddf");
             switch (m.Type)
             {
                 case "init":

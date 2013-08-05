@@ -40,6 +40,8 @@ namespace OstBot_2_
 
         public void DrawBlock(Block block)
         {
+            if (block == null)
+                return;
             if (Block.Compare(getMapBlock(block.layer, block.x, block.y, 0), block))
                 return;
 
@@ -327,7 +329,6 @@ namespace OstBot_2_
                         while (OstBot.hasCode)
                         {
 
-                            Console.WriteLine("??");
                             lock (blockQueueLock)
                             {
                                 if (blockQueue.Count != 0)

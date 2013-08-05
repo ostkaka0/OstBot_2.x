@@ -17,6 +17,10 @@ namespace OstBot_2_
         public static bool hasCode = false;
         public static bool isOwner = false;
         public static string worldKey = "";
+
+        public static Zombie zombie = null;
+        public static Stopwatch zombieStopWatch = new Stopwatch();
+
         public static Room room;
         public static Dig dig;
         Stopwatch playerTickTimer = new Stopwatch();
@@ -28,12 +32,21 @@ namespace OstBot_2_
         public OstBot()
         {
             playerTickTimer.Start();
+            zombieStopWatch.Start();
             new System.Threading.Thread(() =>
             {
                 while (true)
                 {
                     if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                     {
+                        if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 1000)
+                        {
+                            zombieStopWatch.Restart();
+                            zombie.Update();
+                            zombie.Draw();
+                            //System.Threading.Thread.Sleep(1000);
+                        }
+
                         playerTickTimer.Restart();
                         try
                         {
@@ -127,6 +140,12 @@ namespace OstBot_2_
                         string[] message = m.GetString(1).Split(' ');
                         switch (message[0])
                         {
+                            case "!zombie":
+                                {
+                                    zombie = new Zombie(playerList[playerId].blockX * 16 - (10 * 16), playerList[playerId].blockX * 16);
+                                    Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                }
+                                break;
                             case "!xp":
                                 connection.Send("say", "Your xp: " + playerList[playerId].digXp);
                                 break;
@@ -183,8 +202,8 @@ namespace OstBot_2_
                                                         InventoryItem item = DigBlockMap.itemTranslator[message[1].ToLower()];
                                                         int itemPrice = Shop.GetBuyPrice(item);
 
-                                                        int amount = 1; 
-                                                        if(message.Length >= 3)
+                                                        int amount = 1;
+                                                        if (message.Length >= 3)
                                                             int.TryParse(message[2], out amount);
                                                         if (p.digMoney >= (itemPrice * amount))
                                                         {
@@ -230,7 +249,7 @@ namespace OstBot_2_
                                                             p.digMoney += itemSellPrice * amount;
                                                             if (!p.inventory.RemoveItem(item, amount))
                                                                 throw new Exception("Could not remove item?D:");
-                                                            connection.Send("say", "Item sold! You received " + (itemSellPrice*amount) + " money.");
+                                                            connection.Send("say", "Item sold! You received " + (itemSellPrice * amount) + " money.");
                                                         }
                                                         else
                                                             connection.Send("say", "You do not have enough of that item.");
