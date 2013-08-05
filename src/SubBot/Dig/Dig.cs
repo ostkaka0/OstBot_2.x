@@ -23,26 +23,30 @@ namespace OstBot_2_
             Random random = new Random();
             Graphics.Tools.Noise.Primitive.SimplexPerlin noise = new Graphics.Tools.Noise.Primitive.SimplexPerlin(random.Next(), NoiseQuality.Best);
             //f.Heightmap.
-            Console.WriteLine("sdfsdfsfdrgsadrgdsgsdfsdf");
             Block[,] blockMap = new Block[width, height];
 
             for (int x = 1; x < width - 1; x++)
             {
                 for (int y = 1; y < height - 1; y++)
                 {
-                    if (noise.GetValue(x * 0.0625F, y * 0.0625F, 0) > 0.635)
+                    double distanceFromCenter = Math.Sqrt(Math.Pow(x - width / 2, 2) + Math.Pow(y - height / 2, 2))/((width>height)? width:height)*2;
+                    double distanceFromCenterPow = Math.Pow(distanceFromCenter, 1.5);
+
+                    Console.WriteLine(distanceFromCenter.ToString());
+
+                    if (noise.GetValue(x * 0.0625F, y * 0.0625F, 0) > 1-0.25*distanceFromCenterPow)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
 
-                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 32) > 0.635)
+                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 32) > 1 - 0.75 * distanceFromCenter)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
 
-                    else if (noise.GetValue(x * 0.0078125F, y * 0.0078125F, 64) > 0.5)
+                    else if (noise.GetValue(x * 0.0078125F, y * 0.0078125F, 64) > 1 - 0.25 * distanceFromCenterPow)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
 
-                    else if (noise.GetValue(x * 0.0625F, y * 0.0625F, 96) > 0.5)
+                    else if (noise.GetValue(x * 0.0625F, y * 0.0625F, 96) > 1 - 0.75 * distanceFromCenter)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
 
-                    else if (noise.GetValue(x * 0.03125F, y * 0.03125F, 128) > 0.75)
+                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 128) > 1 - 0.75 * distanceFromCenter)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, (int)Blocks.Stone, -1);
 
                     else
@@ -52,18 +56,18 @@ namespace OstBot_2_
 
             Queue<Block> blockQueue = new Queue<Block>();
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Stone, -1));
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Copper, -1));
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Iron, -1));
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Gold, -1));
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Emerald, -1));
 
-            int amount = 512;
+            int amount = 1024;
 
             while (blockQueue.Count > 0 && amount > 0)
             {
@@ -302,7 +306,7 @@ namespace OstBot_2_
 
                     InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
 
-                    if (player.level >= Convert.ToInt32(temp.GetDataAt(5)))
+                    if (player.digLevel>= Convert.ToInt32(temp.GetDataAt(5)))
                     {
                         //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
                         if (digHardness[x, y] <= digStrength)
