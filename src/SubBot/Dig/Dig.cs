@@ -212,15 +212,15 @@ namespace OstBot_2_
 
                                                 if (true)//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                                 {
-                                                    float distanceA = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
-                                                    float distanceB = (float)Math.Sqrt(Math.Pow(x - horizontal, 2) + Math.Pow(y - vertical, 2)*1.5F);
+                                                    float distance = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+                                                    //float distanceB = (float)Math.Sqrt(Math.Pow(x - horizontal, 2) + Math.Pow(y - vertical, 2))*1.5F;
 
-                                                    float distance = (distanceA < distanceB)? distanceA:distanceB;
+                                                    //float distance = (distanceA < distanceB)? distanceA:distanceB;
 
                                                     //if (distance == 0)
                                                     //    DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength, false);
-                                                    if (distance < 1.4142 * (player.digRange-1) || distance < 1.4142)
-                                                        DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength*(1.4142F*player.digRange-distance), false);
+                                                    if (distance <= 1.41421357 * (player.digRange-1) || distance < 1.4142)
+                                                        DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digRange-distance, false);
                                                 }
                                             }
                                         }
@@ -358,7 +358,7 @@ namespace OstBot_2_
         {
             if (isDigable(blockId))
             {
-                digHardness[x, y] = 0.5F;
+                digHardness[x, y] = 1F;
             }
             else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
             {
