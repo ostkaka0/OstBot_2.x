@@ -16,8 +16,8 @@ namespace OstBot_2_
         private int yBlock_ = 0;
         public Monster(int x, int y)
         {
-            xPos = x;
-            yPos = y;
+            xBlock = x;
+            yBlock = y;
         }
 
         public int xPos { get { return xPos_; } set { xOldPos_ = xPos_; xPos_ = value; } }

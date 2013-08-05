@@ -29,31 +29,28 @@ namespace OstBot_2_
 
         public override void Update()
         {
-            if (targetBotPlayer == null) //Find a player to target
+            foreach (BotPlayer player in OstBot.playerList.Values)
             {
-                foreach (BotPlayer player in OstBot.playerList.Values)
+                if (IsWithinRange(player))//ayer is within detection radius
                 {
-                    if (player.blockX < xBlock + zombieDetectRadius && player.blockX > xBlock - zombieDetectRadius)
+                    if (targetBotPlayer != null && !IsWithinRange(targetBotPlayer) ||targetBotPlayer == null)
                     {
-                        if (player.blockY < yBlock + zombieDetectRadius && player.blockY > yBlock - zombieDetectRadius)
-                        {
-                            //Player is within detection radius
-                            targetBotPlayer = player;
-                            break;
-                        }
+                        targetBotPlayer = player;
                     }
+                    break;
+
                 }
             }
-            else if (targetBotPlayer != null)
+
+            if (targetBotPlayer != null && IsWithinRange(targetBotPlayer))
             {
-                //targetBotPlayer = OstBot.playerList[OstBot.nameList[targetPlayer]];
                 Console.WriteLine("Current position: X" + xBlock + " Y" + yBlock);
+
+                pathFinding = new PathFinding();
                 Queue<Point> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
+
                 Console.WriteLine(targetBotPlayer.blockX + " target " + targetBotPlayer.blockY);
-                //if (this.pathToGo == null || this.pathToGo.Peek() != pathToGo.Peek())
                 this.pathToGo = pathToGo;
-                //if (pathToGo != null && pathToGo.Count == 0)
-                //throw new Exception("Wtf no path?:o");
                 if (this.pathToGo != null)
                 {
                     Point next = pathToGo.Dequeue();
@@ -73,6 +70,18 @@ namespace OstBot_2_
             OstBot.room.DrawBlock(zombieBlock);
 
             base.Draw();
+        }
+
+        public bool IsWithinRange(BotPlayer player)
+        {
+            if (player.blockX < xBlock + zombieDetectRadius && player.blockX > xBlock - zombieDetectRadius)
+            {
+                if (player.blockY < yBlock + zombieDetectRadius && player.blockY > yBlock - zombieDetectRadius)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

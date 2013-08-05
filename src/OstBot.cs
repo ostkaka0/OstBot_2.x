@@ -142,8 +142,8 @@ namespace OstBot_2_
                         {
                             case "!zombie":
                                 {
-                                    zombie = new Zombie(playerList[playerId].blockX * 16 - (10 * 16), playerList[playerId].blockX * 16);
-                                    Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                    zombie = new Zombie(playerList[playerId].blockX - 5, playerList[playerId].blockX);
+                                    Console.WriteLine("Added new zombie at " + playerList[playerId].blockX + 5 + " ", playerList[playerId].blockX);
                                 }
                                 break;
                             case "!xp":
