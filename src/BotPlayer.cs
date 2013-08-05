@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using PlayerIOClient;
 using System.IO;
+using System.Runtime.Serialization;
 
 namespace OstBot_2_
 {
@@ -15,36 +16,56 @@ namespace OstBot_2_
         public Inventory inventory = new Inventory(100);
         protected int xp = 0;
         protected int xpRequired;
-        protected int digLevel = 1;
-        protected int money = 0;
+        protected int digLevel_ = 1;
+        protected int digMoney_ = 0;
         protected bool betaDig = false;
         protected bool fastDig = true;
 
         public BotPlayer(PlayerIOClient.Message m)
             : base(m.GetInt(0), m.GetString(1), m.GetInt(2), m.GetFloat(3), m.GetFloat(4), m.GetBoolean(5), m.GetBoolean(6), m.GetBoolean(7), m.GetInt(8), false, false, 0)
         {
-            if (File.Exists(@"data\" + name))
-                inventory.Load(@"data\" + name);
-
-            xpRequired = getXpRequired(digLevel);
+            Load();
         }
 
         ~BotPlayer()
         {
-            inventory.Save(@"data\" + name);
+            Save();
         }
 
-        public int digRange
+        public void Save()
         {
-            get { return ((digLevel > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); }
+            Pair<IFormatter, Stream> writeStuff = inventory.Save(@"data\" + name);
+            writeStuff.first.Serialize(writeStuff.second, digXp);
+            writeStuff.first.Serialize(writeStuff.second, digMoney);
+            writeStuff.second.Close();
         }
 
-        public int digStrength
+        public void Load()
         {
-            get { return 1; }
+            if (File.Exists(@"data\" + name))
+            {
+                digLevel_ = 0;
+                Pair<IFormatter, Stream> writeStuff = inventory.Load(@"data\" + name);
+                xp = (int)writeStuff.first.Deserialize(writeStuff.second);
+                digMoney_ = (int)writeStuff.first.Deserialize(writeStuff.second);
+                writeStuff.second.Close();
+                xpRequired = getXpRequired(digLevel);
+            }
         }
 
-        public int xp_
+        public int digRange { get { return ((digLevel_ > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); } }
+
+        public int xpRequired_ { get { return xpRequired; } }
+
+        public int digLevel { get { return digLevel_; } }
+
+        public int digMoney { get { return digMoney_; } set { digMoney_ = value; } }
+
+        public int digStrength { get { return 1; } }
+
+        private static int getXpRequired(int level) { return BetterMath.Fibonacci(level + 2) * 8; }
+
+        public int digXp
         {
             get { return xp; }
             set
@@ -53,30 +74,14 @@ namespace OstBot_2_
                 {
                     xp = value;
                     if (xp >= xpRequired)
-                        xpRequired = getXpRequired(++digLevel);
+                        xpRequired = getXpRequired(++digLevel_);
                     else
-                        xpRequired = getXpRequired((digLevel = getLevel(xp)));
+                        xpRequired = getXpRequired((digLevel_ = getLevel(xp)));
                 }
             }
         }
 
-        public int xpRequired_
-        {
-            get { return xpRequired; }
-        }
-
-        public int level_
-        {
-            get { return digLevel; }
-        }
-
-        public int money_
-        {
-            get { return money; }
-            set { money = value; }
-        }
-
-        private int getLevel(int xp)
+        private static int getLevel(int xp)
         {
             int level = 0;
 
@@ -84,33 +89,6 @@ namespace OstBot_2_
                 level++;
 
             return level;
-        }
-
-        private int getXpRequired(int level)
-        {
-            return Fibonacci(level + 2) * 8;
-        }
-
-        private int Fibonacci(int i)
-        {
-            if (i < 1)
-            {
-                return 0;
-            }
-            else
-            {
-                int j = 1;
-                int k = 0;
-
-
-                for (int l = 1; l < i; l++)
-                {
-                    j += k;
-                    k = j;
-                }
-
-                return j;
-            }
         }
     }
 }

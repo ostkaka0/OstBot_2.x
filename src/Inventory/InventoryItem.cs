@@ -49,12 +49,12 @@ namespace OstBot_2_
         public override bool Equals(object obj)
         {
             InventoryItem item = obj as InventoryItem;
-            return item.GetData() == GetData() && item.GetName() == GetName();
+            return /*item.GetData() == GetData() && */item.GetName() == GetName();
         }
 
         public bool Equals(InventoryItem item)
         {
-            return item.GetData() == GetData() && item.GetName() == GetName();
+            return /*item.GetData() == GetData() && */item.GetName() == GetName();
         }
 
         public override int GetHashCode()
@@ -69,12 +69,12 @@ namespace OstBot_2_
 
         public static bool operator !=(InventoryItem a, InventoryItem b)
         {
-            return a.GetData() != b.GetData() || a.GetName() != b.GetName();
+            return /*a.GetData() != b.GetData() || */a.GetName() != b.GetName();
         }
 
         public static bool operator ==(InventoryItem a, InventoryItem b)
         {
-            return a.GetData() == b.GetData() && a.GetName() == b.GetName();
+            return /*a.GetData() == b.GetData() && */a.GetName() == b.GetName();
         }
 
     }

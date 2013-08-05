@@ -306,7 +306,7 @@ namespace OstBot_2_
                         InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
                         InventoryItem newsak = new InventoryItem(temp.GetData());
                         player.inventory.AddItem(newsak, 1);
-                        player.xp_ += Convert.ToInt32(temp.GetDataAt(1));
+                        player.digXp += Convert.ToInt32(temp.GetDataAt(1));
                     }
                     
                 }

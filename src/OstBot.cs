@@ -127,19 +127,25 @@ namespace OstBot_2_
                         string[] message = m.GetString(1).Split(' ');
                         switch (message[0])
                         {
+                            case "!xp":
+                                connection.Send("say", "Your xp: " + playerList[playerId].digXp);
+                                break;
+                            case "!level":
+                                connection.Send("say", "Your level: " + playerList[playerId].digLevel);
+                                break;
                             case "!inventory":
                                 {
-                                    connection.Send("say", playerList[m.GetInt(0)].inventory.GetContents());
+                                    connection.Send("say", playerList[playerId].inventory.GetContents());
                                 }
                                 break;
                             case "!save":
                                 {
-                                    playerList[playerId].inventory.Save(@"data\" + playerList[playerId].name);
+                                    playerList[playerId].Save();
                                 }
                                 break;
                             case "!load":
                                 {
-                                    playerList[playerId].inventory.Load(@"data\" + playerList[playerId].name);
+                                    playerList[playerId].Load();
                                 }
                                 break;
 
@@ -154,7 +160,7 @@ namespace OstBot_2_
                                 break;
                             case "!money":
                                 {
-                                    connection.Send("say", "Your money: " + playerList[playerId].money_);
+                                    connection.Send("say", "Your money: " + playerList[playerId].digMoney);
                                 }
                                 break;
                             case "!setmoney":
@@ -180,9 +186,9 @@ namespace OstBot_2_
                                                         int amount = 1; 
                                                         if(message.Length >= 3)
                                                             int.TryParse(message[2], out amount);
-                                                        if (p.money_ >= (itemPrice * amount))
+                                                        if (p.digMoney >= (itemPrice * amount))
                                                         {
-                                                            p.money_ -= itemPrice;
+                                                            p.digMoney -= itemPrice;
                                                             p.inventory.AddItem(new InventoryItem(item.GetData()), amount);
                                                             connection.Send("say", "Item bought!");
                                                         }
@@ -221,7 +227,7 @@ namespace OstBot_2_
                                                             int.TryParse(message[2], out amount);
                                                         if (p.inventory.Contains(item) != -1 && p.inventory.GetItemCount(item) >= amount)
                                                         {
-                                                            p.money_ += itemSellPrice * amount;
+                                                            p.digMoney += itemSellPrice * amount;
                                                             if (!p.inventory.RemoveItem(item, amount))
                                                                 throw new Exception("Could not remove item?D:");
                                                             connection.Send("say", "Item sold! You received " + (itemSellPrice*amount) + " money.");

@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminList.cs" />
+    <Compile Include="BetterMath.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="BotPlayer.cs" />
     <Compile Include="Inventory\DigMap.cs" />

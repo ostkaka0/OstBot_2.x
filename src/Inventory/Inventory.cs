@@ -178,23 +178,23 @@ namespace OstBot_2_
             }
         }
 
-        public void Save(string path)
+        public Pair<IFormatter, Stream> Save(string path)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
             formatter.Serialize(stream, (string)"Version: 0");
             formatter.Serialize(stream, storedItems);
-            stream.Close();
+            return new Pair<IFormatter, Stream>(formatter, stream);
         }
 
-        public void Load(string path)
+        public Pair<IFormatter, Stream> Load(string path)
         {
             IFormatter formatter = new BinaryFormatter();
             Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
             string version = (string)formatter.Deserialize(stream);
-            Console.WriteLine("Loaded inventory version: " + version);
+            //Console.WriteLine("Loaded inventory version: " + version);
             storedItems = (Dictionary<int, Pair<InventoryItem, int>>)formatter.Deserialize(stream);
-            stream.Close();
+            return new Pair<IFormatter, Stream>(formatter, stream);
         }
     }
 
