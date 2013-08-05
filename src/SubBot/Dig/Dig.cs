@@ -212,10 +212,15 @@ namespace OstBot_2_
 
                                                 if (true)//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                                                 {
-                                                    float distance = (float)Math.Sqrt(Math.Pow(x + horizontal, 2) + Math.Pow(y + vertical, 2));
+                                                    float distanceA = (float)Math.Sqrt(Math.Pow(x, 2) + Math.Pow(y, 2));
+                                                    float distanceB = (float)Math.Sqrt(Math.Pow(x - horizontal, 2) + Math.Pow(y - vertical, 2)*1.5F);
 
-                                                    if (distance < 1.4142 * (player.digRange - 1) || distance < 1.4142)
-                                                        DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, false);
+                                                    float distance = (distanceA < distanceB)? distanceA:distanceB;
+
+                                                    //if (distance == 0)
+                                                    //    DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength, false);
+                                                    if (distance < 1.4142 * (player.digRange-1) || distance < 1.4142)
+                                                        DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength*(1.4142F*player.digRange-distance), false);
                                                 }
                                             }
                                         }
@@ -224,10 +229,10 @@ namespace OstBot_2_
                                 }
                                 {
                                     if (horizontal == 0 || vertical == 0)
-                                        DigBlock(blockX + (int)horizontal, blockY + (int)vertical, player, true);
+                                        DigBlock(blockX + (int)horizontal, blockY + (int)vertical, player, player.digStrength, true);
 
                                     blockId = OstBot.room.getMapBlock(0, blockX, blockY, 0).blockId;
-                                    DigBlock(blockX, blockY, player, true);
+                                    DigBlock(blockX, blockY, player, player.digStrength, true);
 
                                 }
                             }).Start();
@@ -274,7 +279,7 @@ namespace OstBot_2_
                 return false;
         }
 
-        private void DigBlock(int x, int y, BotPlayer player, bool mining)
+        private void DigBlock(int x, int y, BotPlayer player, float digStrength, bool mining)
         {
             if (digHardness == null)
                 return;
@@ -296,7 +301,7 @@ namespace OstBot_2_
                     blockId = 4;
 
                     //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
-                    if (digHardness[x, y] <= player.digStrength)
+                    if (digHardness[x, y] <= digStrength)
                     {
                         InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
                         InventoryItem newsak = new InventoryItem(temp.GetData());
@@ -328,7 +333,7 @@ namespace OstBot_2_
                         break;
             }
 
-            digHardness[x, y] -= player.digStrength;
+            digHardness[x, y] -= digStrength;
 
             if (digHardness[x, y] <= 0)
             {
@@ -353,7 +358,7 @@ namespace OstBot_2_
         {
             if (isDigable(blockId))
             {
-                digHardness[x, y] = 0.1F;
+                digHardness[x, y] = 0.5F;
             }
             else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
             {
