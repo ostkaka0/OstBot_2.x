@@ -7,23 +7,10 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    public class PathFindingSquare
-    {
-        public int inhertedGValue = 0;
-        public int HValue = 0;
-        public int totalValue = 0;
-        public PathFindingSquare()
-        {
-
-        }
-    }
-
     class PathFinding
     {
-        List<Point> blocksToCheck = new List<Point>();
         List<Point> blocksChecked = new List<Point>();
-        Dictionary<Point, PathFindingSquare> blockData = new Dictionary<Point, PathFindingSquare>();
-
+        Dictionary<Point, int> blocksToCheck = new Dictionary<Point, int>();
         Queue<Point> finalPath = new Queue<Point>();
 
         /*static List<Point> easyOneBlockMoves = new List<Point> { 
@@ -55,71 +42,55 @@ namespace OstBot_2_
             Point startingPoint = new Point(x, y);
             Point targetPoint = new Point(xTarget, yTarget);
             blocksChecked = new List<Point>();
-            blocksToCheck = new List<Point>();
-            blockData = new Dictionary<Point, PathFindingSquare>();
+            blocksToCheck = new Dictionary<Point, int>();
             finalPath = new Queue<Point>();
-            blocksChecked.Add(startingPoint);
-            blockData.Add(startingPoint, new PathFindingSquare());
-            blockData[startingPoint].inhertedGValue = 0;
-            blockData[startingPoint].totalValue = 0;
-            GetQuickPath(startingPoint, targetPoint);
-            Point closestSquarePos;
-
+            GetQuickPath(startingPoint, targetPoint, 0);
 
             while (true)
             {
-
-                int closestSquareCost = 0;
-                closestSquarePos = new Point(0, 0);
-                foreach (Point current in blocksToCheck)
+                int lowest = 10000;
+                Point lowestPos = new Point(0, 0);
+                foreach (KeyValuePair<Point, int> current in blocksToCheck)
                 {
-                    if (current == targetPoint)
+                    if (current.Key == targetPoint)
                     {
-                        finalPath.Enqueue(current);
+                        finalPath.Enqueue(current.Key);
                         return finalPath;
                     }
-                    if (blockData[current].inhertedGValue < closestSquareCost || closestSquareCost == 0)
+                    if (current.Value < lowest)
                     {
-                        closestSquareCost = blockData[current].totalValue;
-                        closestSquarePos = current;
-
-                        Console.WriteLine("Closest square cost: " + closestSquareCost);
+                        lowest = current.Value;
+                        lowestPos = current.Key;
                     }
                 }
-                if (closestSquarePos.X == 0 && closestSquarePos.Y == 0)
-                    return null;
-                finalPath.Enqueue(closestSquarePos);
-                blocksChecked.Add(closestSquarePos);
+                //if (lowestPos.X == 0 && lowestPos.Y == 0)
+                    //GetQuickPath(startingPoint, targetPoint, 0);
+                finalPath.Enqueue(lowestPos);
                 blocksToCheck.Clear();
-                GetQuickPath(closestSquarePos, targetPoint);
+                GetQuickPath(lowestPos, targetPoint, lowest);
+                if (blocksToCheck.Count == 0)
+                    return null;
             }
         }
 
-        public void GetQuickPath(Point currentSquare, Point targetPoint)
+        public void GetQuickPath(Point currentPoint, Point targetPoint, int cost)
         {
-            if (currentSquare.X == 0 && currentSquare.Y == 0)
-                return;
-            // Console.WriteLine("Parsngisn " + currentSquare + " and tagert " + targetPoint);
             foreach (Point p in blockMoves)
             {
-                Point squareNextToCurrentSquare = new Point(currentSquare.X + p.X, currentSquare.Y + p.Y);
-                Block currentBlock = OstBot.room.getMapBlock(0, squareNextToCurrentSquare.X, squareNextToCurrentSquare.Y, 0);
-                if (currentBlock.blockId == 4)
+                if (!blocksChecked.Contains(p))
                 {
-                    if (!blockData.ContainsKey(squareNextToCurrentSquare))
+                    Point nextPoint = new Point(currentPoint.X + p.X, currentPoint.Y + p.Y);
+                    Block currentBlock = OstBot.room.getMapBlock(0, nextPoint.X, nextPoint.Y, 0);
+                    if (currentBlock.blockId == 4)
                     {
-                        if (!blocksToCheck.Contains(squareNextToCurrentSquare))
-                            blocksToCheck.Add(squareNextToCurrentSquare);
-
-                        blockData.Add(squareNextToCurrentSquare, new PathFindingSquare());
-                        blockData[squareNextToCurrentSquare].inhertedGValue = blockData[currentSquare].inhertedGValue + 10;
-                        blockData[squareNextToCurrentSquare].HValue = CalculateSecondCost(squareNextToCurrentSquare, targetPoint);
-                        blockData[squareNextToCurrentSquare].totalValue = blockData[squareNextToCurrentSquare].inhertedGValue + blockData[squareNextToCurrentSquare].HValue;
-                        //GetQuickPath(nextPoint, targetPoint, blocksToCheck[nextPoint]);
+                        if (!blocksToCheck.ContainsKey(nextPoint))
+                        {
+                            blocksToCheck.Add(nextPoint, cost + 10 + CalculateSecondCost(nextPoint, targetPoint));
+                            blocksChecked.Add(currentPoint);
+                            //GetQuickPath(nextPoint, targetPoint, blocksToCheck[nextPoint]);
+                        }
                     }
                 }
-                //else
-                //Console.WriteLine("Omg, a wall! " + currentBlock.blockId);
             }
             /*foreach (Point p in diagonalOneBlockMoves)
             {
@@ -144,16 +115,16 @@ namespace OstBot_2_
         {
             int x = 0;
             int y = 0;
-            if (currentPoint.X >= targetPoint.X)
+            if (currentPoint.X > targetPoint.X)
                 x = currentPoint.X - targetPoint.X;
             else
                 x = targetPoint.X - currentPoint.X;
 
-            if (currentPoint.Y >= targetPoint.Y)
-                y = currentPoint.Y - targetPoint.Y;
+            if (currentPoint.Y > targetPoint.Y)
+                x = currentPoint.Y - targetPoint.Y;
             else
-                y = targetPoint.Y - currentPoint.Y;
-            Console.WriteLine("H is " + x + " " + y + " total+");
+                x = targetPoint.Y - currentPoint.Y;
+
             return x + y;
         }
     }
