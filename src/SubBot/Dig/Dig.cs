@@ -296,11 +296,12 @@ namespace OstBot_2_
                     blockId = 4;
 
                     //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
-                    if (digHardness[x, y] <= player.digStrength*0.25F)
+                    if (digHardness[x, y] <= player.digStrength)
                     {
                         InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
                         InventoryItem newsak = new InventoryItem(temp.GetData());
                         player.inventory.AddItem(newsak, 1);
+                        player.xp_ += Convert.ToInt32(temp.GetDataAt(1));
                     }
                     
                 }
@@ -327,7 +328,7 @@ namespace OstBot_2_
                         break;
             }
 
-            digHardness[x, y] -= player.digStrength*0.25F;
+            digHardness[x, y] -= player.digStrength;
 
             if (digHardness[x, y] <= 0)
             {
@@ -356,7 +357,7 @@ namespace OstBot_2_
             }
             else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
             {
-                digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(3));
+                digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(4));
             }
         }
 

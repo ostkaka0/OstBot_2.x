@@ -154,7 +154,7 @@ namespace OstBot_2_
                                 break;
                             case "!money":
                                 {
-                                    connection.Send("say", "Your money: " + playerList[playerId].money);
+                                    connection.Send("say", "Your money: " + playerList[playerId].money_);
                                 }
                                 break;
                             case "!setmoney":
@@ -180,9 +180,9 @@ namespace OstBot_2_
                                                         int amount = 1; 
                                                         if(message.Length >= 3)
                                                             int.TryParse(message[2], out amount);
-                                                        if (p.money >= (itemPrice * amount))
+                                                        if (p.money_ >= (itemPrice * amount))
                                                         {
-                                                            p.money -= itemPrice;
+                                                            p.money_ -= itemPrice;
                                                             p.inventory.AddItem(new InventoryItem(item.GetData()), amount);
                                                             connection.Send("say", "Item bought!");
                                                         }
@@ -221,7 +221,7 @@ namespace OstBot_2_
                                                             int.TryParse(message[2], out amount);
                                                         if (p.inventory.Contains(item) != -1 && p.inventory.GetItemCount(item) >= amount)
                                                         {
-                                                            p.money += itemSellPrice * amount;
+                                                            p.money_ += itemSellPrice * amount;
                                                             if (!p.inventory.RemoveItem(item, amount))
                                                                 throw new Exception("Could not remove item?D:");
                                                             connection.Send("say", "Item sold! You received " + (itemSellPrice*amount) + " money.");
