@@ -141,7 +141,7 @@ namespace OstBot_2_
                         {
                             string[] arg = text.ToLower().Split(' ');
                             string name = "";
-                            lock (OstBot.playerListLock)
+                            lock (OstBot.playerList)
                             {
                                 if (OstBot.playerList.ContainsKey(userId))
                                     name = OstBot.playerList[userId].name;
@@ -158,7 +158,7 @@ namespace OstBot_2_
                                     {
                                         new Thread(() =>
                                             {
-                                                Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerListLock
+                                                Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerList
                                             }).Start();
                                     }
                                     break;
@@ -167,7 +167,7 @@ namespace OstBot_2_
                                     if (name == "ostkaka" || name == "gustav9797" && arg.Length > 2)
                                     {
                                         BotPlayer receiver;
-                                        lock (OstBot.playerListLock)
+                                        lock (OstBot.playerList)
                                         {
                                             if (OstBot.nameList.ContainsKey(arg[1]))
                                             {
@@ -189,38 +189,41 @@ namespace OstBot_2_
                                 //case "!cheat":
 
                                 case "!xp":
-                                    lock (OstBot.playerListLock)
+                                    lock (OstBot.playerList)
                                         OstBot.connection.Send("say", "Your xp: " + OstBot.playerList[userId].digXp);
                                     break;
                                 case "!level":
-                                    lock (OstBot.playerListLock)
+                                    lock (OstBot.playerList)
                                         OstBot.connection.Send("say", "Your level: " + OstBot.playerList[userId].digLevel);
                                     break;
                                 case "!inventory":
                                     {
-                                        lock(OstBot.playerListLock)
+                                        lock(OstBot.playerList)
                                             OstBot.connection.Send("say", OstBot.playerList[userId].inventory.GetContents());
                                     }
                                     break;
                                 case "!save":
                                     {
-                                        lock (OstBot.playerListLock)
+                                        lock (OstBot.playerList)
                                             OstBot.playerList[userId].Save();
                                     }
                                     break;
 
                                 case "!setshop":
                                     {
-                                        int x = OstBot.playerList[userId].blockX;
-                                        int y = OstBot.playerList[userId].blockY;
-                                        Shop.SetLocation(x, y);
-                                        OstBot.connection.Send("say", "Shop set at " + x + " " + y);
-                                        OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, 9, 0));
+                                        lock (OstBot.playerList)
+                                        {
+                                            int x = OstBot.playerList[userId].blockX;
+                                            int y = OstBot.playerList[userId].blockY;
+                                            Shop.SetLocation(x, y);
+                                            OstBot.connection.Send("say", "Shop set at " + x + " " + y);
+                                            OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, 9, 0));
+                                        }
                                     }
                                     break;
                                 case "!money":
                                     {
-                                        lock (OstBot.playerListLock)
+                                        lock (OstBot.playerList)
                                             OstBot.connection.Send("say", "Your money: " + OstBot.playerList[userId].digMoney);
                                     }
                                     break;
@@ -337,7 +340,7 @@ namespace OstBot_2_
 
                                 BotPlayer player;
 
-                                lock (OstBot.playerListLock)
+                                lock (OstBot.playerList)
                                 {
                                     if (!OstBot.playerList.ContainsKey(userId))
                                         return;

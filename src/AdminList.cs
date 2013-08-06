@@ -17,7 +17,10 @@ namespace OstBot_2_
 
         public static bool isAdmin(int playerId)
         {
-            return list.Contains(OstBot.playerList[playerId].name);
+            lock (OstBot.playerList)
+            {
+                return list.Contains(OstBot.playerList[playerId].name);
+            }
         }
     }
 }

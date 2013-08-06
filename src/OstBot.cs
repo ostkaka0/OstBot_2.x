@@ -27,7 +27,6 @@ namespace OstBot_2_
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
-        public static object playerListLock = 0;
 
         public OstBot()
         {
@@ -141,7 +140,7 @@ namespace OstBot_2_
                     break;
 
                 case "say":
-                    lock (playerListLock)
+                    lock (playerList)
                     {
                         //Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
                         int playerId = m.GetInt(0);
@@ -154,27 +153,35 @@ namespace OstBot_2_
                                     Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
                                 }
                                 break;
-                            
+
                         }
                     }
                     break;
 
                 case "add":
-                    lock (playerListLock)
+                    lock (playerList)
                     {
                         if (!playerList.ContainsKey(m.GetInt(0)))
                         {
                             BotPlayer player = new BotPlayer(m);
-                            lock (playerListLock)
-                            {
-                                playerList.Add(m.GetInt(0), player);
-                                nameList.Add(player.name, m.GetInt(0));
-                            }
+                            playerList.Add(m.GetInt(0), player);
+                            nameList.Add(player.name, m.GetInt(0));
                             Program.form1.listBox_PlayerList.Items.Add(player.name);
                         }
                     }
                     break;
-
+                case "left":
+                    {
+                        lock (playerList)
+                        {
+                            int tempKey = m.GetInt(0);
+                            if (playerList.ContainsKey(tempKey))
+                            {
+                                playerList.Remove(tempKey);
+                            }
+                        }
+                    }
+                    break;
                 case "access":
                     hasCode = true;
                     Program.form1.WriteLine("Code Cracked!");
@@ -193,18 +200,21 @@ namespace OstBot_2_
                         float modifierY = float.Parse(m[6].ToString());
                         int xDir = int.Parse(m[7].ToString());
                         int yDir = int.Parse(m[8].ToString());
-                        if (OstBot.playerList.ContainsKey(playerID))
+                        lock (playerList)
                         {
-                            player = OstBot.playerList[playerID];
-                            player.x = playerXPos;
-                            player.y = playerYPos;
-                            player.speedX = playerXSpeed;
-                            player.speedY = playerYSpeed;
-                            player.modifierX = modifierX;
-                            player.modifierY = modifierY;
-                            player.horizontal = xDir;
-                            player.vertical = yDir;
-                            OstBot.playerList[playerID] = player;
+                            if (OstBot.playerList.ContainsKey(playerID))
+                            {
+                                player = OstBot.playerList[playerID];
+                                player.x = playerXPos;
+                                player.y = playerYPos;
+                                player.speedX = playerXSpeed;
+                                player.speedY = playerYSpeed;
+                                player.modifierX = modifierX;
+                                player.modifierY = modifierY;
+                                player.horizontal = xDir;
+                                player.vertical = yDir;
+                                OstBot.playerList[playerID] = player;
+                            }
                         }
                     }
                     break;
