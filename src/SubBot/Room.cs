@@ -134,8 +134,14 @@ namespace OstBot_2_
                             blockMap[l] = new List<Block>[width, height];
 
                             for (int x = 0; x < width; x++)
+                            {
                                 for (int y = 0; y < height; y++)
+                                {
                                     blockMap[l][x, y] = new List<Block>();
+                                    if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
+                                        blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
+                                }
+                            }
                         }
                     }
 
@@ -206,9 +212,9 @@ namespace OstBot_2_
                 case "clear":
                     {
                         //Redstone.ClearLists();
-                        for (int x = 1; x < width; x++)
+                        for (int x = 1; x < width-2; x++)
                         {
-                            for (int y = 1; y < height; y++)
+                            for (int y = 1; y < height-2; y++)
                             {
                                 for(int i = 0; i < blockMap.Length; i++)
                                     blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
