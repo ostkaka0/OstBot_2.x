@@ -159,6 +159,29 @@ namespace OstBot_2_
                                     }
                                     break;
 
+                                case "!givexp":
+                                    if (name == "ostkaka" || name == "gustav9797" && arg.Length > 2)
+                                    {
+                                        BotPlayer receiver;
+                                        lock (OstBot.playerListLock)
+                                        {
+                                            if (OstBot.nameList.ContainsKey(arg[1]))
+                                            {
+                                                receiver = OstBot.playerList[OstBot.nameList[arg[1]]];
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                        }
+
+                                        int xp = Int32.Parse(arg[2]);
+
+                                        receiver.digXp += xp;
+
+                                    }
+                                    break;
+
                                 //case "!cheat":
 
                             }

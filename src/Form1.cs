@@ -81,6 +81,11 @@ namespace OstBot_2_
             Console.WriteLine(runtime);
         }
 
+        private void Form1_Closing(object sender, EventArgs e)
+        {
+
+        }
+
         private void CheckKeys(object sender, System.Windows.Forms.KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)13)

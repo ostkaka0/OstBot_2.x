@@ -326,6 +326,15 @@ namespace OstBot_2_
         {
             connected = false;
 
+            dig = null;
+            room = null;
+
+            lock (playerList)
+            {
+                nameList = null;
+                playerList = null;
+            }
+
             Program.form1.listBox_PlayerList.Items.Clear();
 
             Program.form1.WriteLine("Disconnected by " + sender.ToString() + " with reason: " + reason);
