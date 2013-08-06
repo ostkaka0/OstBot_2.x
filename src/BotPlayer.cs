@@ -16,7 +16,7 @@ namespace OstBot_2_
         public Inventory inventory = new Inventory(100);
         protected int xp = 0;
         protected int xpRequired;
-        protected int digLevel_ = 1;
+        protected int digLevel_ = 0;
         protected int digMoney_ = 0;
         protected bool betaDig = false;
         protected bool fastDig = true;

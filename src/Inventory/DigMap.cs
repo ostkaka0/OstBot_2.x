@@ -26,7 +26,7 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 2, //SHOPSELL
-                13, //HARDNESS
+                10, //HARDNESS
                 2  //LEVELREQ
             }));
 
@@ -35,8 +35,8 @@ namespace OstBot_2_
                 6, //XPGAIN
                 8, //SHOPBUY
                 3, //SHOPSELL
-                34, //HARDNESS
-                4  //LEVELREQ
+                14, //HARDNESS
+                8  //LEVELREQ
             }));
 
 
@@ -45,8 +45,8 @@ namespace OstBot_2_
                 15, //XPGAIN
                 15, //SHOPBUY
                 14, //SHOPSELL
-                38, //HARDNESS
-                8  //LEVELREQ
+                18, //HARDNESS
+                16  //LEVELREQ
             }));
 
             blockTranslator.Add((int)Blocks.Emerald, new InventoryItem(new object[]{
@@ -54,8 +54,8 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                55, //HARDNESS
-                12  //LEVELREQ
+                24, //HARDNESS
+                24  //LEVELREQ
             }));
 
             blockTranslator.Add((int)Blocks.Ruby, new InventoryItem(new object[]{
@@ -63,8 +63,8 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                89, //HARDNESS
-                16  //LEVELREQ
+                30, //HARDNESS
+                32  //LEVELREQ
             }));
 
             blockTranslator.Add((int)Blocks.Sapphire, new InventoryItem(new object[]{
@@ -72,8 +72,8 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                89, //HARDNESS
-                20  //LEVELREQ
+                36, //HARDNESS
+                40  //LEVELREQ
             }));
 
             blockTranslator.Add((int)Blocks.Diamond, new InventoryItem(new object[]{
@@ -81,8 +81,8 @@ namespace OstBot_2_
                 5, //XPGAIN
                 5, //SHOPBUY
                 0, //SHOPSELL
-                134, //HARDNESS
-                24  //LEVELREQ
+                56, //HARDNESS
+                48  //LEVELREQ
             }));
 
 

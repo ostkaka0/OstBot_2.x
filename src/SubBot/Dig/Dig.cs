@@ -101,7 +101,7 @@ namespace OstBot_2_
                 blockQueue.Enqueue(block);
             }
 
-            blockMap[width / 2, height / 2 - 1] = Block.CreateBlock(0, width << 1, (height << 1) - 1, 255, -1);
+            blockMap[width / 2, height / 2 - 1] = Block.CreateBlock(0, width / 2 - 1, (height / 2) - 1, 255, -1);
 
             for (int x = 1; x < width - 1; x++)
             {
