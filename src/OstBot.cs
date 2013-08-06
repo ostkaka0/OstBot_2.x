@@ -18,7 +18,7 @@ namespace OstBot_2_
         public static bool isOwner = false;
         public static string worldKey = "";
 
-        public static Zombie zombie = null;
+        public static List<Zombie> zombieList = new List<Zombie>();
         public static Stopwatch zombieStopWatch = new Stopwatch();
 
         public static Room room;
@@ -38,15 +38,21 @@ namespace OstBot_2_
                 {
                     if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                     {
-                        if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
-                        {
-                            zombieStopWatch.Restart();
-                            zombie.Update();
-                            zombie.Draw();
-                            //System.Threading.Thread.Sleep(1000);
-                        }
-
                         playerTickTimer.Restart();
+
+                        lock (zombieList)
+                        {
+                            foreach (Zombie zombie in zombieList)
+                            {
+                                if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
+                                {
+                                    zombieStopWatch.Restart();
+                                    zombie.Update();
+                                    zombie.Draw();
+                                    //System.Threading.Thread.Sleep(1000);
+                                }
+                            }
+                        }
                         lock (playerList)
                         {
                             try
@@ -57,7 +63,7 @@ namespace OstBot_2_
                                     //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
                                 }
                             }
-                            catch (Exception e) { }
+                            catch (Exception e) { throw e; }
                         }
                     }
                 }
@@ -155,8 +161,16 @@ namespace OstBot_2_
                         {
                             case "!zombie":
                                 {
-                                    zombie = new Zombie(playerList[playerId].blockX * 16 - (10 * 16), playerList[playerId].blockX * 16);
-                                    Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                    lock (playerList)
+                                    {
+                                        Zombie zombie = new Zombie(playerList[playerId].blockX * 16, playerList[playerId].blockY * 16);
+                                        lock (zombieList)
+                                        {
+                                            zombieList.Add(zombie);
+                                        }
+                                        room.DrawBlock(Block.CreateBlock(0, playerList[playerId].blockX, playerList[playerId].blockY, 32, 0));
+                                        //Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                    }
                                 }
                                 break;
 
@@ -184,6 +198,28 @@ namespace OstBot_2_
                             if (playerList.ContainsKey(tempKey))
                             {
                                 playerList.Remove(tempKey);
+                            }
+                        }
+                    }
+                    break;
+                case "tele":
+                    {
+                        lock (playerList)
+                        {
+                            bool allReset = m.GetBoolean(0);
+                            if (allReset)
+                            {
+                                /*foreach (BotPlayer p in playerList)
+                                {
+                                    if(!p.isgod)
+                                        p.
+                                }*/
+                            }
+                            else
+                            {
+                                int id = m.GetInt(1);
+                                playerList[id].x = m.GetInt(2) * 16;
+                                playerList[id].y = m.GetInt(3) * 16;
                             }
                         }
                     }

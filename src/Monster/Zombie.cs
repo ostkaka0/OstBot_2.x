@@ -74,10 +74,10 @@ namespace OstBot_2_
                     }
                 }
 
-                /*if (pathToGo != null && pathToGo.Count == 0 && targetBotPlayer != null)
+                if (pathToGo != null && pathToGo.Count == 0 && targetBotPlayer != null)
                 {
                     OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
-                }*/
+                }
             }
             base.Update();
         }

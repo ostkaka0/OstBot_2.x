@@ -133,10 +133,13 @@ namespace OstBot_2_
                 }
             }
 
+            if (parent != null)
+            {
+                closedSquares.Push(parent);
+            }
+
             if (parent == null || parent.x == targetX && parent.y == targetY || openSquares.Count == 0)
                 return;
-
-            closedSquares.Push(parent);
             openSquares.Remove(parent);
 
             foreach (KeyValuePair<Point, int> adjacentSquareVar in adjacentSquares)
