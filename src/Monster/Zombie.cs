@@ -15,7 +15,7 @@ namespace OstBot_2_
         Block zombieBlock = null;
         Block zombieOldBlock = null;
         BotPlayer targetBotPlayer = null;
-        int zombieDetectRadius = 16;
+        int zombieDetectRadius = 8;
         Stopwatch updateTimer = new Stopwatch();
         Stopwatch drawTimer = new Stopwatch();
 
@@ -36,15 +36,18 @@ namespace OstBot_2_
         {
             if (targetBotPlayer == null) //Find a player to target
             {
-                foreach (BotPlayer player in OstBot.playerList.Values)
+                lock (OstBot.playerList)
                 {
-                    if (player.blockX < xBlock + zombieDetectRadius && player.blockX > xBlock - zombieDetectRadius)
+                    foreach (BotPlayer player in OstBot.playerList.Values)
                     {
-                        if (player.blockY < yBlock + zombieDetectRadius && player.blockY > yBlock - zombieDetectRadius)
+                        if (player.blockX < xBlock + zombieDetectRadius && player.blockX > xBlock - zombieDetectRadius)
                         {
-                            //Player is within detection radius
-                            targetBotPlayer = player;
-                            break;
+                            if (player.blockY < yBlock + zombieDetectRadius && player.blockY > yBlock - zombieDetectRadius)
+                            {
+                                //Player is within detection radius
+                                targetBotPlayer = player;
+                                break;
+                            }
                         }
                     }
                 }
@@ -85,6 +88,11 @@ namespace OstBot_2_
                             OstBot.room.DrawBlock(zombieBlock);
                         }
                     }
+                }
+
+                if (pathToGo != null && pathToGo.Count == 0 && targetBotPlayer != null)
+                {
+                    OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
                 }
             }
             base.Update();
