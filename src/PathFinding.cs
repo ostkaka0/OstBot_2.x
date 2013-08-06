@@ -94,16 +94,16 @@ namespace OstBot_2_
             this.targetX = targetX;
             this.targetY = targetY;
 
-            Square startingSquare = new Square(startX, startY, 0, 0, null);
+            Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), null);
             openSquares.Add(startingSquare); //Add the starting square (or node) to the open list.
             GetCloseSquareData();
             if (openSquares.Count == 0)
             {
-                int lowestH = 0;
+                int lowestH = -1;
                 Square parent = null;
                 foreach (Square s in closedSquares)
                 {
-                    if (s.H < lowestH || lowestH == 0)
+                    if (s.H < lowestH || lowestH == -1)
                     {
                         lowestH = s.H;
                         parent = s;
@@ -111,6 +111,7 @@ namespace OstBot_2_
                 }
                 if (parent != null)
                 {
+                    Console.WriteLine("Lowest H pos X:" + parent.x + " Y:" + parent.y);
                     Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y);
                     return temp;
                 }
