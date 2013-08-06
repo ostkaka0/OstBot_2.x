@@ -7,32 +7,64 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    class square
+    class Square
     {
-        int x;
-        int y;
+        public int x;
+        public int y;
         public int thisG = 0;
         public int G;
-        int H;
-        public int parentX = 0;
-        public int parentY = 0;
+        public int H;
+        public Square parent;
         public int F { get { return G + H; } }
-        public square(int G, int H, int parentX, int parentY)
+        public Square(int x, int y, int G, int H, Square parent)
         {
+            this.x = x;
+            this.y = y;
             this.G = H;
             this.H = H;
-            this.parentX = parentX;
-            this.parentY = parentY;
+            this.parent = parent;
+        }
+
+        public override bool Equals(object obj)
+        {
+            Square square = obj as Square;
+            return square.x == x && square.y == y;
+        }
+
+        public bool Equals(Square square)
+        {
+            return square.x == x && square.y == y;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode() + 15 + x.GetHashCode() + y.GetHashCode();
+        }
+
+        public static bool operator !=(Square a, Square b)
+        {
+            if ((object)b == null || (object)a == null)
+            {
+                return (object)b != (object)a;
+            }
+            return a.x != b.x || a.y != b.y;
+        }
+
+        public static bool operator ==(Square a, Square b)
+        {
+            if ((object)b == null || (object)a == null)
+            {
+                return (object)b == (object)a;
+            }
+            return a.x == b.x && a.y == b.y;
         }
     }
 
     class PathFinding
     {
-        public List<Point> closedSquares = new List<Point>();
-        public List<Point> openListThatHasData = new List<Point>();
-        public Dictionary<Point, square> squareData = new Dictionary<Point, square>();
-
-        //public SortedList<int, Point> fScoreList = new SortedList<int, Point>();
+        public Stack<Square> closedSquares = new Stack<Square>();
+        public List<Square> openSquares = new List<Square>();
+        //public Dictionary<Point, Square> squareData = new Dictionary<Point, Square>();
 
         static List<Point> additionalCostSquares = new List<Point> { 
             new Point(1, 1), 
@@ -55,89 +87,96 @@ namespace OstBot_2_
         public int targetX = 0;
         public int targetY = 0;
 
-        Point lowestFSquare = new Point(0, 0);
-
-        public Stack<Point> Begin(int startX, int startY, int targetX, int targetY)
+        public Stack<Square> Begin(int startX, int startY, int targetX, int targetY)
         {
             this.startX = startX;
             this.startY = startY;
             this.targetX = targetX;
             this.targetY = targetY;
 
-            squareData.Add(new Point(startX, startY), new square(0, 0, 0, 0));
-            openListThatHasData.Add(new Point(startX, startY)); //Add the starting square (or node) to the open list.
+            Square startingSquare = new Square(startX, startY, 0, 0, null);
+            openSquares.Add(startingSquare); //Add the starting square (or node) to the open list.
             GetCloseSquareData();
-            if(openListThatHasData.Count == 0)
+            if (openSquares.Count == 0)
             {
-                Console.WriteLine("Could not find path!");
-                return null;
+                int lowestH = 0;
+                Square parent = null;
+                foreach (Square s in closedSquares)
+                {
+                    if (s.H < lowestH || lowestH == 0)
+                    {
+                        lowestH = s.H;
+                        parent = s;
+                    }
+                }
+                if (parent != null)
+                {
+                    Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y);
+                    return temp;
+                }
+
             }
-            Stack<Point> finalPath = new Stack<Point>();
-            square currentSquare = squareData[new Point(targetX, targetY)];
-            while (currentSquare.parentX != 0 && currentSquare.parentY != 0)
+            Stack<Square> finalPath = new Stack<Square>();
+            Square currentSquare = closedSquares.Pop();
+            while (currentSquare != null && currentSquare.parent != null)
             {
-                Point parentOfCurrent = new Point(currentSquare.parentX,  currentSquare.parentY);
+                Square parentOfCurrent = currentSquare.parent;
                 finalPath.Push(parentOfCurrent);
-                //Console.WriteLine("Added square to path " + parentOfCurrent);
-                if (!squareData.ContainsKey(parentOfCurrent))
-                    break;
-                currentSquare = squareData[parentOfCurrent];
+                Console.WriteLine("Added square to path X:" + parentOfCurrent.x + " Y:" + parentOfCurrent.y);
+                currentSquare = parentOfCurrent;
             }
+            if (finalPath.Count != 0)
+                Console.WriteLine("Returned " + finalPath.Count + " items!");
             return finalPath;
         }
 
-        public Point GetLowestFCostInOpenList()
-        {
-            int lowestF = 0;
-            Point lowestFSquare = this.lowestFSquare;
-            foreach (Point p in openListThatHasData)
-            {
-                if (squareData[p].F < lowestF || lowestF == 0)
-                {
-                    lowestF = squareData[p].F;
-                    lowestFSquare = p;
-                }
-            }
-            return lowestFSquare;
-        }
+
 
         public void GetCloseSquareData()
         {
-            Point parent = GetLowestFCostInOpenList(); //Look for the lowest F cost square on the open list. We refer to this as the current square.
-            int parentX = parent.X;
-            int parentY = parent.Y;
-            closedSquares.Add(parent); //Switch it to the closed list.
-            if (parentX == targetX && parentY == targetY)  //Stop when you: Add the target square to the closed list, in which case the path has been found (see note below),
+            int lowestF = 0;            //Look for the lowest F cost square on the open list. We refer to this as the current square.
+            Square parent = null;
+            foreach (Square s in openSquares)
+            {
+                if (s.F < lowestF || lowestF == 0)
+                {
+                    lowestF = s.F;
+                    parent = s;
+                }
+            }
+            if (parent == null)
                 return;
-            if (openListThatHasData.Count == 0) //or fail to find the target square, and the open list is empty. In this case, there is no path.   
+            int parentX = parent.x;
+            int parentY = parent.y;
+            closedSquares.Push(parent); //Switch it to the closed list.
+            if (parentX == targetX && parentY == targetY || openSquares.Count == 0)  //Stop when you: Add the target square to the closed list, in which case the path has been found (see note below), or fail to find the target square, and the open list is empty. In this case, there is no path.   
+            {
                 return;
-            openListThatHasData.Remove(parent);
+            }
+            openSquares.Remove(parent);
             foreach (Point adjacentSquare_ in adjacentSquares) //For each of the 8 squares adjacent to this current square …
-            {   
+            {
                 int additionalCost = 0;
                 if (additionalCostSquares.Contains(adjacentSquare_))
                     additionalCost = 4;
-                Point adjacentSquare = new Point(parentX + adjacentSquare_.X, parentY + adjacentSquare_.Y);
-                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.X, adjacentSquare.Y, 0).blockId == 4) //If it is not walkable or if it is on the closed list, ignore it.
+                Square adjacentSquare = new Square(parentX + adjacentSquare_.X, parentY + adjacentSquare_.Y, 0, 0, parent);
+                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId == 4) //If it is not walkable or if it is on the closed list, ignore it.
                 {
-                    if (!openListThatHasData.Contains(adjacentSquare))//If it isn’t on the open list, 
+                    if (!openSquares.Contains(adjacentSquare))//If it isn’t on the open list, add it to the open list. //Make the current square the parent of this square. Record the F, G, and H costs of the square. 
                     {
-                        openListThatHasData.Add(adjacentSquare);     //add it to the open list. 
-                        square square = new square(squareData[parent].G + 10 + additionalCost, CalculateH(adjacentSquare.X, adjacentSquare.Y, targetX, targetY), parentX, parentY);
-                        square.thisG = 10 + additionalCost;
-                        squareData.Add(adjacentSquare, square);        //Make the current square the parent of this square. Record the F, G, and H costs of the square. 
+                        adjacentSquare.G = parent.G + 10 + additionalCost;
+                        adjacentSquare.H = CalculateH(adjacentSquare.x, adjacentSquare.x, targetX, targetY);
+                        adjacentSquare.thisG = 10 + additionalCost;
+                        openSquares.Add(adjacentSquare);//Make the current square the parent of this square. Record the F, G, and H costs of the square. 
                     }
                     else //If it is on the open list already,
                     {
-                        //check to see if the G score for that square is lower if we use the parent square to get there.
-                        int oldG = squareData[adjacentSquare].G;
-                        int newG = squareData[parent].G + 10 + additionalCost;
-                        if (newG < oldG)
+                        int oldG = adjacentSquare.G;
+                        int newG = parent.G + 10 + additionalCost;
+                        if (newG < oldG)  //check to see if the G score for that square is lower if we use the parent square to get there.
                         {
-                            squareData[adjacentSquare].parentX = parentX;
-                            squareData[adjacentSquare].parentY = parentY;
-
-                            squareData[adjacentSquare].G = newG;
+                            adjacentSquare.parent = parent;
+                            adjacentSquare.G = newG;
                         }
                     }
                 }

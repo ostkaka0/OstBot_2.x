@@ -11,7 +11,6 @@ namespace OstBot_2_
     public class Zombie : Monster
     {
         PathFinding pathFinding = new PathFinding();
-        Stack<Point> pathToGo = null;
         Block zombieBlock = null;
         Block zombieOldBlock = null;
         BotPlayer targetBotPlayer = null;
@@ -64,8 +63,7 @@ namespace OstBot_2_
                 pathFinding = null;
                 pathFinding = new PathFinding();
 
-                Stack<Point> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
-                this.pathToGo = pathToGo;
+                Stack<Square> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
                 //}
                 //Console.WriteLine(targetBotPlayer.blockX + " target " + targetBotPlayer.blockY);
 
@@ -74,12 +72,12 @@ namespace OstBot_2_
                     if (updateTimer.ElapsedMilliseconds >= 400)
                     {
                         updateTimer.Restart();
-                        Point temp;
+                        Square temp;
                         if (pathToGo.Count >= 2)
                             temp = pathToGo.Pop();
-                        Point next = pathToGo.Pop();
-                        xBlock = next.X;
-                        yBlock = next.Y;
+                        Square next = pathToGo.Pop();
+                        xBlock = next.x;
+                        yBlock = next.y;
                         //if (xOldPos != xPos || yOldPos != yPos)
                         {
                             zombieOldBlock = Block.CreateBlock(0, (xOldPos / 16), (yOldPos / 16), 4, 0);
@@ -90,10 +88,10 @@ namespace OstBot_2_
                     }
                 }
 
-                if (pathToGo != null && pathToGo.Count == 0 && targetBotPlayer != null)
+                /*if (pathToGo != null && pathToGo.Count == 0 && targetBotPlayer != null)
                 {
                     OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
-                }
+                }*/
             }
             base.Update();
         }
