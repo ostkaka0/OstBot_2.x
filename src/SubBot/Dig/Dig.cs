@@ -56,18 +56,18 @@ namespace OstBot_2_
 
             Queue<Block> blockQueue = new Queue<Block>();
 
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 64; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Stone, -1));
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 64; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Copper, -1));
             for (int i = 0; i < 32; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Iron, -1));
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 16; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Gold, -1));
-            for (int i = 0; i < 32; i++)
+            for (int i = 0; i < 8; i++)
                 blockQueue.Enqueue(Block.CreateBlock(0, random.Next(1, width - 1), random.Next(1, height - 1), (int)Blocks.Emerald, -1));
 
-            int amount = 1024;
+            int amount = 1536;//2048 later
 
             while (blockQueue.Count > 0 && amount > 0)
             {
