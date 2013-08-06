@@ -47,15 +47,18 @@ namespace OstBot_2_
                         }
 
                         playerTickTimer.Restart();
-                        try
+                        lock (playerList)
                         {
-                            foreach (Player player in OstBot.playerList.Values)
+                            try
                             {
-                                player.tick();
-                                //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                foreach (Player player in OstBot.playerList.Values)
+                                {
+                                    player.tick();
+                                    //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                }
                             }
+                            catch (Exception e) { }
                         }
-                        catch (Exception e) { }
                     }
                 }
             }).Start();
@@ -63,9 +66,12 @@ namespace OstBot_2_
 
         ~OstBot()
         {
-            foreach (var pair in playerList)
+            lock (playerList)
             {
-                pair.Value.Save();
+                foreach (var pair in playerList)
+                {
+                    pair.Value.Save();
+                }
             }
         }
 
