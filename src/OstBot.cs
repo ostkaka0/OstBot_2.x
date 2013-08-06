@@ -39,7 +39,7 @@ namespace OstBot_2_
                 {
                     if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                     {
-                        if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 1000)
+                        if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
                         {
                             zombieStopWatch.Restart();
                             zombie.Update();

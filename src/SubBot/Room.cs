@@ -53,7 +53,7 @@ namespace OstBot_2_
                 {
                     if (block == b)//(false && block.Equals(b))
                     {
-                        Console.WriteLine("== failar inte>.<");
+                        //Console.WriteLine("== failar inte>.<");
                         return;
                     }
                     else if (b.layer == block.layer && b.x == block.x && b.y == block.y)
@@ -67,7 +67,7 @@ namespace OstBot_2_
                 blockSet.Add(block);
             }
 
-            Console.WriteLine("boo");
+            //Console.WriteLine("boo");
 
             lock (blockQueue)
                 blockQueue.Enqueue(block);
@@ -336,11 +336,11 @@ namespace OstBot_2_
 
                                     if (blockSet.Contains(blockQueue.Peek()))
                                     {
-                                        Console.WriteLine("jag är en sjuk sak");
+                                        //Console.WriteLine("jag är en sjuk sak");
                                         blockQueue.Peek().Send(OstBot.connection);
                                         lock (blockRepairQueue)
                                             blockRepairQueue.Enqueue(blockQueue.Dequeue());
-                                        Console.WriteLine("!!");
+                                        //Console.WriteLine("!!");
                                     }
                                     else
                                     {

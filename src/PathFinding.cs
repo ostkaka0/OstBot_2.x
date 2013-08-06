@@ -7,26 +7,40 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
+    class square
+    {
+        int x;
+        int y;
+        public int thisG = 0;
+        public int G;
+        int H;
+        public int parentX = 0;
+        public int parentY = 0;
+        public int F { get { return G + H; } }
+        public square(int G, int H, int parentX, int parentY)
+        {
+            this.G = H;
+            this.H = H;
+            this.parentX = parentX;
+            this.parentY = parentY;
+        }
+    }
+
     class PathFinding
     {
-        List<Point> blocksChecked = new List<Point>();
-        Dictionary<Point, int> blocksToCheck = new Dictionary<Point, int>();
-        Queue<Point> finalPath = new Queue<Point>();
+        public List<Point> closedSquares = new List<Point>();
+        public List<Point> openListThatHasData = new List<Point>();
+        public Dictionary<Point, square> squareData = new Dictionary<Point, square>();
 
-        /*static List<Point> easyOneBlockMoves = new List<Point> { 
-            new Point(1, 0), 
-            new Point(-1, 0), 
-            new Point(0, 1), 
-            new Point(0, -1) };
+        //public SortedList<int, Point> fScoreList = new SortedList<int, Point>();
 
-        static List<Point> diagonalOneBlockMoves = new List<Point> { 
+        static List<Point> additionalCostSquares = new List<Point> { 
             new Point(1, 1), 
             new Point(-1, 1), 
             new Point(1, 1), 
-            new Point(1, -1) };
-        */
+            new Point(1, -1)};
 
-        static List<Point> blockMoves = new List<Point> { 
+        static List<Point> adjacentSquares = new List<Point> { 
             new Point(1, 1), 
             new Point(-1, 1), 
             new Point(1, 1), 
@@ -36,94 +50,114 @@ namespace OstBot_2_
             new Point(0, 1), 
             new Point(0, -1)};
 
+        public int startX = 0;
+        public int startY = 0;
+        public int targetX = 0;
+        public int targetY = 0;
 
-        public Queue<Point> Begin(int x, int y, int xTarget, int yTarget)
+        Point lowestFSquare = new Point(0, 0);
+
+        public Stack<Point> Begin(int startX, int startY, int targetX, int targetY)
         {
-            Point startingPoint = new Point(x, y);
-            Point targetPoint = new Point(xTarget, yTarget);
-            blocksChecked = new List<Point>();
-            blocksToCheck = new Dictionary<Point, int>();
-            finalPath = new Queue<Point>();
-            GetQuickPath(startingPoint, targetPoint, 0);
+            this.startX = startX;
+            this.startY = startY;
+            this.targetX = targetX;
+            this.targetY = targetY;
 
-            while (true)
+            squareData.Add(new Point(startX, startY), new square(0, 0, 0, 0));
+            openListThatHasData.Add(new Point(startX, startY)); //Add the starting square (or node) to the open list.
+            GetCloseSquareData();
+            if(openListThatHasData.Count == 0)
             {
-                int lowest = 10000;
-                Point lowestPos = new Point(0, 0);
-                foreach (KeyValuePair<Point, int> current in blocksToCheck)
-                {
-                    if (current.Key == targetPoint)
-                    {
-                        finalPath.Enqueue(current.Key);
-                        return finalPath;
-                    }
-                    if (current.Value < lowest)
-                    {
-                        lowest = current.Value;
-                        lowestPos = current.Key;
-                    }
-                }
-                //if (lowestPos.X == 0 && lowestPos.Y == 0)
-                    //GetQuickPath(startingPoint, targetPoint, 0);
-                finalPath.Enqueue(lowestPos);
-                blocksToCheck.Clear();
-                GetQuickPath(lowestPos, targetPoint, lowest);
-                if (blocksToCheck.Count == 0)
-                    return null;
+                Console.WriteLine("Could not find path!");
+                return null;
             }
+            Stack<Point> finalPath = new Stack<Point>();
+            square currentSquare = squareData[new Point(targetX, targetY)];
+            while (currentSquare.parentX != 0 && currentSquare.parentY != 0)
+            {
+                Point parentOfCurrent = new Point(currentSquare.parentX,  currentSquare.parentY);
+                finalPath.Push(parentOfCurrent);
+                //Console.WriteLine("Added square to path " + parentOfCurrent);
+                if (!squareData.ContainsKey(parentOfCurrent))
+                    break;
+                currentSquare = squareData[parentOfCurrent];
+            }
+            return finalPath;
         }
 
-        public void GetQuickPath(Point currentPoint, Point targetPoint, int cost)
+        public Point GetLowestFCostInOpenList()
         {
-            foreach (Point p in blockMoves)
+            int lowestF = 0;
+            Point lowestFSquare = this.lowestFSquare;
+            foreach (Point p in openListThatHasData)
             {
-                if (!blocksChecked.Contains(p))
+                if (squareData[p].F < lowestF || lowestF == 0)
                 {
-                    Point nextPoint = new Point(currentPoint.X + p.X, currentPoint.Y + p.Y);
-                    Block currentBlock = OstBot.room.getMapBlock(0, nextPoint.X, nextPoint.Y, 0);
-                    if (currentBlock.blockId == 4)
+                    lowestF = squareData[p].F;
+                    lowestFSquare = p;
+                }
+            }
+            return lowestFSquare;
+        }
+
+        public void GetCloseSquareData()
+        {
+            Point parent = GetLowestFCostInOpenList(); //Look for the lowest F cost square on the open list. We refer to this as the current square.
+            int parentX = parent.X;
+            int parentY = parent.Y;
+            closedSquares.Add(parent); //Switch it to the closed list.
+            if (parentX == targetX && parentY == targetY)  //Stop when you: Add the target square to the closed list, in which case the path has been found (see note below),
+                return;
+            if (openListThatHasData.Count == 0) //or fail to find the target square, and the open list is empty. In this case, there is no path.   
+                return;
+            openListThatHasData.Remove(parent);
+            foreach (Point adjacentSquare_ in adjacentSquares) //For each of the 8 squares adjacent to this current square …
+            {   
+                int additionalCost = 0;
+                if (additionalCostSquares.Contains(adjacentSquare_))
+                    additionalCost = 4;
+                Point adjacentSquare = new Point(parentX + adjacentSquare_.X, parentY + adjacentSquare_.Y);
+                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.X, adjacentSquare.Y, 0).blockId == 4) //If it is not walkable or if it is on the closed list, ignore it.
+                {
+                    if (!openListThatHasData.Contains(adjacentSquare))//If it isn’t on the open list, 
                     {
-                        if (!blocksToCheck.ContainsKey(nextPoint))
+                        openListThatHasData.Add(adjacentSquare);     //add it to the open list. 
+                        square square = new square(squareData[parent].G + 10 + additionalCost, CalculateH(adjacentSquare.X, adjacentSquare.Y, targetX, targetY), parentX, parentY);
+                        square.thisG = 10 + additionalCost;
+                        squareData.Add(adjacentSquare, square);        //Make the current square the parent of this square. Record the F, G, and H costs of the square. 
+                    }
+                    else //If it is on the open list already,
+                    {
+                        //check to see if the G score for that square is lower if we use the parent square to get there.
+                        int oldG = squareData[adjacentSquare].G;
+                        int newG = squareData[parent].G + 10 + additionalCost;
+                        if (newG < oldG)
                         {
-                            blocksToCheck.Add(nextPoint, cost + 10 + CalculateSecondCost(nextPoint, targetPoint));
-                            blocksChecked.Add(currentPoint);
-                            //GetQuickPath(nextPoint, targetPoint, blocksToCheck[nextPoint]);
+                            squareData[adjacentSquare].parentX = parentX;
+                            squareData[adjacentSquare].parentY = parentY;
+
+                            squareData[adjacentSquare].G = newG;
                         }
                     }
                 }
             }
-            /*foreach (Point p in diagonalOneBlockMoves)
-            {
-                if (!blocksChecked.Contains(p))
-                {
-                    Point nextPoint = new Point(currentPoint.X + p.X, currentPoint.Y + p.Y);
-                    Block currentBlock = OstBot.room.getMapBlock(0, nextPoint.X, nextPoint.Y, 0);
-                    if (currentBlock.blockId == 4)
-                    {
-                        if (!blocksToCheck.ContainsKey(nextPoint))
-                        {
-                            blocksToCheck.Add(nextPoint, cost + 10 + CalculateSecondCost(nextPoint, targetPoint));
-                            blocksChecked.Add(currentPoint);
-                        }
-                        //GetQuickPath(nextPoint, targetPoint, blocksToCheck[nextPoint]);
-                    }
-                }
-            }*/
+            GetCloseSquareData();
         }
 
-        public int CalculateSecondCost(Point currentPoint, Point targetPoint)
+        public int CalculateH(int x1, int y1, int x2, int y2)
         {
             int x = 0;
             int y = 0;
-            if (currentPoint.X > targetPoint.X)
-                x = currentPoint.X - targetPoint.X;
+            if (x1 >= x2)
+                x = x1 - x2;
             else
-                x = targetPoint.X - currentPoint.X;
+                x = x2 - x1;
 
-            if (currentPoint.Y > targetPoint.Y)
-                x = currentPoint.Y - targetPoint.Y;
+            if (y1 >= y2)
+                y = y1 - y2;
             else
-                x = targetPoint.Y - currentPoint.Y;
+                y = y2 - y1;
 
             return x + y;
         }
