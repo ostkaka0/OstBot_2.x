@@ -42,14 +42,17 @@ namespace OstBot_2_
 
                         lock (zombieList)
                         {
-                            foreach (Zombie zombie in zombieList)
+                            if (zombieStopWatch.ElapsedMilliseconds >= 10)
                             {
-                                if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
+                                zombieStopWatch.Restart();
+                                foreach (Zombie zombie in zombieList)
                                 {
-                                    zombieStopWatch.Restart();
-                                    zombie.Update();
-                                    zombie.Draw();
-                                    //System.Threading.Thread.Sleep(1000);
+                                    if (zombie != null)
+                                    {
+                                        zombie.Update();
+                                        zombie.Draw();
+                                        //System.Threading.Thread.Sleep(1000);
+                                    }
                                 }
                             }
                         }
