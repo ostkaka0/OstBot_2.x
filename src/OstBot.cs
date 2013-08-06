@@ -92,6 +92,7 @@ namespace OstBot_2_
             catch (Exception e)
             {
                 Program.form1.WriteLine("Error: " + e.ToString());
+                throw e;
             }
         }
 
@@ -119,6 +120,8 @@ namespace OstBot_2_
             catch (Exception e)
             {
                 Program.form1.WriteLine("Error: " + e.ToString());
+                throw e;
+
             }
         }
 
