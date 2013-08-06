@@ -19,12 +19,12 @@ namespace OstBot_2_
 
         static public int GetBuyPrice(InventoryItem item)
         {
-            return (int)item.GetDataAt(1);
+            return (int)item.GetDataAt(2);
         }
 
         static public int GetSellPrice(InventoryItem item)
         {
-            return (int)item.GetDataAt(2);
+            return (int)item.GetDataAt(3);
         }
 
         /*static public InventoryItem Buy(string itemName, int amount)

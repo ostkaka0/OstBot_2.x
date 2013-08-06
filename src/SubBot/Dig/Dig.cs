@@ -149,6 +149,10 @@ namespace OstBot_2_
 
                             switch (arg[0])
                             {
+                                case "!digcommands":
+                                    OstBot.connection.Send(PlayerIOClient.Message.Create("say", "commands: !xp, !level, !inventory, !xpleft, !buy <item> <amount>, !sell <item> <amount>, "));
+                                    break;
+
                                 case "!generate":
                                     if (name == "ostkaka" || name == "gustav9797")
                                     {
@@ -183,6 +187,126 @@ namespace OstBot_2_
                                     break;
 
                                 //case "!cheat":
+
+                                case "!xp":
+                                    lock (OstBot.playerListLock)
+                                        OstBot.connection.Send("say", "Your xp: " + OstBot.playerList[userId].digXp);
+                                    break;
+                                case "!level":
+                                    lock (OstBot.playerListLock)
+                                        OstBot.connection.Send("say", "Your level: " + OstBot.playerList[userId].digLevel);
+                                    break;
+                                case "!inventory":
+                                    {
+                                        lock(OstBot.playerListLock)
+                                            OstBot.connection.Send("say", OstBot.playerList[userId].inventory.GetContents());
+                                    }
+                                    break;
+                                case "!save":
+                                    {
+                                        lock (OstBot.playerListLock)
+                                            OstBot.playerList[userId].Save();
+                                    }
+                                    break;
+
+                                case "!setshop":
+                                    {
+                                        int x = OstBot.playerList[userId].blockX;
+                                        int y = OstBot.playerList[userId].blockY;
+                                        Shop.SetLocation(x, y);
+                                        OstBot.connection.Send("say", "Shop set at " + x + " " + y);
+                                        OstBot.room.DrawBlock(Block.CreateBlock(0, x, y, 9, 0));
+                                    }
+                                    break;
+                                case "!money":
+                                    {
+                                        lock (OstBot.playerListLock)
+                                            OstBot.connection.Send("say", "Your money: " + OstBot.playerList[userId].digMoney);
+                                    }
+                                    break;
+                                case "!setmoney":
+                                    {
+                                    }
+                                    break;
+                                case "!buy":
+                                    {
+                                        lock (OstBot.playerList)
+                                        {
+                                            BotPlayer p = OstBot.playerList[userId];
+                                            if (p.blockX > Shop.xPos - 2 && p.blockX < Shop.xPos + 2)
+                                            {
+                                                if (p.blockY > Shop.yPos - 2 && p.blockY < Shop.yPos + 2)
+                                                {
+                                                    if (arg.Length > 1)
+                                                    {
+                                                        if (DigBlockMap.itemTranslator.ContainsKey(arg[1].ToLower()))
+                                                        {
+                                                            InventoryItem item = DigBlockMap.itemTranslator[arg[1].ToLower()];
+                                                            int itemPrice = Shop.GetBuyPrice(item);
+
+                                                            int amount = 1;
+                                                            if (arg.Length >= 3)
+                                                                int.TryParse(arg[2], out amount);
+                                                            if (p.digMoney >= (itemPrice * amount))
+                                                            {
+                                                                p.digMoney -= itemPrice;
+                                                                p.inventory.AddItem(new InventoryItem(item.GetData()), amount);
+                                                                OstBot.connection.Send("say", "Item bought!");
+                                                            }
+                                                            else
+                                                                OstBot.connection.Send("say", "You do not have enough money.");
+                                                        }
+                                                        else
+                                                            OstBot.connection.Send("say", "The requested item does not exist.");
+                                                    }
+                                                    else
+                                                        OstBot.connection.Send("say", "Please specify what you want to buy.");
+                                                }
+                                            }
+                                            OstBot.connection.Send("say", p.name + ": You aren't near the shop.");
+                                        }
+                                    }
+                                    break;
+                                case "!sell":
+                                    {
+                                        lock (OstBot.playerList)
+                                        {
+                                            BotPlayer p = OstBot.playerList[userId];
+                                            if (p.blockX > Shop.xPos - 2 && p.blockX < Shop.xPos + 2)
+                                            {
+                                                if (p.blockY > Shop.yPos - 2 && p.blockY < Shop.yPos + 2)
+                                                {
+                                                    if (arg.Length > 1)
+                                                    {
+                                                        string itemName = arg[1].ToLower();
+                                                        if (DigBlockMap.itemTranslator.ContainsKey(itemName))
+                                                        {
+                                                            InventoryItem item = DigBlockMap.itemTranslator[itemName];
+                                                            int itemSellPrice = Shop.GetSellPrice(item);
+                                                            int amount = 1;
+                                                            if (arg.Length >= 3)
+                                                                int.TryParse(arg[2], out amount);
+                                                            if (p.inventory.Contains(item) != -1 && p.inventory.GetItemCount(item) >= amount)
+                                                            {
+                                                                p.digMoney += itemSellPrice * amount;
+                                                                if (!p.inventory.RemoveItem(item, amount))
+                                                                    throw new Exception("Could not remove item?D:");
+                                                                OstBot.connection.Send("say", "Item sold! You received " + (itemSellPrice * amount) + " money.");
+                                                            }
+                                                            else
+                                                                OstBot.connection.Send("say", "You do not have enough of that item.");
+                                                        }
+                                                        else
+                                                            OstBot.connection.Send("say", "The item does not exist.");
+                                                    }
+                                                    else
+                                                        OstBot.connection.Send("say", "Please specify what you want to sell.");
+                                                }
+                                            }
+                                            OstBot.connection.Send("say", p.name + ": You aren't near the shop.");
+                                        }
+                                    }
+                                    break;
 
                             }
                         }

@@ -62,6 +62,14 @@ namespace OstBot_2_
             }).Start();
         }
 
+        ~OstBot()
+        {
+            foreach (var pair in playerList)
+            {
+                pair.Value.Save();
+            }
+        }
+
         public static void Login(string server, string email, string password)
         {
             isBB = (server == "blocking-blocks-u4zmkxjugu0ap8xqbymw");
@@ -146,125 +154,7 @@ namespace OstBot_2_
                                     Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
                                 }
                                 break;
-                            case "!xp":
-                                connection.Send("say", "Your xp: " + playerList[playerId].digXp);
-                                break;
-                            case "!level":
-                                connection.Send("say", "Your level: " + playerList[playerId].digLevel);
-                                break;
-                            case "!inventory":
-                                {
-                                    connection.Send("say", playerList[playerId].inventory.GetContents());
-                                }
-                                break;
-                            case "!save":
-                                {
-                                    playerList[playerId].Save();
-                                }
-                                break;
-                            case "!load":
-                                {
-                                    playerList[playerId].Load();
-                                }
-                                break;
-
-                            case "!setshop":
-                                {
-                                    int x = playerList[playerId].blockX;
-                                    int y = playerList[playerId].blockY;
-                                    Shop.SetLocation(x, y);
-                                    connection.Send("say", "Shop set at " + x + " " + y);
-                                    room.DrawBlock(Block.CreateBlock(0, x, y, 9, 0));
-                                }
-                                break;
-                            case "!money":
-                                {
-                                    connection.Send("say", "Your money: " + playerList[playerId].digMoney);
-                                }
-                                break;
-                            case "!setmoney":
-                                {
-                                }
-                                break;
-                            case "!buy":
-                                {
-                                    lock (OstBot.playerList)
-                                    {
-                                        BotPlayer p = playerList[playerId];
-                                        if (p.blockX > Shop.xPos - 2 && p.blockX < Shop.xPos + 2)
-                                        {
-                                            if (p.blockY > Shop.yPos - 2 && p.blockY < Shop.yPos + 2)
-                                            {
-                                                if (message.Length > 1)
-                                                {
-                                                    if (DigBlockMap.itemTranslator.ContainsKey(message[1].ToLower()))
-                                                    {
-                                                        InventoryItem item = DigBlockMap.itemTranslator[message[1].ToLower()];
-                                                        int itemPrice = Shop.GetBuyPrice(item);
-
-                                                        int amount = 1;
-                                                        if (message.Length >= 3)
-                                                            int.TryParse(message[2], out amount);
-                                                        if (p.digMoney >= (itemPrice * amount))
-                                                        {
-                                                            p.digMoney -= itemPrice;
-                                                            p.inventory.AddItem(new InventoryItem(item.GetData()), amount);
-                                                            connection.Send("say", "Item bought!");
-                                                        }
-                                                        else
-                                                            connection.Send("say", "You do not have enough money.");
-                                                    }
-                                                    else
-                                                        connection.Send("say", "The requested item does not exist.");
-                                                }
-                                                else
-                                                    connection.Send("say", "Please specify what you want to buy.");
-                                            }
-                                        }
-                                        connection.Send("say", p.name + ": You aren't near the shop.");
-                                    }
-                                }
-                                break;
-                            case "!sell":
-                                {
-                                    lock (OstBot.playerList)
-                                    {
-                                        BotPlayer p = playerList[playerId];
-                                        if (p.blockX > Shop.xPos - 2 && p.blockX < Shop.xPos + 2)
-                                        {
-                                            if (p.blockY > Shop.yPos - 2 && p.blockY < Shop.yPos + 2)
-                                            {
-                                                if (message.Length > 1)
-                                                {
-                                                    string itemName = message[1].ToLower();
-                                                    if (DigBlockMap.itemTranslator.ContainsKey(itemName))
-                                                    {
-                                                        InventoryItem item = DigBlockMap.itemTranslator[itemName];
-                                                        int itemSellPrice = Shop.GetSellPrice(item);
-                                                        int amount = 1;
-                                                        if (message.Length >= 3)
-                                                            int.TryParse(message[2], out amount);
-                                                        if (p.inventory.Contains(item) != -1 && p.inventory.GetItemCount(item) >= amount)
-                                                        {
-                                                            p.digMoney += itemSellPrice * amount;
-                                                            if (!p.inventory.RemoveItem(item, amount))
-                                                                throw new Exception("Could not remove item?D:");
-                                                            connection.Send("say", "Item sold! You received " + (itemSellPrice * amount) + " money.");
-                                                        }
-                                                        else
-                                                            connection.Send("say", "You do not have enough of that item.");
-                                                    }
-                                                    else
-                                                        connection.Send("say", "The item does not exist.");
-                                                }
-                                                else
-                                                    connection.Send("say", "Please specify what you want to sell.");
-                                            }
-                                        }
-                                        connection.Send("say", p.name + ": You aren't near the shop.");
-                                    }
-                                }
-                                break;
+                            
                         }
                     }
                     break;
@@ -331,6 +221,11 @@ namespace OstBot_2_
 
             lock (playerList)
             {
+                foreach (var pair in playerList)
+                {
+                    pair.Value.Save();
+                }
+
                 nameList = null;
                 playerList = null;
             }
@@ -395,34 +290,24 @@ namespace OstBot_2_
             {
                 case "Boolean":
                     return m.GetBoolean(index);
-                    break;
                 case "Int":
                     return m.GetInt(index);
-                    break;
                 case "UInt":
                     return m.GetUInt(index);
-                    break;
                 case "Long":
                     return m.GetLong(index);
-                    break;
                 case "Ulong":
                     return m.GetULong(index);
-                    break;
                 case "Double":
                     return m.GetDouble(index);
-                    break;
                 case "Float":
                     return m.GetFloat(index);
-                    break;
                 case "Single":
                     return m.GetFloat(index);
-                    break;
                 case "String":
                     return m.GetString(index);
-                    break;
                 case "Byte[]":
                     return m.GetByteArray(index);
-                    break;
 
                 default:
                     return 0;
