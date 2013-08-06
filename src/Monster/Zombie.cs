@@ -14,58 +14,47 @@ namespace OstBot_2_
         Block zombieBlock = null;
         Block zombieOldBlock = null;
         BotPlayer targetBotPlayer = null;
-        int zombieDetectRadius = 8;
         Stopwatch updateTimer = new Stopwatch();
-        Stopwatch drawTimer = new Stopwatch();
 
         public Zombie(int x, int y)
             : base(x, y)
         {
             zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
             updateTimer.Start();
-            drawTimer.Start();
         }
 
-        ~Zombie()
+        public static double GetDistanceBetween(BotPlayer player, int targetX, int targetY)
         {
-
+            double a = player.blockX - targetX;
+            double b = player.blockY - targetY;
+            double distance = Math.Sqrt(a * a + b * b);
+            return distance;
         }
 
         public override void Update()
         {
-            if (targetBotPlayer == null) //Find a player to target
+            lock (OstBot.playerList)
             {
-                lock (OstBot.playerList)
+                double lowestDistance = 0;
+                BotPlayer lowestDistancePlayer = null;
+                foreach (BotPlayer player in OstBot.playerList.Values)
                 {
-                    foreach (BotPlayer player in OstBot.playerList.Values)
+                    double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
+                    if (currentDistance < lowestDistance || lowestDistance == 0)
                     {
-                        if (player.blockX < xBlock + zombieDetectRadius && player.blockX > xBlock - zombieDetectRadius)
-                        {
-                            if (player.blockY < yBlock + zombieDetectRadius && player.blockY > yBlock - zombieDetectRadius)
-                            {
-                                //Player is within detection radius
-                                targetBotPlayer = player;
-                                break;
-                            }
-                        }
+                        lowestDistance = currentDistance;
+                        lowestDistancePlayer = player;
                     }
                 }
+                if (lowestDistancePlayer != null)
+                    targetBotPlayer = lowestDistancePlayer;
             }
-            else if (targetBotPlayer != null)
+            if (targetBotPlayer != null)
             {
-                //targetBotPlayer = OstBot.playerList[OstBot.nameList[targetPlayer]];
-                //Console.WriteLine("Current position: X" + xBlock + " Y" + yBlock);
-                //if (this.pathToGo == null || this.pathToGo.Count == 0 || targetBotPlayer.blockX != pathFinding.targetX || targetBotPlayer.blockY != pathFinding.targetY)
-                //{
-                //zombieOldBlock = Block.CreateBlock(0, (xOldPos / 16), (yOldPos / 16), 4, 0);
-                //OstBot.room.DrawBlock(zombieOldBlock);
-
                 pathFinding = null;
                 pathFinding = new PathFinding();
 
                 Stack<Square> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
-                //}
-                //Console.WriteLine(targetBotPlayer.blockX + " target " + targetBotPlayer.blockY);
 
                 if (pathToGo != null && pathToGo.Count != 0)
                 {
@@ -78,13 +67,10 @@ namespace OstBot_2_
                         Square next = pathToGo.Pop();
                         xBlock = next.x;
                         yBlock = next.y;
-                        //if (xOldPos != xPos || yOldPos != yPos)
-                        {
-                            zombieOldBlock = Block.CreateBlock(0, (xOldPos / 16), (yOldPos / 16), 4, 0);
-                            OstBot.room.DrawBlock(zombieOldBlock);
-                            zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
-                            OstBot.room.DrawBlock(zombieBlock);
-                        }
+                        zombieOldBlock = Block.CreateBlock(0, (xOldPos / 16), (yOldPos / 16), 4, 0);
+                        OstBot.room.DrawBlock(zombieOldBlock);
+                        zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
+                        OstBot.room.DrawBlock(zombieBlock);
                     }
                 }
 
@@ -94,22 +80,6 @@ namespace OstBot_2_
                 }*/
             }
             base.Update();
-        }
-
-        public override void Draw()
-        {
-            /*if (drawTimer.ElapsedMilliseconds >= 400)
-            {
-                drawTimer.Restart();
-                if (xOldPos != xPos || yOldPos != yPos)
-                {
-                    zombieOldBlock = Block.CreateBlock(0, (xOldPos / 16), (yOldPos / 16), 4, 0);
-                    OstBot.room.DrawBlock(zombieOldBlock);
-                    zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
-                    OstBot.room.DrawBlock(zombieBlock);
-                }
-            }*/
-            base.Draw();
         }
     }
 }

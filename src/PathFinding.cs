@@ -14,7 +14,13 @@ namespace OstBot_2_
         public int G;
         public int H;
         public Square parent;
-        public int F { get { return G + H; } set { F = value; } }
+        public int F 
+        { 
+            get 
+            { 
+                return G + H; 
+            } 
+        }
         public Square(int x, int y, int G, int H, Square parent)
         {
             this.x = x;
@@ -100,13 +106,16 @@ namespace OstBot_2_
 
             }
             Stack<Square> finalPath = new Stack<Square>();
-            Square currentSquare = closedSquares.Pop();
-            while (currentSquare != null && currentSquare.parent != null)
+            if (closedSquares.Count > 0)
             {
-                Square parentOfCurrent = currentSquare.parent;
-                finalPath.Push(parentOfCurrent);
-                //Console.WriteLine("Added square to path X:" + parentOfCurrent.x + " Y:" + parentOfCurrent.y);
-                currentSquare = parentOfCurrent;
+                Square currentSquare = closedSquares.Pop();
+                while (currentSquare != null && currentSquare.parent != null)
+                {
+                    Square parentOfCurrent = currentSquare.parent;
+                    finalPath.Push(parentOfCurrent);
+                    //Console.WriteLine("Added square to path X:" + parentOfCurrent.x + " Y:" + parentOfCurrent.y);
+                    currentSquare = parentOfCurrent;
+                }
             }
             return finalPath;
         }
@@ -121,7 +130,6 @@ namespace OstBot_2_
                 if (parent == null || s.F < parent.F)
                 {
                     parent = s;
-                    parent.F = s.F;
                 }
             }
 
