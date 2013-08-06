@@ -11,11 +11,10 @@ namespace OstBot_2_
     {
         public int x;
         public int y;
-        public int thisG = 0;
         public int G;
         public int H;
         public Square parent;
-        public int F { get { return G + H; } }
+        public int F { get { return G + H; } set { F = value; } }
         public Square(int x, int y, int G, int H, Square parent)
         {
             this.x = x;
@@ -64,39 +63,22 @@ namespace OstBot_2_
     {
         public Stack<Square> closedSquares = new Stack<Square>();
         public List<Square> openSquares = new List<Square>();
-        //public Dictionary<Point, Square> squareData = new Dictionary<Point, Square>();
 
-        static List<Point> additionalCostSquares = new List<Point> { 
-            new Point(1, 1), 
-            new Point(-1, 1), 
-            new Point(1, 1), 
-            new Point(1, -1)};
-
-        static List<Point> adjacentSquares = new List<Point> { 
-            new Point(1, 1), 
-            new Point(-1, 1), 
-            new Point(1, 1), 
-            new Point(1, -1),
-            new Point(1, 0), 
-            new Point(-1, 0), 
-            new Point(0, 1), 
-            new Point(0, -1)};
-
-        public int startX = 0;
-        public int startY = 0;
-        public int targetX = 0;
-        public int targetY = 0;
+        static Dictionary<Point, int> adjacentSquares = new Dictionary<Point, int>() { 
+            {new Point(1, 1), 14}, 
+            {new Point(-1, 1), 14}, 
+            {new Point(-1, -1), 14}, 
+            {new Point(1, -1), 14}, 
+            {new Point(1, 0), 10}, 
+            {new Point(-1, 0), 10}, 
+            {new Point(0, 1), 10}, 
+            {new Point(0, -1), 10}};
 
         public Stack<Square> Begin(int startX, int startY, int targetX, int targetY)
         {
-            this.startX = startX;
-            this.startY = startY;
-            this.targetX = targetX;
-            this.targetY = targetY;
-
             Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), null);
-            openSquares.Add(startingSquare); //Add the starting square (or node) to the open list.
-            GetCloseSquareData();
+            openSquares.Add(startingSquare);
+            GetCloseSquareData(targetX, targetY);
             if (openSquares.Count == 0)
             {
                 int lowestH = -1;
@@ -123,83 +105,62 @@ namespace OstBot_2_
             {
                 Square parentOfCurrent = currentSquare.parent;
                 finalPath.Push(parentOfCurrent);
-                Console.WriteLine("Added square to path X:" + parentOfCurrent.x + " Y:" + parentOfCurrent.y);
+                //Console.WriteLine("Added square to path X:" + parentOfCurrent.x + " Y:" + parentOfCurrent.y);
                 currentSquare = parentOfCurrent;
             }
-            if (finalPath.Count != 0)
-                Console.WriteLine("Returned " + finalPath.Count + " items!");
             return finalPath;
         }
 
 
 
-        public void GetCloseSquareData()
+        public void GetCloseSquareData(int targetX, int targetY)
         {
-            int lowestF = 0;            //Look for the lowest F cost square on the open list. We refer to this as the current square.
             Square parent = null;
             foreach (Square s in openSquares)
             {
-                if (s.F < lowestF || lowestF == 0)
+                if (parent == null || s.F < parent.F)
                 {
-                    lowestF = s.F;
                     parent = s;
+                    parent.F = s.F;
                 }
             }
-            if (parent == null)
+
+            if (parent == null || parent.x == targetX && parent.y == targetY || openSquares.Count == 0)
                 return;
-            int parentX = parent.x;
-            int parentY = parent.y;
-            closedSquares.Push(parent); //Switch it to the closed list.
-            if (parentX == targetX && parentY == targetY || openSquares.Count == 0)  //Stop when you: Add the target square to the closed list, in which case the path has been found (see note below), or fail to find the target square, and the open list is empty. In this case, there is no path.   
-            {
-                return;
-            }
+
+            closedSquares.Push(parent);
             openSquares.Remove(parent);
-            foreach (Point adjacentSquare_ in adjacentSquares) //For each of the 8 squares adjacent to this current square …
+
+            foreach (KeyValuePair<Point, int> adjacentSquareVar in adjacentSquares)
             {
-                int additionalCost = 0;
-                if (additionalCostSquares.Contains(adjacentSquare_))
-                    additionalCost = 4;
-                Square adjacentSquare = new Square(parentX + adjacentSquare_.X, parentY + adjacentSquare_.Y, 0, 0, parent);
-                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId == 4) //If it is not walkable or if it is on the closed list, ignore it.
-                {
-                    if (!openSquares.Contains(adjacentSquare))//If it isn’t on the open list, add it to the open list. //Make the current square the parent of this square. Record the F, G, and H costs of the square. 
+                int additionalCost = adjacentSquareVar.Value;
+                int adjacentSquareX = parent.x + adjacentSquareVar.Key.X;
+                int adjacentSquareY = parent.y + adjacentSquareVar.Key.Y;
+                Square adjacentSquare = new Square(adjacentSquareX, adjacentSquareY, parent.G + 10 + additionalCost, CalculateH(adjacentSquareX, adjacentSquareY, targetX, targetY), parent);
+
+                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId == 4)
+
+                    if (!openSquares.Contains(adjacentSquare))
                     {
-                        adjacentSquare.G = parent.G + 10 + additionalCost;
-                        adjacentSquare.H = CalculateH(adjacentSquare.x, adjacentSquare.x, targetX, targetY);
-                        adjacentSquare.thisG = 10 + additionalCost;
-                        openSquares.Add(adjacentSquare);//Make the current square the parent of this square. Record the F, G, and H costs of the square. 
+                        openSquares.Add(adjacentSquare);
                     }
-                    else //If it is on the open list already,
+                    else
                     {
                         int oldG = adjacentSquare.G;
                         int newG = parent.G + 10 + additionalCost;
-                        if (newG < oldG)  //check to see if the G score for that square is lower if we use the parent square to get there.
+                        if (newG < oldG)
                         {
                             adjacentSquare.parent = parent;
                             adjacentSquare.G = newG;
                         }
                     }
-                }
             }
-            GetCloseSquareData();
+            GetCloseSquareData(targetX, targetY);
         }
 
         public int CalculateH(int x1, int y1, int x2, int y2)
         {
-            int x = 0;
-            int y = 0;
-            if (x1 >= x2)
-                x = x1 - x2;
-            else
-                x = x2 - x1;
-
-            if (y1 >= y2)
-                y = y1 - y2;
-            else
-                y = y2 - y1;
-
-            return x + y;
+            return 10 * (Math.Abs(x1 - x2) + Math.Abs(y1 - y2));
         }
     }
 
