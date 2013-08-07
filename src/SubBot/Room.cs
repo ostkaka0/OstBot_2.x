@@ -151,6 +151,24 @@ namespace OstBot_2_
                         break;
 
                     case "reset":
+
+                        lock (blockMapLock)
+                        {
+                            for (int l = 0; l < 2; l++)
+                            {
+                                blockMap[l] = new List<Block>[width, height];
+
+                                for (int x = 0; x < width; x++)
+                                {
+                                    for (int y = 0; y < height; y++)
+                                    {
+                                        blockMap[l][x, y] = new List<Block>();
+                                        if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
+                                            blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
+                                    }
+                                }
+                            }
+                        }
                         LoadMap(m, 0);
                         break;
 

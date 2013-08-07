@@ -243,7 +243,7 @@ namespace OstBot_2_
                         }
                     }
                     break;
-                case "tele":
+                /*case "1":
                     {
                         lock (playerList)
                         {
@@ -255,15 +255,101 @@ namespace OstBot_2_
                                     if(!p.isgod)
                                         p.
                                 }*/
-                            }
-                            else
-                            {
-                                int id = m.GetInt(1);
-                                playerList[id].x = m.GetInt(2) * 16;
-                                playerList[id].y = m.GetInt(3) * 16;
-                                playerList[id].isDead = false;
-                            }
+                /*
+         }
+         else
+         {
+             int id = m.GetInt(1);
+             playerList[id].x = m.GetInt(2) * 16;
+             playerList[id].y = m.GetInt(3) * 16;
+         }
+     }
+ }
+ break;*/
+                case "teleport":
+                    {
+                        BotPlayer _loc_5 = null;
+                        int playerId = m.GetInt(0);
+                        double xPos = m.GetInt(1);
+                        double yPos = m.GetInt(2);
+                        /*if (param2 == myid)
+                        {
+                            player.setPosition(param3, param4);
                         }
+                        else
+                        {*/
+                        _loc_5 = playerList[playerId];
+                        //if (_loc_5)
+                        //{
+                        _loc_5.setPosition(xPos, yPos);
+                        //}
+                        //}
+                        //return;
+                    }
+                    break;
+                case "tele":
+                    {
+                        int playerId = 0;
+                        int xPos = 0;
+                        int yPos = 0;
+                        BotPlayer player = null;
+                        bool _loc_2 = m.GetBoolean(0);
+                        uint _loc_3 = 1;
+                        while (_loc_3 < m.Count)
+                        {
+
+                            playerId = m.GetInt(_loc_3);
+                            xPos = m.GetInt((_loc_3 + 1));
+                            yPos = m.GetInt(_loc_3 + 2);
+                            player = playerList[playerId];
+                            if (player != null)
+                            {
+                                player.x = xPos;
+                                player.y = yPos;
+                                player.respawn();
+                                if (_loc_2)
+                                {
+                                    player.resetCoins();
+                                    player.purple = false;
+                                }
+                            }
+                            /*if (_loc_4 == myid)
+                            {
+                                player.x = _loc_5;
+                                player.y = _loc_6;
+                                this.x = -_loc_6;
+                                this.y = -_loc_6;
+                                player.respawn();
+                                if (_loc_2)
+                                {
+                                    player.resetCoins();
+                                    player.purple = false;
+                                    world.hidePurple = false;
+                                    world.resetCoins();
+                                    world.resetSecrets();
+                                }
+                            }*/
+                            _loc_3 += 3;
+                        }
+                    }// end function
+                    break;
+                case "kill":
+                    {
+                        BotPlayer _loc_3 = null;
+                        int playerId = m.GetInt(0);
+                        /*if (param2 == myid)
+                        {
+                            player.killPlayer();
+                        }
+                        else
+                        {*/
+                        _loc_3 = playerList[playerId];
+                        //if (_loc_3)
+                        //{
+                        _loc_3.killPlayer();
+                        //}
+                        //}
+                        return;
                     }
                     break;
                 case "access":

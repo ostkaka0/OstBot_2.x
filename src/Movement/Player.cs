@@ -73,6 +73,8 @@ namespace OstBot_2_
         private double modoffset = 0;
         //private Rectangle modRect;
         //private bool slowMotion = true;
+        public bool isDead = false;
+        public DateTime last_respawn;
 
 
         int cx;
@@ -462,6 +464,36 @@ namespace OstBot_2_
                 currentSY = osy;
                 doney = true;
             }
+            return;
+        }// end function
+
+        public void respawn()
+        {
+            _modifierX = 0;
+            _modifierY = 0;
+            modifierX = 0;
+            modifierY = 0;
+            _speedX = 0;
+            _speedY = 0;
+            speedX = 0;
+            speedY = 0;
+            this.isDead = false;
+            //this.deathsend = false;
+            this.last_respawn = DateTime.Now;
+            return;
+        }// end function
+
+        public void setPosition(double param1, double param2)
+        {
+            x = param1;
+            y = param2;
+            return;
+        }// end function
+
+        public void killPlayer()
+        {
+            this.isDead = true;
+            //this.deadAnim = AnimationManager.animRandomDeath();
             return;
         }// end function
 
