@@ -77,7 +77,10 @@ namespace OstBot_2_
                 catch (Exception e)
                 {
                     shutdown();
-                    throw e;
+                    if (e != null)
+                        throw e;
+                    else
+                        throw null;
                 }
 
             }).Start();
