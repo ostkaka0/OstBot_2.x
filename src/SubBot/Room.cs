@@ -28,7 +28,8 @@ namespace OstBot_2_
 
         bool blockDrawerEnabled = false;
 
-        public Room() : base()
+        public Room()
+            : base()
         {
 
         }
@@ -98,159 +99,175 @@ namespace OstBot_2_
             return Block.CreateBlock(layer, x, y, 0, -1);
         }
 
-        public override void onMessage(object sender, PlayerIOClient.Message m)
+        public void DrawBorder()
         {
-            try
+            for (int x = 0; x < width; x++)
             {
-                switch (m.Type)
+                for (int y = 0; y < height; y++)
                 {
-                    case "init":
-                        bool isOwner;
-                        if (OstBot.isBB)
-                        {
-                            //worldKey = rot13(m[3].ToString());
-                            //botPlayerID = m.GetInt(6);
-                            width = m.GetInt(10);
-                            height = m.GetInt(11);
-                            //hasCode = m.GetBoolean(8);
-                            isOwner = m.GetBoolean(9);
-                        }
-                        else
-                        {
-                            //worldKey = rot13(m[5].ToString());
-                            //botPlayerID = m.GetInt(6);
-                            width = m.GetInt(12);
-                            height = m.GetInt(13);
-                            //hasCode = m.GetBoolean(10);
-                            isOwner = m.GetBoolean(11);
-                        }
-
-
-                        if (isOwner)
-                            BlockDrawer();
-
-                        lock (blockMapLock)
-                        {
-                            for (int l = 0; l < 2; l++)
-                            {
-                                blockMap[l] = new List<Block>[width, height];
-
-                                for (int x = 0; x < width; x++)
-                                {
-                                    for (int y = 0; y < height; y++)
-                                    {
-                                        blockMap[l][x, y] = new List<Block>();
-                                        if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
-                                            blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
-                                    }
-                                }
-                            }
-                        }
-
-                        LoadMap(m, 18);
-                        break;
-
-                    case "reset":
-
-                        lock (blockMapLock)
-                        {
-                            for (int l = 0; l < 2; l++)
-                            {
-                                blockMap[l] = new List<Block>[width, height];
-
-                                for (int x = 0; x < width; x++)
-                                {
-                                    for (int y = 0; y < height; y++)
-                                    {
-                                        blockMap[l][x, y] = new List<Block>();
-                                        if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
-                                            blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
-                                    }
-                                }
-                            }
-                        }
-                        LoadMap(m, 0);
-                        break;
-
-                    case "access":
-                        Thread.Sleep(5);
-                        BlockDrawer();
-                        break;
-
-                    case "b":
-                        while (blockMap == null)
-                            Thread.Sleep(5);
-
-                        lock (blockMap)
-                            blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
-
-                        Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
-
-                        lock (blockSetLock)
-                        {
-                            if (blockSet.Contains(block))
-                                blockSet.Remove(block);
-                        }
-
-                        lock (blockSetLock)
-                        {
-                            foreach (Block b in blockSet)
-                            {
-                                if (block.Equals(b))
-                                {
-                                    blockSet.Remove(b);
-                                    break;
-                                }
-                                /*if (Block.Compare(block, b))
-                                {
-                                    if (b.x == block.x && b.y == block.y)
-                                    {
-                                        blockSet.Remove(b);
-                                    }
-                                }*/
-                            }
-                        }
-
-                        break;
-
-                    case "bc":
-                        lock (blockMap)
-                            blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
-                        break;
-
-                    case "bs":
-                        goto case "bc";
-
-                    case "pt":
-                        goto case "bc";
-
-                    case "lb":
-                        goto case "bc";
-
-                    case "br":
-                        goto case "bc";
-                    case "clear":
-                        {
-                            //Redstone.ClearLists();
-                            for (int x = 1; x < width - 2; x++)
-                            {
-                                for (int y = 1; y < height - 2; y++)
-                                {
-                                    for (int i = 0; i < blockMap.Length; i++)
-                                        blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
-                                }
-                            }
-                        }
-                        break;
-
-
+                    if (x == 0 || y == 0 || x == width || y == width)
+                    {
+                        blockMap[0][x, y].Clear();
+                        blockMap[0][x, y].Add(Block.CreateBlock(0, x, y, 9, -1));
+                        Console.WriteLine("Border at " + x + " " + y);
+                    }
                 }
             }
-            catch (Exception e)
+        }
+
+        public override void onMessage(object sender, PlayerIOClient.Message m)
+        {
+            //try
+            //{
+            switch (m.Type)
             {
-                OstBot.shutdown();
-                throw e;
+                case "init":
+                    bool isOwner;
+                    if (OstBot.isBB)
+                    {
+                        //worldKey = rot13(m[3].ToString());
+                        //botPlayerID = m.GetInt(6);
+                        width = m.GetInt(10);
+                        height = m.GetInt(11);
+                        //hasCode = m.GetBoolean(8);
+                        isOwner = m.GetBoolean(9);
+                    }
+                    else
+                    {
+                        //worldKey = rot13(m[5].ToString());
+                        //botPlayerID = m.GetInt(6);
+                        width = m.GetInt(12);
+                        height = m.GetInt(13);
+                        //hasCode = m.GetBoolean(10);
+                        isOwner = m.GetBoolean(11);
+                    }
+
+
+                    if (isOwner)
+                        BlockDrawer();
+
+                    lock (blockMapLock)
+                    {
+                        for (int l = 0; l < 2; l++)
+                        {
+                            blockMap[l] = new List<Block>[width, height];
+
+                            for (int x = 0; x < width; x++)
+                            {
+                                for (int y = 0; y < height; y++)
+                                {
+                                    blockMap[l][x, y] = new List<Block>();
+                                }
+                            }
+                        }
+                    }
+
+                    LoadMap(m, 18);
+                    break;
+
+                case "reset":
+
+                    lock (blockMapLock)
+                    {
+                        for (int l = 0; l < 2; l++)
+                        {
+                            blockMap[l] = new List<Block>[width, height];
+
+                            for (int x = 0; x < width; x++)
+                            {
+                                for (int y = 0; y < height; y++)
+                                {
+                                    blockMap[l][x, y] = new List<Block>();
+                                }
+                            }
+                        }
+                    }
+                    LoadMap(m, 0);
+                    break;
+
+                case "access":
+                    Thread.Sleep(5);
+                    BlockDrawer();
+                    break;
+
+                case "b":
+                    while (blockMap == null)
+                        Thread.Sleep(5);
+
+                    lock (blockMap)
+                        blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
+
+                    Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
+
+                    lock (blockSetLock)
+                    {
+                        if (blockSet.Contains(block))
+                            blockSet.Remove(block);
+                    }
+
+                    lock (blockSetLock)
+                    {
+                        foreach (Block b in blockSet)
+                        {
+                            if (block.Equals(b))
+                            {
+                                blockSet.Remove(b);
+                                break;
+                            }
+                            /*if (Block.Compare(block, b))
+                            {
+                                if (b.x == block.x && b.y == block.y)
+                                {
+                                    blockSet.Remove(b);
+                                }
+                            }*/
+                        }
+                    }
+
+                    break;
+
+                case "bc":
+                    lock (blockMap)
+                        blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
+                    break;
+
+                case "bs":
+                    goto case "bc";
+
+                case "pt":
+                    goto case "bc";
+
+                case "lb":
+                    goto case "bc";
+
+                case "br":
+                    goto case "bc";
+                case "clear":
+                    {
+                        //Redstone.ClearLists();
+                        for (int x = 0; x < width; x++)
+                        {
+                            for (int y = 0; y < height; y++)
+                            {
+                                for (int i = 0; i < blockMap.Length; i++)
+                                {
+                                    blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
+                                }
+                            }
+                        }
+                        DrawBorder();
+
+                    }
+                    break;
+
+
             }
+            //}
+            //catch (Exception e)
+            //{
+            // OstBot.shutdown();
+            //throw e;
+            //}
         }
 
         public override void onDisconnect(object sender, string reason)
@@ -340,6 +357,7 @@ namespace OstBot_2_
                         }
                     }
                 }
+                DrawBorder();
             }
         }
 

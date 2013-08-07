@@ -243,29 +243,6 @@ namespace OstBot_2_
                         }
                     }
                     break;
-                /*case "1":
-                    {
-                        lock (playerList)
-                        {
-                            bool allReset = m.GetBoolean(0);
-                            if (allReset)
-                            {
-                                /*foreach (BotPlayer p in playerList)
-                                {
-                                    if(!p.isgod)
-                                        p.
-                                }*/
-                /*
-         }
-         else
-         {
-             int id = m.GetInt(1);
-             playerList[id].x = m.GetInt(2) * 16;
-             playerList[id].y = m.GetInt(3) * 16;
-         }
-     }
- }
- break;*/
                 case "teleport":
                     {
                         BotPlayer _loc_5 = null;
@@ -349,7 +326,6 @@ namespace OstBot_2_
                         _loc_3.killPlayer();
                         //}
                         //}
-                        return;
                     }
                     break;
                 case "access":
