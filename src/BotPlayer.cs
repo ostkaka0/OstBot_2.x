@@ -74,7 +74,8 @@ namespace OstBot_2_
                 {
                     xp = value;
                     if (xp >= xpRequired)
-                        xpRequired = getXpRequired(++digLevel_);
+                        while (xp >= xpRequired)
+                            xpRequired = getXpRequired(++digLevel_);
                     else
                         xpRequired = getXpRequired((digLevel_ = getLevel(xp)));
                 }

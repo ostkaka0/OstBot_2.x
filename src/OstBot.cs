@@ -76,6 +76,7 @@ namespace OstBot_2_
                 }
                 catch (Exception e)
                 {
+                    int line = new StackTrace(e, true).GetFrame(0).GetFileLineNumber();
                     shutdown();
                     if (e != null)
                         throw e;
@@ -100,11 +101,11 @@ namespace OstBot_2_
 
         public static void shutdown()
         {
-            connected = false;
-            client = null;
-            connection = null;
-            room = null;
-            dig = null;
+            //connected = false;
+            //client = null;
+            //connection = null;
+            //room = null;
+            //dig = null;
 
             if (playerList != null)
             {
@@ -113,7 +114,7 @@ namespace OstBot_2_
                     foreach (var pair in OstBot.playerList)
                         pair.Value.Save();
 
-                    playerList = null;
+                    //playerList = null;
                 }
             }
         }

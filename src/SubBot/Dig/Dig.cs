@@ -32,23 +32,29 @@ namespace OstBot_2_
                     double distanceFromCenter = Math.Sqrt(Math.Pow(x - width / 2, 2) + Math.Pow(y - height / 2, 2))/((width>height)? width:height)*2;
                     double distanceFromCenterPow = Math.Pow(distanceFromCenter, 1.5);
 
-                    if (noise.GetValue(x * 0.0625F, y * 0.0625F, 0) > 1-0.25*distanceFromCenterPow)
+                    if (noise.GetValue(x * 0.015625F, y * 0.015625F, 0) > 1 - 0.25F * distanceFromCenterPow)                 // slimy mud
                         blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
 
-                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 32) > 1 - 0.75 * distanceFromCenter)
+                    else if (noise.GetValue(x * 0.03125F, y * 0.03125F, 32) > 1 - 0.75 * distanceFromCenter)      // slimy mud
                         blockMap[x, y] = Block.CreateBlock(0, x, y, 21, -1);
 
-                    else if (noise.GetValue(x * 0.0078125F, y * 0.0078125F, 64) > 1 - 0.25 * distanceFromCenterPow)
-                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
+                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 48) > 1 - 0.5 * distanceFromCenter) // Water
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, BlockIds.Blocks.JungleRuins.BLUE, -1);
 
-                    else if (noise.GetValue(x * 0.0625F, y * 0.0625F, 96) > 1 - 0.75 * distanceFromCenter)
-                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.GRAY, -1);
+                    else if (noise.GetValue(x * 0.03125F, y * 0.03125F, 64) > 1 - 0.75 * distanceFromCenter) //wet stones
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, (int)BlockIds.Blocks.JungleRuins.BLUE, -1);
+
+                    else if (noise.GetValue(x * 0.0078125F, y * 0.0078125F, 96) > 1 - 0.75 * distanceFromCenterPow)
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, (int)Blocks.Stone, -1);
 
                     else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 128) > 1 - 0.75 * distanceFromCenter)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, (int)Blocks.Stone, -1);
 
-                    else
+                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 160) > 0)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
+                    else
+                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN-1, -1);
+
                 }
             }
 
@@ -165,7 +171,7 @@ namespace OstBot_2_
                                                     catch (Exception e)
                                                     {
                                                         OstBot.shutdown();
-                                                        throw e;
+                                                        throw new Exception("wtf", e);
                                                     }
                                                 }).Start();
                                         }
@@ -198,16 +204,20 @@ namespace OstBot_2_
 
                                     case "!xp":
                                         lock (OstBot.playerList)
-                                            OstBot.connection.Send("say", "Your xp: " + OstBot.playerList[userId].digXp);
+                                            OstBot.connection.Send("say", name + ": Your xp: " + OstBot.playerList[userId].digXp);
+                                        break;
+                                    case "!xpleft":
+                                        lock (OstBot.playerList)
+                                            OstBot.connection.Send("say", name + ": You need" + (OstBot.playerList[userId].xpRequired_ - OstBot.playerList[userId].digXp).ToString() + " for level " + OstBot.playerList[userId].digLevel.ToString());
                                         break;
                                     case "!level":
                                         lock (OstBot.playerList)
-                                            OstBot.connection.Send("say", "Your level: " + OstBot.playerList[userId].digLevel);
+                                            OstBot.connection.Send("say", name + ": Level: " + OstBot.playerList[userId].digLevel);
                                         break;
                                     case "!inventory":
                                         {
                                             lock (OstBot.playerList)
-                                                OstBot.connection.Send("say", OstBot.playerList[userId].inventory.ToString());
+                                                OstBot.connection.Send("say", name + ": " + OstBot.playerList[userId].inventory.ToString());
                                         }
                                         break;
                                     case "!save":
@@ -232,7 +242,7 @@ namespace OstBot_2_
                                     case "!money":
                                         {
                                             lock (OstBot.playerList)
-                                                OstBot.connection.Send("say", "Your money: " + OstBot.playerList[userId].digMoney);
+                                                OstBot.connection.Send("say", name + ": Money: " + OstBot.playerList[userId].digMoney);
                                         }
                                         break;
                                     case "!setmoney":
@@ -265,16 +275,16 @@ namespace OstBot_2_
                                                                     OstBot.connection.Send("say", "Item bought!");
                                                                 }
                                                                 else
-                                                                    OstBot.connection.Send("say", "You do not have enough money.");
+                                                                    OstBot.connection.Send("say", name + ": You do not have enough money.");
                                                             }
                                                             else
-                                                                OstBot.connection.Send("say", "The requested item does not exist.");
+                                                                OstBot.connection.Send("say", name + ": The requested item does not exist.");
                                                         }
                                                         else
-                                                            OstBot.connection.Send("say", "Please specify what you want to buy.");
+                                                            OstBot.connection.Send("say", name + ": Please specify what you want to buy.");
                                                     }
                                                 }
-                                                OstBot.connection.Send("say", p.name + ": You aren't near the shop.");
+                                                OstBot.connection.Send("say", name + ": You aren't near the shop.");
                                             }
                                         }
                                         break;
@@ -302,19 +312,19 @@ namespace OstBot_2_
                                                                     p.digMoney += itemSellPrice * amount;
                                                                     if (!p.inventory.RemoveItem(item, amount))
                                                                         throw new Exception("Could not remove item?D:");
-                                                                    OstBot.connection.Send("say", "Item sold! You received " + (itemSellPrice * amount) + " money.");
+                                                                    OstBot.connection.Send("say", name + ": Item sold! You received " + (itemSellPrice * amount) + " money.");
                                                                 }
                                                                 else
-                                                                    OstBot.connection.Send("say", "You do not have enough of that item.");
+                                                                    OstBot.connection.Send("say", name + ": You do not have enough of that item.");
                                                             }
                                                             else
-                                                                OstBot.connection.Send("say", "The item does not exist.");
+                                                                OstBot.connection.Send("say", name + ": The item does not exist.");
                                                         }
                                                         else
-                                                            OstBot.connection.Send("say", "Please specify what you want to sell.");
+                                                            OstBot.connection.Send("say", name + ": Please specify what you want to sell.");
                                                     }
                                                 }
-                                                OstBot.connection.Send("say", p.name + ": You aren't near the shop.");
+                                                OstBot.connection.Send("say", name + ": You aren't near the shop.");
                                             }
                                         }
                                         break;
@@ -452,6 +462,8 @@ namespace OstBot_2_
                 return true;
             else if (blockId >= 16 && blockId <= 21)
                 return true;
+            else if (blockId == BlockIds.Blocks.JungleRuins.BLUE)
+                return true;
             else
                 return false;
         }
@@ -504,7 +516,7 @@ namespace OstBot_2_
                     blockId = 4;
                     break;
 
-                case BlockIds.Blocks.Sand.GRAY:
+                case BlockIds.Blocks.JungleRuins.BLUE:
                     blockId = BlockIds.Action.Liquids.WATER;
                     break;
 
