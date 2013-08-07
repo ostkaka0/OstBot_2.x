@@ -40,6 +40,7 @@ namespace OstBot_2_
                     {
                         if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                         {
+<<<<<<< HEAD
                             playerTickTimer.Restart();
 
                             lock (zombieList)
@@ -49,6 +50,15 @@ namespace OstBot_2_
                                     if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
                                     {
                                         zombieStopWatch.Restart();
+=======
+                            if (zombieStopWatch.ElapsedMilliseconds >= 10)
+                            {
+                                zombieStopWatch.Restart();
+                                foreach (Zombie zombie in zombieList)
+                                {
+                                    if (zombie != null)
+                                    {
+>>>>>>> 64bcc5813707c67a60cc32aed4b7d266802d62c1
                                         zombie.Update();
                                         zombie.Draw();
                                         //System.Threading.Thread.Sleep(1000);
