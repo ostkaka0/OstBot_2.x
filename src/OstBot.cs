@@ -258,6 +258,7 @@ namespace OstBot_2_
                                 int id = m.GetInt(1);
                                 playerList[id].x = m.GetInt(2) * 16;
                                 playerList[id].y = m.GetInt(3) * 16;
+                                playerList[id].isDead = false;
                             }
                         }
                     }

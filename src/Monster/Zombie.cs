@@ -67,17 +67,20 @@ namespace OstBot_2_
                         Square next = pathToGo.Pop();
                         xBlock = next.x;
                         yBlock = next.y;
-                        zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, 0);
-                        OstBot.room.DrawBlock(zombieOldBlock);
                         zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
                         OstBot.room.DrawBlock(zombieBlock);
+                        zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, 0);
+                        OstBot.room.DrawBlock(zombieOldBlock);
                     }
                 }
 
                 if (targetBotPlayer != null)
                 {
-                    if (GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
+                    if (!targetBotPlayer.isDead && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
+                    {
+                        targetBotPlayer.isDead = true;
                         OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
+                    }
                 }
             }
             base.Update();
