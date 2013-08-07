@@ -12,7 +12,7 @@ namespace OstBot_2_
 {
     public class Room : SubBot
     {
-        List<Block>[][,] blockMap = new List<Block>[2][,];
+        public List<Block>[][,] blockMap = new List<Block>[2][,];
         object blockMapLock = 0;
 
         public static Queue<Block> blockQueue = new Queue<Block>();
@@ -105,7 +105,7 @@ namespace OstBot_2_
             {
                 for (int y = 0; y < height; y++)
                 {
-                    if (x == 0 || y == 0 || x == width || y == width)
+                    if (x == 0 || y == 0 || x == width - 1 || y == width - 1)
                     {
                         blockMap[0][x, y].Clear();
                         blockMap[0][x, y].Add(Block.CreateBlock(0, x, y, 9, -1));

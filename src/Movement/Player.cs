@@ -104,21 +104,24 @@ namespace OstBot_2_
             this.name = name;
             this.frame = frame; this.coins = coins; this.level = level;
             this.isgod = isGod; this.ismod = isMod; this.bla = bla; this.purple = purple; this.isFriend = isFriend;
+            this.that = this as SynchronizedObject;
             that.x = xPos;
             that.y = yPos;
             this.queue = new List<int>(Config.physics_queue_length);
         }
 
-        public int overlaps(BlObject param1)
+        public int overlaps(SynchronizedObject param1)
         {
             List<int> _loc_8 = new List<int>();
             //int _loc_10 = 0;
             int _loc_11 = 0;
-            if (param1.x / 16 < 0 || param1.y / 16 < 0 || param1.x / 16 >= OstBot.room.width || param1.y / 16 >= OstBot.room.height)
+            if (param1.x < 16 || param1.y < 16 || param1.x >= OstBot.room.width * 16 || param1.y >= OstBot.room.height * 16)
             {
-                //Console.WriteLine("returning 1, worldborder");
+                //Console.WriteLine("returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
                 return 1;
             }
+            //else
+            //Console.WriteLine("NOT returning 1, worldborder, " + name + " " + param1.x / 16 + " " + param1.y / 16);
             Player _loc_2 = this;
 
             if (_loc_2.isgod || _loc_2.ismod)
@@ -467,6 +470,20 @@ namespace OstBot_2_
             return;
         }// end function
 
+        public void setPosition(double param1, double param2)
+        {
+            x = param1;
+            y = param2;
+            return;
+        }// end function
+
+        public void killPlayer()
+        {
+            this.isDead = true;
+            //this.deadAnim = AnimationManager.animRandomDeath();
+            return;
+        }// end function
+
         public void respawn()
         {
             _modifierX = 0;
@@ -480,20 +497,6 @@ namespace OstBot_2_
             this.isDead = false;
             //this.deathsend = false;
             this.last_respawn = DateTime.Now;
-            return;
-        }// end function
-
-        public void setPosition(double param1, double param2)
-        {
-            x = param1;
-            y = param2;
-            return;
-        }// end function
-
-        public void killPlayer()
-        {
-            this.isDead = true;
-            //this.deadAnim = AnimationManager.animRandomDeath();
             return;
         }// end function
 

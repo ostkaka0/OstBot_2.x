@@ -67,10 +67,16 @@ namespace OstBot_2_
                         Square next = pathToGo.Pop();
                         xBlock = next.x;
                         yBlock = next.y;
-                        zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
-                        OstBot.room.DrawBlock(zombieBlock);
-                        zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, 0);
-                        OstBot.room.DrawBlock(zombieOldBlock);
+                        zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, -1);
+                        Room.blockSet.Add(zombieBlock);
+                        Room.blockQueue.Enqueue(zombieBlock);
+                        //OstBot.room.blockMap[0][xBlock, yBlock].Add(zombieBlock);
+                       // OstBot.room.DrawBlock(zombieBlock);
+                        zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, -1);
+                        Room.blockSet.Add(zombieOldBlock);
+                        Room.blockQueue.Enqueue(zombieOldBlock);
+                        //OstBot.room.blockMap[0][xOldBlock, yOldBlock].Add(zombieOldBlock);
+                        //OstBot.room.DrawBlock(zombieOldBlock);
                     }
                 }
 
@@ -78,7 +84,7 @@ namespace OstBot_2_
                 {
                     if (!targetBotPlayer.isDead && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
                     {
-                        targetBotPlayer.isDead = true;
+                        targetBotPlayer.killPlayer();
                         OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
                     }
                 }

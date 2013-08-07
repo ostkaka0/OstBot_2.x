@@ -24,6 +24,7 @@ namespace OstBot_2_
         public static Room room;
         public static Dig dig;
         Stopwatch playerTickTimer = new Stopwatch();
+        public static Random r = new Random();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
@@ -214,6 +215,21 @@ namespace OstBot_2_
                                     }
                                 }
                                 break;
+                            case "!zombies":
+                                {
+                                    for (int i = 0; i < 50; i++)
+                                    {
+                                        int x = r.Next(1, room.width - 1);
+                                        int y = r.Next(1, room.height - 1);
+                                        Zombie zombie = new Zombie(x * 16, y * 16);
+                                        lock (zombieList)
+                                        {
+                                            zombieList.Add(zombie);
+                                        }
+                                        //room.DrawBlock(Block.CreateBlock(0, x, y, 32, 0));
+                                    }
+                                }
+                                break;
 
                         }
                     }
@@ -279,35 +295,38 @@ namespace OstBot_2_
                             playerId = m.GetInt(_loc_3);
                             xPos = m.GetInt((_loc_3 + 1));
                             yPos = m.GetInt(_loc_3 + 2);
-                            player = playerList[playerId];
-                            if (player != null)
+                            if (playerList.ContainsKey(playerId))
                             {
-                                player.x = xPos;
-                                player.y = yPos;
-                                player.respawn();
-                                if (_loc_2)
+                                player = playerList[playerId];
+                                if (player != null)
                                 {
-                                    player.resetCoins();
-                                    player.purple = false;
+                                    player.x = xPos;
+                                    player.y = yPos;
+                                    player.respawn();
+                                    if (_loc_2)
+                                    {
+                                        player.resetCoins();
+                                        player.purple = false;
+                                    }
                                 }
+                                /*if (_loc_4 == myid)
+                                {
+                                    player.x = _loc_5;
+                                    player.y = _loc_6;
+                                    this.x = -_loc_6;
+                                    this.y = -_loc_6;
+                                    player.respawn();
+                                    if (_loc_2)
+                                    {
+                                        player.resetCoins();
+                                        player.purple = false;
+                                        world.hidePurple = false;
+                                        world.resetCoins();
+                                        world.resetSecrets();
+                                    }
+                                }*/
                             }
-                            /*if (_loc_4 == myid)
-                            {
-                                player.x = _loc_5;
-                                player.y = _loc_6;
-                                this.x = -_loc_6;
-                                this.y = -_loc_6;
-                                player.respawn();
-                                if (_loc_2)
-                                {
-                                    player.resetCoins();
-                                    player.purple = false;
-                                    world.hidePurple = false;
-                                    world.resetCoins();
-                                    world.resetSecrets();
-                                }
-                            }*/
-                            _loc_3 += 3;
+                                _loc_3 += 3;
                         }
                     }// end function
                     break;
