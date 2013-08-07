@@ -38,36 +38,30 @@ namespace OstBot_2_
                 {
                     while (true)
                     {
-                        if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
-                        {
-<<<<<<< HEAD
-                            playerTickTimer.Restart();
 
+                        if (zombieStopWatch.ElapsedMilliseconds >= 100)
+                        {
+                            zombieStopWatch.Restart();
                             lock (zombieList)
                             {
                                 foreach (Zombie zombie in zombieList)
                                 {
-                                    if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
-                                    {
-                                        zombieStopWatch.Restart();
-=======
-                            if (zombieStopWatch.ElapsedMilliseconds >= 10)
-                            {
-                                zombieStopWatch.Restart();
-                                foreach (Zombie zombie in zombieList)
-                                {
                                     if (zombie != null)
                                     {
->>>>>>> 64bcc5813707c67a60cc32aed4b7d266802d62c1
                                         zombie.Update();
                                         zombie.Draw();
                                         //System.Threading.Thread.Sleep(1000);
                                     }
                                 }
                             }
-                            lock (playerList)
+                        }
+
+                        if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                        {
+                            playerTickTimer.Restart();
+                            try
                             {
-                                try
+                                lock (playerList)
                                 {
                                     foreach (Player player in OstBot.playerList.Values)
                                     {
@@ -75,12 +69,8 @@ namespace OstBot_2_
                                         //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
                                     }
                                 }
-                                catch (Exception e)
-                                {
-                                    shutdown();
-                                    throw e;
-                                }
                             }
+                            catch (Exception e) { throw e; }
                         }
                     }
                 }
@@ -89,19 +79,20 @@ namespace OstBot_2_
                     shutdown();
                     throw e;
                 }
+
             }).Start();
         }
 
         ~OstBot()
         {
             shutdown();
-            /*lock (playerList)
+            lock (playerList)
             {
                 foreach (var pair in playerList)
                 {
                     pair.Value.Save();
                 }
-            }*/
+            }
         }
 
         public static void shutdown()
@@ -198,7 +189,7 @@ namespace OstBot_2_
                     break;
 
                 case "say":
-                    lock (playerList)
+                    //lock (playerList)
                     {
                         //Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
                         int playerId = m.GetInt(0);
@@ -207,7 +198,7 @@ namespace OstBot_2_
                         {
                             case "!zombie":
                                 {
-                                    lock (playerList)
+                                    //lock (playerList)
                                     {
                                         Zombie zombie = new Zombie(playerList[playerId].blockX * 16, playerList[playerId].blockY * 16);
                                         lock (zombieList)
@@ -231,7 +222,8 @@ namespace OstBot_2_
                         {
                             BotPlayer player = new BotPlayer(m);
                             playerList.Add(m.GetInt(0), player);
-                            nameList.Add(player.name, m.GetInt(0));
+                            if (!nameList.ContainsKey(player.name))
+                                nameList.Add(player.name, m.GetInt(0));
                             Program.form1.listBox_PlayerList.Items.Add(player.name);
                         }
                     }
