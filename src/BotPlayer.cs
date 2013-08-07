@@ -46,7 +46,7 @@ namespace OstBot_2_
             {
                 digLevel_ = 0;
                 Pair<IFormatter, Stream> writeStuff = inventory.Load(@"data\" + name);
-                xp = (int)writeStuff.first.Deserialize(writeStuff.second);
+                digXp = (int)writeStuff.first.Deserialize(writeStuff.second);
                 digMoney_ = (int)writeStuff.first.Deserialize(writeStuff.second);
                 writeStuff.second.Close();
                 xpRequired = getXpRequired(digLevel);

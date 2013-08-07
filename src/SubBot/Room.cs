@@ -100,130 +100,138 @@ namespace OstBot_2_
 
         public override void onMessage(object sender, PlayerIOClient.Message m)
         {
-            switch (m.Type)
+            try
             {
-                case "init":
-                    bool isOwner;
-                    if (OstBot.isBB)
-                    {
-                        //worldKey = rot13(m[3].ToString());
-                        //botPlayerID = m.GetInt(6);
-                        width = m.GetInt(10);
-                        height = m.GetInt(11);
-                        //hasCode = m.GetBoolean(8);
-                        isOwner = m.GetBoolean(9);
-                    }
-                    else
-                    {
-                        //worldKey = rot13(m[5].ToString());
-                        //botPlayerID = m.GetInt(6);
-                        width = m.GetInt(12);
-                        height = m.GetInt(13);
-                        //hasCode = m.GetBoolean(10);
-                        isOwner = m.GetBoolean(11);
-                    }
-
-
-                    if (isOwner)
-                        BlockDrawer();
-
-                    lock (blockMapLock)
-                    {
-                        for (int l = 0; l < 2; l++)
+                switch (m.Type)
+                {
+                    case "init":
+                        bool isOwner;
+                        if (OstBot.isBB)
                         {
-                            blockMap[l] = new List<Block>[width, height];
+                            //worldKey = rot13(m[3].ToString());
+                            //botPlayerID = m.GetInt(6);
+                            width = m.GetInt(10);
+                            height = m.GetInt(11);
+                            //hasCode = m.GetBoolean(8);
+                            isOwner = m.GetBoolean(9);
+                        }
+                        else
+                        {
+                            //worldKey = rot13(m[5].ToString());
+                            //botPlayerID = m.GetInt(6);
+                            width = m.GetInt(12);
+                            height = m.GetInt(13);
+                            //hasCode = m.GetBoolean(10);
+                            isOwner = m.GetBoolean(11);
+                        }
 
-                            for (int x = 0; x < width; x++)
+
+                        if (isOwner)
+                            BlockDrawer();
+
+                        lock (blockMapLock)
+                        {
+                            for (int l = 0; l < 2; l++)
                             {
-                                for (int y = 0; y < height; y++)
+                                blockMap[l] = new List<Block>[width, height];
+
+                                for (int x = 0; x < width; x++)
                                 {
-                                    blockMap[l][x, y] = new List<Block>();
-                                    if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
-                                        blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
+                                    for (int y = 0; y < height; y++)
+                                    {
+                                        blockMap[l][x, y] = new List<Block>();
+                                        if (l == 0 && (x == 0 || x == width - 1) && (y == 0 || y == height - 1))
+                                            blockMap[l][x, y].Add(Block.CreateBlock(l, x, y, 9, -1));
+                                    }
                                 }
                             }
                         }
-                    }
 
-                    LoadMap(m, 18);
-                    break;
+                        LoadMap(m, 18);
+                        break;
 
-                case "reset":
-                    LoadMap(m, 0);
-                    break;
+                    case "reset":
+                        LoadMap(m, 0);
+                        break;
 
-                case "access":
-                    Thread.Sleep(5);
-                    BlockDrawer();
-                    break;
-
-                case "b":
-                    while (blockMap == null)
+                    case "access":
                         Thread.Sleep(5);
+                        BlockDrawer();
+                        break;
 
-                    lock (blockMap)
-                        blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
+                    case "b":
+                        while (blockMap == null)
+                            Thread.Sleep(5);
 
-                    Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
+                        lock (blockMap)
+                            blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
 
-                    lock (blockSetLock)
-                    {
-                        if (blockSet.Contains(block))
-                            blockSet.Remove(block);
-                    }
+                        Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
 
-                    lock (blockSetLock)
-                    {
-                        foreach (Block b in blockSet)
+                        lock (blockSetLock)
                         {
-                            if (block.Equals(b))
+                            if (blockSet.Contains(block))
+                                blockSet.Remove(block);
+                        }
+
+                        lock (blockSetLock)
+                        {
+                            foreach (Block b in blockSet)
                             {
-                                blockSet.Remove(b);
-                                break;
-                            }
-                            /*if (Block.Compare(block, b))
-                            {
-                                if (b.x == block.x && b.y == block.y)
+                                if (block.Equals(b))
                                 {
                                     blockSet.Remove(b);
+                                    break;
                                 }
-                            }*/
-                        }
-                    }
-
-                    break;
-
-                case "bc":
-                    lock (blockMap)
-                        blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
-                    break;
-
-                case "bs":
-                    goto case "bc";
-
-                case "pt":
-                    goto case "bc";
-
-                case "lb":
-                    goto case "bc";
-
-                case "br":
-                    goto case "bc";
-                case "clear":
-                    {
-                        //Redstone.ClearLists();
-                        for (int x = 1; x < width-2; x++)
-                        {
-                            for (int y = 1; y < height-2; y++)
-                            {
-                                for(int i = 0; i < blockMap.Length; i++)
-                                    blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
+                                /*if (Block.Compare(block, b))
+                                {
+                                    if (b.x == block.x && b.y == block.y)
+                                    {
+                                        blockSet.Remove(b);
+                                    }
+                                }*/
                             }
                         }
-                    }
-                    break;
+
+                        break;
+
+                    case "bc":
+                        lock (blockMap)
+                            blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
+                        break;
+
+                    case "bs":
+                        goto case "bc";
+
+                    case "pt":
+                        goto case "bc";
+
+                    case "lb":
+                        goto case "bc";
+
+                    case "br":
+                        goto case "bc";
+                    case "clear":
+                        {
+                            //Redstone.ClearLists();
+                            for (int x = 1; x < width - 2; x++)
+                            {
+                                for (int y = 1; y < height - 2; y++)
+                                {
+                                    for (int i = 0; i < blockMap.Length; i++)
+                                        blockMap[i][x, y].Add(Block.CreateBlock(0, x, y, 0, 0));
+                                }
+                            }
+                        }
+                        break;
 
 
+                }
+            }
+            catch (Exception e)
+            {
+                OstBot.shutdown();
+                throw e;
             }
         }
 
@@ -326,63 +334,71 @@ namespace OstBot_2_
                 blockDrawerEnabled = true;
                 new Thread(() =>
                 {
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-
-                    while (OstBot.connected)
+                    try
                     {
-                        while (OstBot.hasCode)
+
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+
+                        while (OstBot.connected)
                         {
-
-                            lock (blockQueueLock)
+                            while (OstBot.hasCode)
                             {
-                                if (blockQueue.Count != 0)
-                                {
 
-                                    if (blockSet.Contains(blockQueue.Peek()))
+                                lock (blockQueueLock)
+                                {
+                                    if (blockQueue.Count != 0)
                                     {
-                                        //Console.WriteLine("jag är en sjuk sak");
-                                        blockQueue.Peek().Send(OstBot.connection);
-                                        lock (blockRepairQueue)
-                                            blockRepairQueue.Enqueue(blockQueue.Dequeue());
-                                        //Console.WriteLine("!!");
+
+                                        if (blockSet.Contains(blockQueue.Peek()))
+                                        {
+                                            //Console.WriteLine("jag är en sjuk sak");
+                                            blockQueue.Peek().Send(OstBot.connection);
+                                            lock (blockRepairQueue)
+                                                blockRepairQueue.Enqueue(blockQueue.Dequeue());
+                                            //Console.WriteLine("!!");
+                                        }
+                                        else
+                                        {
+                                            blockQueue.Dequeue();
+                                            continue;
+                                        }
+                                    }
+                                    else if (blockRepairQueue.Count != 0)
+                                    {
+                                        while (!blockSet.Contains(blockRepairQueue.Peek()))
+                                        {
+                                            blockRepairQueue.Dequeue();
+                                            if (blockRepairQueue.Count == 0)
+                                                break;
+                                        }
+
+                                        if (blockRepairQueue.Count == 0)
+                                            continue;
+
+                                        blockRepairQueue.Peek().Send(OstBot.connection);
+                                        blockRepairQueue.Enqueue(blockRepairQueue.Dequeue());
                                     }
                                     else
                                     {
-                                        blockQueue.Dequeue();
+                                        Thread.Sleep(5);
                                         continue;
                                     }
-                                }
-                                else if (blockRepairQueue.Count != 0)
-                                {
-                                    while (!blockSet.Contains(blockRepairQueue.Peek()))
+                                    double sleepTime = drawSleep - stopwatch.Elapsed.TotalMilliseconds;
+                                    if (sleepTime >= 0.5)
                                     {
-                                        blockRepairQueue.Dequeue();
-                                        if (blockRepairQueue.Count == 0)
-                                            break;
+                                        Thread.Sleep((int)sleepTime);
                                     }
-
-                                    if (blockRepairQueue.Count == 0)
-                                        continue;
-
-                                    blockRepairQueue.Peek().Send(OstBot.connection);
-                                    blockRepairQueue.Enqueue(blockRepairQueue.Dequeue());
+                                    stopwatch.Reset();
                                 }
-                                else
-                                {
-                                    Thread.Sleep(5);
-                                    continue;
-                                }
-                                double sleepTime = drawSleep - stopwatch.Elapsed.TotalMilliseconds;
-                                if (sleepTime >= 0.5)
-                                {
-                                    Thread.Sleep((int)sleepTime);
-                                }
-                                stopwatch.Reset();
                             }
+                            Thread.Sleep(100);
                         }
-                        Thread.Sleep(100);
+                    }
+                    catch (Exception e)
+                    {
+                        OstBot.shutdown();
+                        throw e;
                     }
 
                 }).Start();

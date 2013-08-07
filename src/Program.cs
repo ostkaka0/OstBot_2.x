@@ -22,6 +22,7 @@ namespace OstBot_2_
             }
             catch (Exception e)
             {
+                OstBot.shutdown();
                 ostBot = null;
                 throw e;
             }

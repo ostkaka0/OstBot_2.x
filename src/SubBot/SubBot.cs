@@ -14,18 +14,26 @@ namespace OstBot_2_
         {
             new Thread(() =>
                 {
-                    while (!OstBot.connected)
-                        Thread.Sleep(1000);
-
-                    Stopwatch stopwatch = new Stopwatch();
-                    stopwatch.Start();
-                    while (OstBot.connected)
+                    try
                     {
-                        Update();
-                        int time = (int)stopwatch.ElapsedMilliseconds;
-                        if (time < 5000)
-                            Thread.Sleep(5000 - time);
-                        stopwatch.Reset();
+                        while (!OstBot.connected)
+                            Thread.Sleep(1000);
+
+                        Stopwatch stopwatch = new Stopwatch();
+                        stopwatch.Start();
+                        while (OstBot.connected)
+                        {
+                            Update();
+                            int time = (int)stopwatch.ElapsedMilliseconds;
+                            if (time < 500)
+                                Thread.Sleep(500 - time);
+                            stopwatch.Reset();
+                        }
+                    }
+                    catch (Exception e)
+                    {
+                        OstBot.shutdown();
+                        throw e;
                     }
                 }).Start();
         }

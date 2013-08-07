@@ -150,7 +150,7 @@ namespace OstBot_2_
             }
         }
 
-        public string GetContents()
+        public override string ToString()
         {
             lock (storedItems)
             {

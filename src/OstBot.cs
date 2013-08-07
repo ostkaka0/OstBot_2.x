@@ -34,49 +34,82 @@ namespace OstBot_2_
             zombieStopWatch.Start();
             new System.Threading.Thread(() =>
             {
-                while (true)
+                try
                 {
-                    if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                    while (true)
                     {
-                        playerTickTimer.Restart();
+                        if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                        {
+                            playerTickTimer.Restart();
 
-                        lock (zombieList)
-                        {
-                            foreach (Zombie zombie in zombieList)
+                            lock (zombieList)
                             {
-                                if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
+                                foreach (Zombie zombie in zombieList)
                                 {
-                                    zombieStopWatch.Restart();
-                                    zombie.Update();
-                                    zombie.Draw();
-                                    //System.Threading.Thread.Sleep(1000);
+                                    if (zombie != null && zombieStopWatch.ElapsedMilliseconds >= 10)
+                                    {
+                                        zombieStopWatch.Restart();
+                                        zombie.Update();
+                                        zombie.Draw();
+                                        //System.Threading.Thread.Sleep(1000);
+                                    }
                                 }
                             }
-                        }
-                        lock (playerList)
-                        {
-                            try
+                            lock (playerList)
                             {
-                                foreach (Player player in OstBot.playerList.Values)
+                                try
                                 {
-                                    player.tick();
-                                    //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                    foreach (Player player in OstBot.playerList.Values)
+                                    {
+                                        player.tick();
+                                        //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                    }
+                                }
+                                catch (Exception e)
+                                {
+                                    shutdown();
+                                    throw e;
                                 }
                             }
-                            catch (Exception e) { throw e; }
                         }
                     }
+                }
+                catch (Exception e)
+                {
+                    shutdown();
+                    throw e;
                 }
             }).Start();
         }
 
         ~OstBot()
         {
-            lock (playerList)
+            shutdown();
+            /*lock (playerList)
             {
                 foreach (var pair in playerList)
                 {
                     pair.Value.Save();
+                }
+            }*/
+        }
+
+        public static void shutdown()
+        {
+            connected = false;
+            client = null;
+            connection = null;
+            room = null;
+            dig = null;
+
+            if (playerList != null)
+            {
+                lock (OstBot.playerList)
+                {
+                    foreach (var pair in OstBot.playerList)
+                        pair.Value.Save();
+
+                    playerList = null;
                 }
             }
         }

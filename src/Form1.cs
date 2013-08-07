@@ -83,7 +83,7 @@ namespace OstBot_2_
 
         private void Form1_Closing(object sender, EventArgs e)
         {
-
+            OstBot.shutdown();
         }
 
         private void CheckKeys(object sender, System.Windows.Forms.KeyPressEventArgs e)

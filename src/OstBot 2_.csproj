@@ -58,6 +58,8 @@
     <Compile Include="BetterMath.cs" />
     <Compile Include="Block.cs" />
     <Compile Include="BotPlayer.cs" />
+    <Compile Include="Building\Building.cs" />
+    <Compile Include="Building\Structure\Structure.cs" />
     <Compile Include="Inventory\DigMap.cs" />
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
