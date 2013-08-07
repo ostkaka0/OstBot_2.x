@@ -33,10 +33,10 @@ namespace OstBot_2_
 
         public override void Update()
         {
+            double lowestDistance = 0;
+            BotPlayer lowestDistancePlayer = null;
             lock (OstBot.playerList)
             {
-                double lowestDistance = 0;
-                BotPlayer lowestDistancePlayer = null;
                 foreach (BotPlayer player in OstBot.playerList.Values)
                 {
                     double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
@@ -46,9 +46,9 @@ namespace OstBot_2_
                         lowestDistancePlayer = player;
                     }
                 }
-                if (lowestDistancePlayer != null)
-                    targetBotPlayer = lowestDistancePlayer;
             }
+            if (lowestDistancePlayer != null)
+                targetBotPlayer = lowestDistancePlayer;
             if (targetBotPlayer != null)
             {
                 pathFinding = null;
@@ -76,7 +76,7 @@ namespace OstBot_2_
 
                 if (targetBotPlayer != null)
                 {
-                    if(GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
+                    if (GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
                         OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
                 }
             }

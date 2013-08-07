@@ -99,7 +99,7 @@ namespace OstBot_2_
                 }
                 if (parent != null)
                 {
-                    Console.WriteLine("Lowest H pos X:" + parent.x + " Y:" + parent.y);
+                    //Console.WriteLine("Lowest H pos X:" + parent.x + " Y:" + parent.y);
                     Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y);
                     return temp;
                 }
