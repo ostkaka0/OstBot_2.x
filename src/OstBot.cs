@@ -37,43 +37,43 @@ namespace OstBot_2_
             {
                 //try
                 //{
-                    while (true)
-                    {
+                while (true)
+                {
 
-                        if (zombieStopWatch.ElapsedMilliseconds >= 100)
+                    if (zombieStopWatch.ElapsedMilliseconds >= 100)
+                    {
+                        zombieStopWatch.Restart();
+                        lock (zombieList)
                         {
-                            zombieStopWatch.Restart();
-                            lock (zombieList)
+                            foreach (Zombie zombie in zombieList)
                             {
-                                foreach (Zombie zombie in zombieList)
+                                if (zombie != null)
                                 {
-                                    if (zombie != null)
-                                    {
-                                        zombie.Update();
-                                        zombie.Draw();
-                                        //System.Threading.Thread.Sleep(1000);
-                                    }
+                                    zombie.Update();
+                                    zombie.Draw();
+                                    //System.Threading.Thread.Sleep(1000);
                                 }
                             }
                         }
-
-                        if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
-                        {
-                            playerTickTimer.Restart();
-                            //try
-                            //{
-                                lock (playerList)
-                                {
-                                    foreach (Player player in OstBot.playerList.Values)
-                                    {
-                                        player.tick();
-                                        //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
-                                    }
-                                }
-                            //}
-                            //catch (Exception e) { throw e; }
-                        }
                     }
+
+                    if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                    {
+                        playerTickTimer.Restart();
+                        //try
+                        //{
+                        lock (playerList)
+                        {
+                            foreach (Player player in OstBot.playerList.Values)
+                            {
+                                player.tick();
+                                //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                            }
+                        }
+                        //}
+                        //catch (Exception e) { throw e; }
+                    }
+                }
                 /*}
                 catch (Exception e)
                 {
@@ -236,15 +236,14 @@ namespace OstBot_2_
                     break;
 
                 case "add":
-                    lock (playerList)
                     {
-                        if (!playerList.ContainsKey(m.GetInt(0)))
+                        lock (playerList)
                         {
                             BotPlayer player = new BotPlayer(m);
                             playerList.Add(m.GetInt(0), player);
                             if (!nameList.ContainsKey(player.name))
                                 nameList.Add(player.name, m.GetInt(0));
-                            Program.form1.listBox_PlayerList.Items.Add(player.name);
+                            //Program.form1.listBox_PlayerList.Items.Add(player.name);
                         }
                     }
                     break;
@@ -326,7 +325,7 @@ namespace OstBot_2_
                                     }
                                 }*/
                             }
-                                _loc_3 += 3;
+                            _loc_3 += 3;
                         }
                     }// end function
                     break;

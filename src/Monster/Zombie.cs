@@ -52,6 +52,7 @@ namespace OstBot_2_
                 targetBotPlayer = lowestDistancePlayer;
             if (targetBotPlayer != null)
             {
+                pathFinding = new ZombiePathFinding();
                 Stack<Square> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
 
                 if (pathToGo != null && pathToGo.Count != 0)

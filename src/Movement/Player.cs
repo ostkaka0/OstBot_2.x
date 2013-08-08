@@ -142,7 +142,7 @@ namespace OstBot_2_
         double ty = 0;
 
         public Player(int ID, string name, int frame, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
-            : base(null)
+            : base(null, 16)
         {
             //this.Ding = Player_Ding;
             //this.Crown = Player_Crown;
@@ -267,7 +267,7 @@ namespace OstBot_2_
                                 if (hitTest((int)(xTest + _loc_2.x + xx * 16), (int)(yTest + _loc_2.y + yy * 16)))
                                 {
                                     double _loc_9 = _loc_4;
-                                    _loc_11 = OstBot.room.getMapBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16), 0).blockId;
+                                    _loc_11 = OstBot.room.getBotMapBlock(0, (int)(((xx * 16) + _loc_2.x + xTest) / 16), (int)(((yy * 16) + _loc_2.y + yTest) / 16)).blockId;
                                     if (ItemId.isSolid(_loc_11))
                                     {
                                         switch (_loc_11)
@@ -637,7 +637,7 @@ namespace OstBot_2_
             double _loc_9 = 0;
             int _loc_10 = 0;
             double _loc_11 = 0;
-            current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
+            current = OstBot.room.getBotMapBlock(0, cx, cy).blockId;
             if (!isgodmod && current == ItemId.WORLD_PORTAL)
             {
                 if (spacejustdown && !worldportalsend)
@@ -661,7 +661,7 @@ namespace OstBot_2_
                     lastPortal = new Point(cx << 4, cy << 4);
 
                     //current = Form1.blockMap[cx, cy].ID;
-                    Block currentBlock = OstBot.room.getMapBlock(0, cx, cy, 0);
+                    Block currentBlock = OstBot.room.getBotMapBlock(0, cx, cy);
                     int currentTarget = currentBlock.pt_target;
                     //Console.WriteLine("entered portal with id " + currentBlock.thisID + " and target id " + currentTarget + " and rotation " + currentBlock.rotation);
 
@@ -670,7 +670,7 @@ namespace OstBot_2_
                     {
                         for (int y = 1; y < OstBot.room.height; y++)
                         {
-                            Block block = OstBot.room.getMapBlock(0, x, y, 0);
+                            Block block = OstBot.room.getBotMapBlock(0, x, y);
                             if (block.isPortal() && block.blockId == currentTarget)
                             {
                                 //Console.WriteLine("found portal target " + block.targetID);
@@ -684,10 +684,10 @@ namespace OstBot_2_
                         //Console.WriteLine("iter: " + loopIterator);
                         currentLoopPortal = targetPortalList[loopIterator];
                         //_loc_4 = world.getPortal(lastPortal.x >> 4, lastPortal.y >> 4).rotation;
-                        _loc_4 = OstBot.room.getMapBlock(0, lastPortal.X >> 4, lastPortal.Y >> 4, 0).pt_rotation;
+                        _loc_4 = OstBot.room.getBotMapBlock(0, lastPortal.X >> 4, lastPortal.Y >> 4).pt_rotation;
                         //Console.WriteLine("1: " + _loc_4);
                         //_loc_5 = world.getPortal(currentLoopPortal.x >> 4, currentLoopPortal.y >> 4).rotation;
-                        _loc_5 = OstBot.room.getMapBlock(0, currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4, 0).pt_rotation;
+                        _loc_5 = OstBot.room.getBotMapBlock(0, currentLoopPortal.X >> 4, currentLoopPortal.Y >> 4).pt_rotation;
                         //Console.WriteLine("2: " + _loc_5);
                         if (_loc_4 < _loc_5)
                         {
@@ -797,7 +797,7 @@ namespace OstBot_2_
             {
                 delayed = this.queue.Dequeue();
             }
-            this.current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
+            this.current = OstBot.room.getBotMapBlock(0, cx, cy).blockId;
             this.queue.Enqueue(this.current);
             if (this.current == 4 || ItemId.isClimbable(this.current))
             {
