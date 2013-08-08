@@ -13,14 +13,9 @@ namespace OstBot_2_
     public class Room : SubBot
     {
         public List<Block>[][,] blockMap = new List<Block>[2][,];
-        object blockMapLock = 0;
-
         public static Queue<Block> blockQueue = new Queue<Block>();
-        object blockQueueLock = 0;
         public static Queue<Block> blockRepairQueue = new Queue<Block>();
-        object blockRepairQueueLock = 0;
         public static HashSet<Block> blockSet = new HashSet<Block>();
-        object blockSetLock = 0;
 
         public int width;
         public int height;
@@ -43,10 +38,10 @@ namespace OstBot_2_
         {
             if (block == null)
                 return;
-            if (Block.Compare(getMapBlock(block.layer, block.x, block.y, 0), block))
+            if (Block.Compare(getBotMapBlock(block.layer, block.x, block.y), block))
                 return;
 
-            lock (blockSetLock)
+            lock (blockSet)
             {
                 //if (blockSet.Contains(block))
                 //    return;
@@ -83,9 +78,9 @@ namespace OstBot_2_
                 Thread.Sleep(100);
 
 
-            if (x > 0 && y > 0 && x < width && y < height)
+            if (x >= 0 && y >= 0 && x < width && y < height)
             {
-                lock (blockMapLock)
+                lock (blockMap)
                 {
                     if (blockMap[layer][x, y].Count > 0)
                     {
@@ -93,6 +88,36 @@ namespace OstBot_2_
                             return blockMap[layer][x, y][0];
                         else
                             return blockMap[layer][x, y][blockMap[layer][x, y].Count - 1 - rollbacks];
+                    }
+                }
+            }
+            return Block.CreateBlock(layer, x, y, 0, -1);
+        }
+
+        public Block getBotMapBlock(int layer, int x, int y)
+        {
+            if (x >= 0 && y >= 0 && x < width && y < height)
+            {
+                lock (blockSet)
+                {
+                    foreach (Block b in blockSet)
+                    {
+                        if (b.x == x && b.y == y && b.layer == layer)
+                            return b;
+                    }
+                }
+
+                while (blockMap == null)
+                    Thread.Sleep(100);
+
+                while (blockMap[layer] == null)
+                    Thread.Sleep(100);
+
+                lock (blockMap)
+                {
+                    if (blockMap[layer][x, y].Count > 0)
+                    {
+                        return blockMap[layer][x, y][blockMap[layer][x, y].Count - 1];
                     }
                 }
             }
@@ -146,7 +171,7 @@ namespace OstBot_2_
                     if (isOwner)
                         BlockDrawer();
 
-                    lock (blockMapLock)
+                    lock (blockMap)
                     {
                         for (int l = 0; l < 2; l++)
                         {
@@ -167,7 +192,7 @@ namespace OstBot_2_
 
                 case "reset":
 
-                    lock (blockMapLock)
+                    lock (blockMap)
                     {
                         for (int l = 0; l < 2; l++)
                         {
@@ -199,13 +224,13 @@ namespace OstBot_2_
 
                     Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
 
-                    lock (blockSetLock)
+                    lock (blockSet)
                     {
                         if (blockSet.Contains(block))
                             blockSet.Remove(block);
                     }
 
-                    lock (blockSetLock)
+                    lock (blockSet)
                     {
                         foreach (Block b in blockSet)
                         {
@@ -281,7 +306,7 @@ namespace OstBot_2_
 
         private void LoadMap(Message m, uint position)
         {
-            lock (blockMapLock)
+            lock (blockMap)
             {
                 byte[] xByteArray;
                 byte[] yByteArray;
@@ -381,7 +406,7 @@ namespace OstBot_2_
                             while (OstBot.hasCode)
                             {
 
-                                lock (blockQueueLock)
+                                lock (blockQueue)
                                 {
                                     if (blockQueue.Count != 0)
                                     {
