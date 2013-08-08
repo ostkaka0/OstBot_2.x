@@ -379,6 +379,7 @@ namespace OstBot_2_
                                 player.modifierY = modifierY;
                                 player.horizontal = xDir;
                                 player.vertical = yDir;
+                                OstBot.playerList[playerID] = player;
                             }
                         }
                     }
