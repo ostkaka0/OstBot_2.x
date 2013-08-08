@@ -67,7 +67,7 @@ namespace OstBot_2_
                                     foreach (Player player in OstBot.playerList.Values)
                                     {
                                         player.tick();
-                                        Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                        //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
                                     }
                                 }
                             //}
@@ -211,7 +211,7 @@ namespace OstBot_2_
                                             zombieList.Add(zombie);
                                         }
                                         room.DrawBlock(Block.CreateBlock(0, playerList[playerId].blockX, playerList[playerId].blockY, 32, 0));
-                                        //Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                        Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
                                     }
                                 }
                                 break;
@@ -379,7 +379,6 @@ namespace OstBot_2_
                                 player.modifierY = modifierY;
                                 player.horizontal = xDir;
                                 player.vertical = yDir;
-                                OstBot.playerList[playerID] = player;
                             }
                         }
                     }

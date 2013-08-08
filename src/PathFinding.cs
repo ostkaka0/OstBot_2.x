@@ -14,12 +14,12 @@ namespace OstBot_2_
         public int G;
         public int H;
         public Square parent;
-        public int F 
-        { 
-            get 
-            { 
-                return G + H; 
-            } 
+        public int F
+        {
+            get
+            {
+                return G + H;
+            }
         }
         public Square(int x, int y, int G, int H, Square parent)
         {
@@ -70,6 +70,9 @@ namespace OstBot_2_
         public Stack<Square> closedSquares = new Stack<Square>();
         public List<Square> openSquares = new List<Square>();
 
+        public List<Point> squaresToAvoid = new List<Point>();
+        public List<int> walkableBlocks = new List<int>();
+
         static Dictionary<Point, int> adjacentSquares = new Dictionary<Point, int>() { 
             {new Point(1, 1), 14}, 
             {new Point(-1, 1), 14}, 
@@ -82,6 +85,8 @@ namespace OstBot_2_
 
         public Stack<Square> Begin(int startX, int startY, int targetX, int targetY)
         {
+            closedSquares = new Stack<Square>();
+            openSquares = new List<Square>();
             Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), null);
             openSquares.Add(startingSquare);
             GetCloseSquareData(targetX, targetY);
@@ -149,7 +154,7 @@ namespace OstBot_2_
                 int adjacentSquareY = parent.y + adjacentSquareVar.Key.Y;
                 Square adjacentSquare = new Square(adjacentSquareX, adjacentSquareY, parent.G + 10 + additionalCost, CalculateH(adjacentSquareX, adjacentSquareY, targetX, targetY), parent);
 
-                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId == 4)
+                if (!closedSquares.Contains(adjacentSquare) && !squaresToAvoid.Contains(new Point(adjacentSquare.x, adjacentSquare.y)) && walkableBlocks.Contains(OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId))
 
                     if (!openSquares.Contains(adjacentSquare))
                     {
