@@ -154,7 +154,7 @@ namespace OstBot_2_
                 int adjacentSquareY = parent.y + adjacentSquareVar.Key.Y;
                 Square adjacentSquare = new Square(adjacentSquareX, adjacentSquareY, parent.G + 10 + additionalCost, CalculateH(adjacentSquareX, adjacentSquareY, targetX, targetY), parent);
 
-                if (!closedSquares.Contains(adjacentSquare) && !squaresToAvoid.Contains(new Point(adjacentSquare.x, adjacentSquare.y)) && walkableBlocks.Contains(OstBot.room.getMapBlock(0, adjacentSquare.x, adjacentSquare.y, 0).blockId))
+                if (!closedSquares.Contains(adjacentSquare) && !squaresToAvoid.Contains(new Point(adjacentSquare.x, adjacentSquare.y)) && walkableBlocks.Contains(OstBot.room.getBotMapBlock(0, adjacentSquare.x, adjacentSquare.y).blockId))
 
                     if (!openSquares.Contains(adjacentSquare))
                     {
