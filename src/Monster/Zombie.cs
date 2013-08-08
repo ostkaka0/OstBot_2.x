@@ -15,7 +15,6 @@ namespace OstBot_2_
         Block zombieOldBlock = null;
         BotPlayer targetBotPlayer = null;
         Stopwatch updateTimer = new Stopwatch();
-        Stopwatch ostkakaTimer = new Stopwatch();
 
         public Zombie(int x, int y)
             : base(x, y)
@@ -52,7 +51,6 @@ namespace OstBot_2_
                 targetBotPlayer = lowestDistancePlayer;
             if (targetBotPlayer != null)
             {
-                pathFinding = new ZombiePathFinding();
                 Stack<Square> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
 
                 if (pathToGo != null && pathToGo.Count != 0)
@@ -80,8 +78,7 @@ namespace OstBot_2_
                             //Room.blockQueue.Enqueue(zombieOldBlock);
                             //OstBot.room.blockMap[0][xOldBlock, yOldBlock].Add(zombieOldBlock);
                             OstBot.room.DrawBlock(zombieOldBlock);
-                            Console.WriteLine("WALKED X:" + xBlock + " Y: " + yBlock + " REMOVED X:" + xOldBlock + " Y:" + yOldBlock + " TIME:" + ostkakaTimer.ElapsedMilliseconds);
-                            ostkakaTimer.Restart();
+                            //Console.WriteLine("WALKED X:" + xBlock + " Y: " + yBlock + " REMOVED X:" + xOldBlock + " Y:" + yOldBlock + " TIME:" + ostkakaTimer.ElapsedMilliseconds);
                         }
                     }
                 }
