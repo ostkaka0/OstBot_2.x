@@ -1,114 +1,232 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-
+using System.Collections.Generic;
+using System;
 namespace OstBot_2_
 {
+    /*import Player.*;
+    import SynchronizedObject.*;
+    import SynchronizedSprite.*;
+    import __AS3__.vec.*;
+    import animations.*;
+    import blitter.*;
+    import com.greensock.*;
+    import com.greensock.easing.*;
+    import flash.display.*;
+    import flash.geom.*;
+    import flash.media.*;
+    import items.*;
+    import playerio.*;
+    import states.*;
+    import ui.*;*/
 
     public class Player : SynchronizedSprite
     {
-        //protected var Ding:Class;
-        //protected var Crown:Class;
-        //protected var CrownSilver:Class;
-        //protected var Aura:Class;
-        //protected var ModAura:Class;
+        /*protected var Ding:Class;
+        protected var Crown:Class;
+        protected var CrownSilver:Class;
+        protected var Aura:Class;
+        protected var ModAura:Class;
+        protected var FireAura:Class;
+        protected var LevitationEffect:Class;*/
+        private int _id;
         //protected var ding:Sound;
         //private var world:World;
-        //public var isme:Boolean;
-        //private var crown:BitmapData;
-        //private var crown_silver:BitmapData;
-        //private var aura:BitmapData;
-        //private var modaura:BitmapData;
+        public bool isme;
+        private Bitmap crown;
+        private Bitmap crown_silver;
+        private Bitmap aura;
+        private Bitmap modaura;
+        private Bitmap fireAura;
+        private Bitmap invulnerableAura;
+        private Bitmap levitationAnimaitonBitmapData;
+        private Bitmap clubaura;
         //private var connection:Connection;
         //private var state:PlayState;
         //private var chat:Chat;
         //private var badge:LevelBadge;
-        //private bool badgeVisible = false;
+        //private var badgevisible:Boolean = false;
+        //private var flauntBadge:FlauntLevelBadge;
+        private Bitmap deadAnim;
+        public bool isDead = false;
+        private bool deathsend = false;
+        private bool worldportalsend = false;
+        private bool _isInvulnerable = false;
         public string name;
-        //private uint textcolor;
+        private uint textcolor;
         private int morx = 0;
         private int mory = 0;
         public int woots = 0;
         public int coins = 0;
         public int level = 1;
         public int bcoins = 0;
-        public bool hasCrown = false;
-        public bool hasCrownSilver = false;
+        public bool hascrown = false;
+        public bool hascrownsilver = false;
         public bool isgod = false;
         public bool ismod = false;
+        public bool isclubmember = false;
         public int current = 0;
         public int current_bg = 0;
         public bool purple = false;
+        public int checkpoint_x = -1;
+        public int checkpoint_y = -1;
         public int overlapy = 0;
         public double gravityMultiplier = 1;
-        public double jumpMultiplier = 1;
-        //private Rectangle rect2;
+        private double last_respawn = 0;
+        private bool _tagged = false;
+        private bool _canTag = false;
+        //private var taggedMarker:TaggedMarker;
+        private Rectangle rect2;
         public double aura_color = 4.29497e+009;
         public int aura_offset = 0;
-        //private double total = 0;
+        //private var fireAnimation:BlSprite;
+        //private var protectionAnimation:BlSprite;
+        //private var levitationAnimation:BlSprite;
+        private bool _hasLevitation = false;
+        private bool _isFlaunting = false;
+        private double total = 0;
         private int pastx = 0;
         private int pasty = 0;
-        private List<int> queue;
-        /*private DateTime lastJump;
+        private Queue<int> queue;
+        private DateTime lastJump;
         private bool changed = false;
-        private int leftDown = 0;
-        private int rightDown = 0;
-        private int upDown = 0;
-        private int downDown = 0;
-        private bool spaceDown = false;
-        private bool spaceJustDown = false;*/
+        private int leftdown = 0;
+        private int rightdown = 0;
+        private int updown = 0;
+        private int downdown = 0;
+        private bool spacedown = false;
+        private bool spacejustdown = false;
         public int horizontal = 0;
         public int vertical = 0;
         public int oh = 0;
         public int ov = 0;
         private Point lastPortal;
-        //private int lastOverlap = 0;
-        public SynchronizedObject that = new SynchronizedObject();
-        //private double bBest = 0;
+        private int lastOverlap = 0;
+        private SynchronizedObject that;
+        private double bbest = 0;
         private bool donex = false;
         private bool doney = false;
         private double animoffset = 0;
         private double modoffset = 0;
-        //private Rectangle modRect;
-        //private bool slowMotion = true;
-        public bool isDead = false;
-        public DateTime last_respawn;
+        private Rectangle modrect;
+        private double cluboffset = 0;
+        private Rectangle clubrect;
+        private double deadoffset = 0;
+        public bool jump_boost = false;
+        public bool fire_aura = false;
+        private bool _zombie = false;
+        private bool _cursed = false;
+        private Dictionary<string, int> touchpotions = new Dictionary<string, int>();
+        private bool _isThrusting = false;
+        private double _maxThrust = 0.2;
+        private double _thrustBurnOff = 0.01;
+        private double _currentThrust;
+        private static List<string> admins = new List<string> { "benjaminsen", "cyclone", "toby", "rpgmaster2000", "mrshoe", "mrvoid" };
+        public static bool HasSolitude = false;
 
+        int cx = 0;
+        int cy = 0;
+        bool isgodmod = false;
+        double reminderX = 0;
+        double currentSX = 0;
+        double reminderY = 0;
+        double currentSY = 0;
+        double osx = 0;
+        double osy = 0;
+        double ox = 0;
+        double oy = 0;
+        int mod = 0;
+        bool injump = false;
+        bool cchanged = false;
+        double tx = 0;
+        double ty = 0;
 
-        int cx;
-        int cy;
-        bool isgodmod;
-        double reminderX;
-        double currentSX;
-        double reminderY;
-        double currentSY;
-        double osx;
-        double osy;
-        double ox;
-        double oy;
-        //int mod;
-        //bool injump;
-        //bool cchanged;
-        //bool doJump;
-        double tx;
-        double ty;
-
-        public int ID;
-        public bool bla, isFriend;
-        public bool hasWonLevel = false;
         public Player(int ID, string name, int frame, float xPos, float yPos, bool isGod, bool isMod, bool bla, int coins, bool purple, bool isFriend, int level)
+            : base(null)
         {
-            this.ID = ID;
-            this.name = name;
-            this.frame = frame; this.coins = coins; this.level = level;
-            this.isgod = isGod; this.ismod = isMod; this.bla = bla; this.purple = purple; this.isFriend = isFriend;
+            //this.Ding = Player_Ding;
+            //this.Crown = Player_Crown;
+            //this.CrownSilver = Player_CrownSilver;
+            //this.Aura = Player_Aura;
+            //this.ModAura = Player_ModAura;
+            //this.FireAura = Player_FireAura;
+            //this.LevitationEffect = Player_LevitationEffect;
+            //this.ding = new this.Ding();
+            //this.crown = new this.Crown().bitmapData;
+            //this.crown_silver = new this.CrownSilver().bitmapData;
+            //this.aura = new this.Aura().bitmapData;
+            //this.modaura = new this.ModAura().bitmapData;
+            ///this.fireAura = new this.FireAura().bitmapData;
+            //this.invulnerableAura = AnimationManager.animProtection;
+            //this.levitationAnimaitonBitmapData = new this.LevitationEffect().bitmapData;
+            //this.clubaura = AnimationManager.animClubAura;
+            this.rect2 = new Rectangle(0, 0, 16, 26);
+            //this.fireAnimation = new BlSprite(this.fireAura, 0, 0, 26, 26, 6);
+            //this.protectionAnimation = new BlSprite(this.invulnerableAura, 0, 0, 26, 26, 24);
+            //this.levitationAnimation = new BlSprite(this.levitationAnimaitonBitmapData, 0, 0, 26, 26, 32);
+            this.queue = new Queue<int>(Config.physics_queue_length);
+            this.lastJump = new DateTime();
+            this.lastPortal = new Point();
             this.that = this as SynchronizedObject;
-            that.x = xPos;
-            that.y = yPos;
-            this.queue = new List<int>(Config.physics_queue_length);
-        }
+            this.modrect = new Rectangle(0, 0, 64, 64);
+            this.clubrect = new Rectangle(0, 0, 64, 64);
+            //this.touchpotions = {};
+            this._currentThrust = this._maxThrust;
+            //super(ItemManager.smiliesBMD);
+            //this.state = param5;
+            //this.connection = param4;
+            //this.world = param1;
+            //this.hitmap = param1;
+            this.x = 16;
+            this.y = 16;
+            this.isme = false;
+            this.name = name;
+            //this.chat = new Chat(param2.indexOf(" ") != -1 ? ("") : (param2));
+            size = 16;
+            width = 16;
+            height = 16;
+            return;
+        }// end function
+
+        public int id()
+        {
+            return this._id;
+        }// end function
+
+        public void id(int param1)
+        {
+            this._id = param1;
+            return;
+        }// end function
+
+        public double jumpMultiplier()
+        {
+            double _loc_1 = 1;
+            if (this.jump_boost)
+            {
+                _loc_1 = _loc_1 * 1.2;
+            }
+            if (this.zombie())
+            {
+                _loc_1 = _loc_1 * 0.75;
+            }
+            return _loc_1;
+        }// end function
+
+        public double speedMultiplier()
+        {
+            double _loc_1 = 1;
+            if (this.zombie())
+            {
+                _loc_1 = _loc_1 * 0.6;
+            }
+            return _loc_1;
+        }// end function
+
+        public double dragMud()
+        {
+            return _mud_drag;
+        }// end function
 
         public int overlaps(SynchronizedObject param1)
         {
@@ -156,106 +274,138 @@ namespace OstBot_2_
                                         {
                                             case 23:
                                                 {
-                                                    //if (this.hideRed)
+                                                    /*if (this.hideRed)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 24:
                                                 {
-                                                    //if (this.hideGreen)
+                                                    /*if (this.hideGreen)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 25:
                                                 {
-                                                    //if (this.hideBlue)
+                                                    /*if (this.hideBlue)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 26:
                                                 {
-                                                    //if (!this.hideRed)
+                                                    /*if (!this.hideRed)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 27:
                                                 {
-                                                    //if (!this.hideGreen)
+                                                    /*if (!this.hideGreen)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 28:
                                                 {
-                                                    //if (!this.hideBlue)
+                                                    /*if (!this.hideBlue)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 156:
                                                 {
-                                                    //if (this._hideTimedoor)
+                                                    /*if (this._hideTimedoor)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 157:
                                                 {
-                                                    //if (!this._hideTimedoor)
+                                                    /*if (!this._hideTimedoor)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case ItemId.DOOR_PURPLE:
                                                 {
-                                                    //if (this.hidePurple)
+                                                    /*if (this.hidePurple)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case ItemId.GATE_PURPLE:
                                                 {
-                                                    //if (!this.hidePurple)
+                                                    /*if (!this.hidePurple)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
+                                                    break;
+                                                }
+                                            case ItemId.DOOR_CLUB:
+                                                {
+                                                    /*if (_loc_2.isclubmember)
+                                                    {
+                                                        break;
+                                                    }*/
+                                                    break;
+                                                }
+                                            case ItemId.GATE_CLUB:
+                                                {
+                                                    /*if (!_loc_2.isclubmember)
+                                                    {
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case ItemId.COINDOOR:
                                                 {
-                                                    //if (this.getCoinValue(currentXBlock, currentRealPosY) <= coins)
+                                                    /*if (this.getCoinValue(_loc_10, _loc_9) <= _loc_2.coins)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case ItemId.COINGATE:
                                                 {
-                                                    //if (this.getCoinValue(currentXBlock, currentRealPosY) > this.showCoinGate)
+                                                    /*if (this.getCoinValue(_loc_10, _loc_9) > this.showCoinGate)
                                                     {
-
-                                                    }
+                                                        break;
+                                                    }*/
+                                                    break;
+                                                }
+                                            case ItemId.ZOMBIE_GATE:
+                                                {
+                                                    /*if (_loc_2.zombie)
+                                                    {
+                                                        break;
+                                                    }*/
+                                                    break;
+                                                }
+                                            case ItemId.ZOMBIE_DOOR:
+                                                {
+                                                    /*if (!_loc_2.zombie)
+                                                    {
+                                                        break;
+                                                    }*/
                                                     break;
                                                 }
                                             case 50:
                                                 {
-                                                    //if (isme)
+                                                    /*if (_loc_2.isme)
                                                     {
-                                                        // knownSecrets[currentXBlock + "x" + currentRealPosY] = true;
-                                                    }
+                                                        knownSecrets[_loc_10 + "x" + _loc_9] = true;
+                                                    }*/
                                                     break;
                                                 }
                                             case 61:
@@ -416,14 +566,16 @@ namespace OstBot_2_
                     currentSX = 0;
                 }
             }
+            //if (hitmap != null)
+            //{
             if (overlaps(that) != 0)
             {
-                //Console.WriteLine("xoverlap " + name);
                 x = ox;
                 _speedX = 0;
                 currentSX = osx;
                 donex = true;
             }
+            //}
             return;
         }// end function
 
@@ -459,44 +611,16 @@ namespace OstBot_2_
                     currentSY = 0;
                 }
             }
+            //if (hitmap != null)
+            //{
             if (overlaps(that) != 0)
             {
-                //Console.WriteLine("yoverlap " + name);
                 y = oy;
                 _speedY = 0;
                 currentSY = osy;
                 doney = true;
             }
-            return;
-        }// end function
-
-        public void setPosition(double param1, double param2)
-        {
-            x = param1;
-            y = param2;
-            return;
-        }// end function
-
-        public void killPlayer()
-        {
-            this.isDead = true;
-            //this.deadAnim = AnimationManager.animRandomDeath();
-            return;
-        }// end function
-
-        public void respawn()
-        {
-            _modifierX = 0;
-            _modifierY = 0;
-            modifierX = 0;
-            modifierY = 0;
-            _speedX = 0;
-            _speedY = 0;
-            speedX = 0;
-            speedY = 0;
-            this.isDead = false;
-            //this.deathsend = false;
-            this.last_respawn = DateTime.Now;
+            //}
             return;
         }// end function
 
@@ -513,6 +637,23 @@ namespace OstBot_2_
             double _loc_9 = 0;
             int _loc_10 = 0;
             double _loc_11 = 0;
+            current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
+            if (!isgodmod && current == ItemId.WORLD_PORTAL)
+            {
+                if (spacejustdown && !worldportalsend)
+                {
+                    //has hit world portal and leaves the world
+                    /*
+                    _loc_1 = Program.getWorldPortalTarget(cx, cy);
+                    if (_loc_1.length > 0)
+                    {
+                        worldportalsend = true;
+                        _loc_2 = new NavigationEvent(NavigationEvent.JOIN_WORLD, true, false);
+                        _loc_2.world_id = _loc_1;
+                        Global.base.dispatchEvent(_loc_2);
+                    }*/
+                }
+            }
             if (!isgodmod && current == 242)
             {
                 if (lastPortal.X == 0 && lastPortal.Y == 0)
@@ -618,22 +759,8 @@ namespace OstBot_2_
             return;
         }// end function
 
-        public void tick()
+        override public void tick()
         {
-            /*cx = 0;
-            cy = 0;
-            isgodmod = false;
-            reminderX = 0;
-            currentSX = 0;
-            reminderY = 0;
-            currentSY = 0;
-            osx = 0;
-            osy = 0;
-            ox = 0;
-            oy = 0;
-            tx = 0;
-            ty = 0;*/
-
             this.animoffset = this.animoffset + 0.2;
             if (this.ismod && !this.isgod)
             {
@@ -643,34 +770,59 @@ namespace OstBot_2_
                     this.modoffset = 10;
                 }
             }
+            else if (this.isclubmember)
+            {
+                this.cluboffset = this.cluboffset + 0.2;
+                if (this.cluboffset >= 14)
+                {
+                    this.cluboffset = 0;
+                }
+            }
             else
             {
                 this.modoffset = 0;
             }
+            if (this.isDead)
+            {
+                this.deadoffset = this.deadoffset + 0.3;
+            }
+            else
+            {
+                this.deadoffset = 0;
+            }
             cx = (int)((x + 8) / 16);
             cy = (int)((y + 8) / 16);
-
             int delayed = 0;
             if (this.queue.Count >= 1)
             {
-                delayed = this.queue[0];
-                queue.Remove(delayed);
+                delayed = this.queue.Dequeue();
             }
-            if (cx > 0 && cy > 0 && cx < OstBot.room.width && cy < OstBot.room.height)
-            {
-                this.current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
-            }
-            queue.Add(this.current);
+            this.current = OstBot.room.getMapBlock(0, cx, cy, 0).blockId;
+            this.queue.Enqueue(this.current);
             if (this.current == 4 || ItemId.isClimbable(this.current))
             {
-                if (this.queue.Count >= 1)
-                {
-                    delayed = this.queue[0];
-                    queue.Remove(delayed);
-                }
-                this.queue.Add(this.current);
+                delayed = this.queue.Dequeue();
+                this.queue.Enqueue(this.current);
             }
-
+            /*if (this.isme)
+            {
+                this.leftdown = Bl.isKeyDown(37) || Bl.isKeyDown(65) ? (-1) : (0);
+                this.rightdown = Bl.isKeyDown(39) || Bl.isKeyDown(68) ? (1) : (0);
+                this.updown = Bl.isKeyDown(38) || Bl.isKeyDown(87) ? (-1) : (0);
+                this.downdown = Bl.isKeyDown(40) || Bl.isKeyDown(83) ? (1) : (0);
+                this.spacejustdown = Bl.isKeyJustPressed(32);
+                this.spacedown = Bl.isKeyDown(32);
+                this.horizontal = this.leftdown + this.rightdown;
+                this.vertical = this.updown + this.downdown;
+                Bl.resetJustPressed();
+            }*/
+            if (this.isDead)
+            {
+                this.horizontal = 0;
+                this.vertical = 0;
+                this.spacejustdown = false;
+                this.spacedown = false;
+            }
             isgodmod = this.isgod || this.ismod;
             if (isgodmod)
             {
@@ -719,7 +871,21 @@ namespace OstBot_2_
                         {
                             this.morx = 0;
                             this.mory = (int)_water_buoyancy;
-                            Console.WriteLine("water");
+                            break;
+                        }
+                    case ItemId.MUD:
+                        {
+                            this.morx = 0;
+                            this.mory = (int)_mud_buoyancy;
+                            break;
+                        }
+                    case ItemId.FIRE:
+                    case ItemId.SPIKE:
+                        {
+                            if (!this.isDead && !this._isInvulnerable)
+                            {
+                                this.killPlayer();
+                            }
                             break;
                         }
                     default:
@@ -769,6 +935,12 @@ namespace OstBot_2_
                             this.moy = _water_buoyancy;
                             break;
                         }
+                    case ItemId.MUD:
+                        {
+                            this.mox = 0;
+                            this.moy = _mud_buoyancy;
+                            break;
+                        }
                     default:
                         {
                             this.mox = 0;
@@ -777,7 +949,7 @@ namespace OstBot_2_
                         }
                 }
             }
-            if (this.moy == _water_buoyancy)
+            if (this.moy == _water_buoyancy || this.moy == _mud_buoyancy)
             {
                 mx = this.horizontal;
                 my = this.vertical;
@@ -797,6 +969,8 @@ namespace OstBot_2_
                 mx = this.horizontal;
                 my = this.vertical;
             }
+            mx = mx * this.speedMultiplier();
+            my = my * this.speedMultiplier();
             mox = mox * this.gravityMultiplier;
             moy = moy * this.gravityMultiplier;
             this.modifierX = this.mox + mx;
@@ -812,6 +986,10 @@ namespace OstBot_2_
                 else if (this.current == ItemId.WATER && !isgodmod)
                 {
                     _speedX = _speedX * _water_drag;
+                }
+                else if (this.current == ItemId.MUD && !isgodmod)
+                {
+                    _speedX = _speedX * this.dragMud();
                 }
                 if (_speedX > 16)
                 {
@@ -838,6 +1016,10 @@ namespace OstBot_2_
                 {
                     _speedY = _speedY * _water_drag;
                 }
+                else if (this.current == ItemId.MUD && !isgodmod)
+                {
+                    _speedY = _speedY * this.dragMud();
+                }
                 if (_speedY > 16)
                 {
                     _speedY = 16;
@@ -851,7 +1033,6 @@ namespace OstBot_2_
                     _speedY = 0;
                 }
             }
-
             if (!isgodmod)
             {
                 switch (this.current)
@@ -880,7 +1061,85 @@ namespace OstBot_2_
                         {
                             break;
                         }
-                    /*case 100:
+                }
+            }
+            reminderX = x % 1;
+            currentSX = _speedX;
+            reminderY = y % 1;
+            currentSY = _speedY;
+            this.donex = false;
+            this.doney = false;
+            while (currentSX != 0 && !this.donex || currentSY != 0 && !this.doney)
+            {
+
+                this.processPortals();
+                ox = x;
+                oy = y;
+                osx = currentSX;
+                osy = currentSY;
+                this.stepx();
+                this.stepy();
+            }
+            /*if (this.isme && !this.isDead)
+            {
+                mod;
+                injump;
+                if (this.spacejustdown)
+                {
+                    this.lastJump = -new Date().time;
+                    injump;
+                    mod;
+                }
+                if (this.spacedown)
+                {
+                    if (this.hasLevitation)
+                    {
+                        if (!this._isThrusting)
+                        {
+                            this.changed = true;
+                        }
+                        this._isThrusting = true;
+                        this.applyThrust();
+                    }
+                    else if (this.lastJump < 0)
+                    {
+                        if (new Date().time + this.lastJump > 750)
+                        {
+                            injump;
+                        }
+                    }
+                    else if (new Date().time - this.lastJump > 150)
+                    {
+                        injump;
+                    }
+                }
+                else if (this.hasLevitation)
+                {
+                    if (this._isThrusting)
+                    {
+                        this.changed = true;
+                    }
+                    this._isThrusting = false;
+                }
+                if (injump && !this.hasLevitation)
+                {
+                    if (this.speedX == 0 && this.morx && this.mox && this.x % 16 == 0)
+                    {
+                        this.speedX = this.speedX - this.morx * Config.physics_jump_height * this.jumpMultiplier;
+                        this.changed = true;
+                        this.lastJump = new Date().time * mod;
+                    }
+                    if (this.speedY == 0 && this.mory && this.moy && this.y % 16 == 0)
+                    {
+                        this.speedY = this.speedY - this.mory * Config.physics_jump_height * this.jumpMultiplier;
+                        this.changed = true;
+                        this.lastJump = new Date().time * mod;
+                    }
+                }
+                cchanged;
+                switch(this.current)
+                {
+                    case 100:
                     {
                         if (Global.play_sounds)
                         {
@@ -904,137 +1163,147 @@ namespace OstBot_2_
                         var _loc_3:* = this.bcoins + 1;
                         _loc_2.bcoins = _loc_3;
                         break;
-                    }*/
+                    }
+                    default:
+                    {
+                        break;
+                    }
                 }
-            }
-            reminderX = x % 1;
-            currentSX = _speedX;
-            reminderY = y % 1;
-            currentSY = _speedY;
-            this.donex = false;
-            this.doney = false;
-
-            while (currentSX != 0 && !this.donex || currentSY != 0 && !this.doney)
-            {
-                this.processPortals();
-                ox = x;
-                oy = y;
-                osx = currentSX;
-                osy = currentSY;
-                this.stepx();
-                this.stepy();
-            }
-
-            if (this.pastx != cx || this.pasty != cy)
-            {
-                Random r = new Random();
-                int i = r.Next(10);
-                switch (this.current)
+                if (this.pastx != cx || this.pasty != cy)
                 {
-                    case 5:
+                    switch(this.current)
+                    {
+                        case 5:
                         {
-                            if (!this.hasCrown && !isgodmod)
+                            if (!this.hascrown && !isgodmod)
                             {
-                                //this.connection.send(Bl.data.m + "k");
-                                OstBot.connection.Send("say", this.name + " hit a crown!" + i);
-                                //Console.WriteLine(name + " crown");
+                                this.connection.send(Bl.data.m + "k");
                             }
                             break;
                         }
-                    case 6:
+                        case 6:
                         {
-                            //this.connection.send(Bl.data.m + "r");
-                            //this.state.showRed();
-                            //Console.WriteLine("red");
-                            OstBot.connection.Send("say", this.name + " hit a red key!" + i);
-                            //Console.WriteLine(name + " red");
+                            this.connection.send(Bl.data.m + "r");
+                            this.state.showRed();
                             break;
                         }
-                    case 7:
+                        case 7:
                         {
-                            //this.connection.send(Bl.data.m + "g");
-                            //this.state.showGreen();
-                            OstBot.connection.Send("say", this.name + " hit a green key!" + i);
-                            //Console.WriteLine(name + " green");
+                            this.connection.send(Bl.data.m + "g");
+                            this.state.showGreen();
                             break;
                         }
-                    case 8:
+                        case 8:
                         {
-                            //this.connection.send(Bl.data.m + "b");
-                            //this.state.showBlue();
-                            OstBot.connection.Send("say", this.name + " hit a blue key!" + i);
-                            //Console.WriteLine(name + " blue");
+                            this.connection.send(Bl.data.m + "b");
+                            this.state.showBlue();
                             break;
                         }
-                    case ItemId.SWITCH_PURPLE:
+                        case ItemId.SWITCH_PURPLE:
                         {
                             this.purple = !this.purple;
                             if (!this.purple)
                             {
-                                //this.state.hidePurple();
+                                this.state.hidePurple();
                             }
                             else
                             {
-                                //this.state.showPurple();
+                                this.state.showPurple();
                             }
-                            //this.connection.send(Bl.data.m + "sp", this.purple);
+                            this.connection.send(Bl.data.m + "sp", this.purple);
                             break;
                         }
-                    /*case 77:
-                    {
-                        if (this.pastx != cx || this.pasty != cy)
+                        case 77:
                         {
-                            if (Global.play_sounds)
+                            if (this.pastx != cx || this.pasty != cy)
                             {
-                                ItemManager.pianoSounds[this.world.getSound(cx, cy)].play();
-                                this.world.pingSound(cx, cy);
-                            }
-                        }
-                        break;
-                    }
-                    case 83:
-                    {
-                        if (this.pastx != cx || this.pasty != cy)
-                        {
-                            if (Global.play_sounds)
-                            {
-                                ItemManager.drumSounds[this.world.getSound(cx, cy)].play();
-                                this.world.pingSound(cx, cy);
-                            }
-                        }
-                        break;
-                    }*/
-                    case ItemId.DIAMOND:
-                        {
-                            //this.connection.send("diamondtouch", cx, cy);
-                            break;
-                        }
-                    case ItemId.CAKE:
-                        {
-                            //this.connection.send("caketouch", cx, cy);
-                            break;
-                        }
-                    case ItemId.BRICK_COMPLETE:
-                        {
-                            if (!isgodmod)
-                            {
-                                //this.connection.send("levelcomplete");
-                                //if (!this.hascrownsilver)
+                                if (Global.play_sounds)
                                 {
-                                    //Global.base.showLevelComplete(new LevelComplete());
+                                    ItemManager.pianoSounds[this.world.getSound(cx, cy)].play();
+                                    this.world.pingSound(cx, cy);
                                 }
                             }
                             break;
                         }
+                        case 83:
+                        {
+                            if (this.pastx != cx || this.pasty != cy)
+                            {
+                                if (Global.play_sounds)
+                                {
+                                    ItemManager.drumSounds[this.world.getSound(cx, cy)].play();
+                                    this.world.pingSound(cx, cy);
+                                }
+                            }
+                            break;
+                        }
+                        case ItemId.DIAMOND:
+                        {
+                            this.connection.send("diamondtouch", cx, cy);
+                            break;
+                        }
+                        case ItemId.CAKE:
+                        {
+                            this.connection.send("caketouch", cx, cy);
+                            break;
+                        }
+                        case ItemId.CHECKPOINT:
+                        {
+                            if (!isgodmod)
+                            {
+                                this.checkpoint_x = cx;
+                                this.checkpoint_y = cy;
+                                this.connection.send("checkpoint", cx, cy);
+                            }
+                            break;
+                        }
+                        case ItemId.BRICK_COMPLETE:
+                        {
+                            if (!isgodmod)
+                            {
+                                this.connection.send("levelcomplete");
+                                if (!this.hascrownsilver)
+                                {
+                                    Global.base.showLevelComplete(new LevelComplete());
+                                }
+                            }
+                            break;
+                        }
+                        default:
+                        {
+                            break;
+                        }
+                    }
+                    this.pastx = cx;
+                    this.pasty = cy;
                 }
-                this.pastx = cx;
-                this.pasty = cy;
+                if (this.changed || this.oh != this.horizontal || this.ov != this.vertical)
+                {
+                    this.oh = this.horizontal;
+                    this.ov = this.vertical;
+                    if (this.connection.connected)
+                    {
+                        this.connection.send("m", this.x, this.y, this.speedX, this.speedY, this.modifierX, this.modifierY, this.horizontal, this.vertical, this.gravityMultiplier, this.spacedown);
+                    }
+                }
+                if (cchanged)
+                {
+                    this.connection.send("c", this.coins, cx, cy);
+                    if (Math.random() * 3000 >> 0 == 0)
+                    {
+                        Global.base.awardSwappits();
+                    }
+                }
+                this.changed = false;
+            }*/
+            if (this.hasLevitation())
+            {
+                this.updateThrust();
             }
-
-            double imx = _speedX * 256;
-            double imy = _speedY * 256;
+            var imx = _speedX * 256;
+            var imy = _speedY * 256;
             moving = false;
-            if (imx != 0 || this.current == ItemId.WATER)
+            if (imx != 0 || this.current == ItemId.WATER || this.current == ItemId.MUD)
             {
                 moving = true;
             }
@@ -1066,7 +1335,7 @@ namespace OstBot_2_
                     }
                 }
             }
-            if (imy != 0 || this.current == ItemId.WATER)
+            if (imy != 0 || this.current == ItemId.WATER || this.current == ItemId.MUD)
             {
                 moving = true;
             }
@@ -1101,8 +1370,102 @@ namespace OstBot_2_
             return;
         }// end function
 
-        public void update()
+        override public void update()
         {
+            return;
+        }// end function
+
+        public void showBadge(bool param1)
+        {
+            /*bool value = param1;
+            if (value)
+            {
+                //this.badgevisible = true;
+                //this.badge = new LevelBadge((this.level - 1));
+                //TweenMax.to(this.badge, 0.25, {y:"-15", yoyo:true, repeat:-1, ease:Sine.easeOut});
+            }
+            else
+            {
+                //TweenMax.killTweensOf(this.badge);
+                //TweenMax.to(this.badge, 0.2, {scale:0, onComplete:function () : void
+            {
+                //badgevisible = false;
+                return;
+            }// end function
+            });
+            }*/
+            return;
+        }// end function
+
+        public void drawBadge(Bitmap param1, double param2, double param3, bool param4)
+        {
+            /*if (param4 && this.badgevisible)
+            {
+                this.badge.draw(param1, param2 + x - 32, param3 + y - 44);
+            }*/
+            return;
+        }// end function
+
+        public void flauntLevelBadge(bool param1)
+        {
+            /*var value:* = param1;
+            this._isFlaunting = value;
+            if (this._isFlaunting)
+            {
+                this.flauntBadge = new FlauntLevelBadge((this.level - 1));
+                TweenMax.to(this.flauntBadge, 0.25, {y:"-15", yoyo:true, repeat:-1, ease:Sine.easeOut});
+            }
+            else
+            {
+                TweenMax.killTweensOf(this.flauntBadge);
+                TweenMax.to(this.flauntBadge, 0.2, {scale:0, onComplete:function () : void
+            {
+                _isFlaunting = false;
+                return;
+            }// end function
+            });
+            }*/
+            return;
+        }// end function
+
+        public void drawChat(Bitmap param1, double param2, double param3, bool param4)
+        {
+            //this.chat.drawChat(param1, param2 + x, param3 + y, param4);
+            return;
+        }// end function
+
+        public void enterChat()
+        {
+            //this.chat.enterFrame();
+            return;
+        }// end function
+
+        public void say(string param1)
+        {
+            //this.chat.say(param1);
+            return;
+        }// end function
+
+        public void killPlayer()
+        {
+            this.isDead = true;
+            //this.deadAnim = AnimationManager.animRandomDeath();
+            return;
+        }// end function
+
+        public void respawn()
+        {
+            _modifierX = 0;
+            _modifierY = 0;
+            modifierX = 0;
+            modifierY = 0;
+            _speedX = 0;
+            _speedY = 0;
+            speedX = 0;
+            speedY = 0;
+            this.isDead = false;
+            this.deathsend = false;
+            this.last_respawn = DateTime.Now.Millisecond;
             return;
         }// end function
 
@@ -1111,6 +1474,443 @@ namespace OstBot_2_
             this.coins = 0;
             this.bcoins = 0;
             return;
+        }// end function
+
+        public void resetCheckpoint()
+        {
+            this.checkpoint_x = -1;
+            this.checkpoint_y = -1;
+            return;
+        }// end function
+
+        /*override public function draw(param1:BitmapData, param2:int, param3:int) : void
+        {
+            var _loc_4:int = 0;
+            var _loc_5:Rectangle = null;
+            if (this.isgod || this.ismod)
+            {
+                return;
+            }
+            if (!Player.HasSolitude || this.isme)
+            {
+                if (this.isDead)
+                {
+                    if (this.deadoffset > 16)
+                    {
+                        if (this.isme && !this.deathsend)
+                        {
+                            this.deathsend = true;
+                            this.connection.send("death");
+                        }
+                        return;
+                    }
+                    if (this.deadoffset < 2)
+                    {
+                        param1.copyPixels(bmd, this.rect2, new Point(x + param2, y + param3 - 5));
+                    }
+                    _loc_4 = this.deadoffset;
+                    param1.copyPixels(this.deadAnim, new Rectangle(_loc_4 * 64, 0, 64, 64), new Point(x + param2 - 24, y + param3 - 24));
+                    return;
+                }
+                if (this._isInvulnerable)
+                {
+                    if ((this.animoffset >> 0) % 3 == 0)
+                    {
+                        if (this.protectionAnimation.frame < (this.protectionAnimation.totalFrames - 1))
+                        {
+                            var _loc_6:* = this.protectionAnimation;
+                            var _loc_7:* = this.protectionAnimation.frame + 1;
+                            _loc_6.frame = _loc_7;
+                        }
+                        else
+                        {
+                            this.protectionAnimation.frame = 0;
+                        }
+                    }
+                    this.protectionAnimation.draw(param1, x + param2 - 5, y + param3 - 5);
+                }
+                if (this.zombie)
+                {
+                    _loc_5 = this.rect2.clone();
+                    this.rect2.clone().x = _loc_5.width * 87;
+                    param1.copyPixels(bmd, _loc_5, new Point(x + param2, y + param3 - 5));
+                }
+                else
+                {
+                    param1.copyPixels(bmd, this.rect2, new Point(x + param2, y + param3 - 5));
+                }
+                if (this.hascrown)
+                {
+                    param1.copyPixels(this.crown, this.crown.rect, new Point(x + param2, y + param3 - 6));
+                }
+                else if (this.hascrownsilver)
+                {
+                    param1.copyPixels(this.crown_silver, this.crown_silver.rect, new Point(x + param2, y + param3 - 6));
+                }
+                if (this.jump_boost)
+                {
+                    param1.copyPixels(this.aura, new Rectangle(4 * 26, 0, 26, 26), new Point(x + param2 - 5, y + param3 - 5));
+                }
+                if (this.fire_aura)
+                {
+                    if ((this.animoffset >> 0) % 3 == 0)
+                    {
+                        if (this.fireAnimation.frame < (this.fireAnimation.totalFrames - 1))
+                        {
+                            var _loc_6:* = this.fireAnimation;
+                            var _loc_7:* = this.fireAnimation.frame + 1;
+                            _loc_6.frame = _loc_7;
+                        }
+                        else
+                        {
+                            this.fireAnimation.frame = 0;
+                        }
+                    }
+                    this.fireAnimation.draw(param1, x + param2 - 4, y + param3 - 5);
+                }
+                if (this.hasLevitation)
+                {
+                    if (this._isThrusting)
+                    {
+                        this.playLevitationAnimation(param1, param2, param3);
+                    }
+                }
+                if (this._isFlaunting && this.flauntBadge)
+                {
+                    this.flauntBadge.draw(param1, param2 + x - 32, param3 + y - 44);
+                }
+            }
+            return;
+        }// end function*/
+
+        /*private function playLevitationAnimation(param1:BitmapData, param2:int, param3:int) : void
+        {
+            if (this.morx == 0 && this.mory == 0)
+            {
+                return;
+            }
+            var _loc_4:int = 0;
+            var _loc_5:int = 8;
+            var _loc_6:int = -5;
+            var _loc_7:int = -5;
+            if (this.mory != 0)
+            {
+                if (this.mory < 0)
+                {
+                    _loc_6 = -21;
+                    _loc_4 = 8;
+                }
+                else
+                {
+                    _loc_6 = 12;
+                    _loc_4 = 0;
+                }
+            }
+            if (this.morx != 0)
+            {
+                if (this.morx < 0)
+                {
+                    _loc_7 = -24;
+                    _loc_4 = 16;
+                }
+                else
+                {
+                    _loc_7 = 14;
+                    _loc_4 = 24;
+                }
+            }
+            if (this.levitationAnimation.frame < _loc_4 + _loc_5 - 1)
+            {
+                var _loc_8:* = this.levitationAnimation;
+                var _loc_9:* = this.levitationAnimation.frame + 1;
+                _loc_8.frame = _loc_9;
+            }
+            else
+            {
+                this.levitationAnimation.frame = _loc_4;
+            }
+            this.levitationAnimation.draw(param1, x + param2 + _loc_7, y + param3 + _loc_6);
+            return;
+        }// end function*/
+
+        /*public function drawGods(param1:BitmapData, param2:int, param3:int) : void
+        {
+            var _loc_4:int = 0;
+            var _loc_5:int = 0;
+            if (!this.isgod && !this.ismod)
+            {
+                return;
+            }
+            if (this.isgod)
+            {
+                if (this.isclubmember)
+                {
+                    _loc_4 = this.cluboffset;
+                    this.clubrect.x = _loc_4 * 64;
+                    this.clubrect.y = this.aura_offset * 64;
+                    param1.copyPixels(this.clubaura, this.clubrect, new Point(x + param2 - 24, y + param3 - 24));
+                }
+                else
+                {
+                    param1.copyPixels(this.aura, new Rectangle(this.aura_offset * 26, 0, 26, 26), new Point(x + param2 - 5, y + param3 - 5));
+                }
+            }
+            else if (this.ismod)
+            {
+                _loc_5 = this.modoffset;
+                this.modrect.x = _loc_5 * 64;
+                param1.copyPixels(this.modaura, this.modrect, new Point(x + param2 - 24, y + param3 - 24));
+            }
+            param1.copyPixels(bmd, this.rect2, new Point(x + param2, y + param3 - 5));
+            if (this.hascrown)
+            {
+                param1.copyPixels(this.crown, this.crown.rect, new Point(x + param2, y + param3 - 6));
+            }
+            else if (this.hascrownsilver)
+            {
+                param1.copyPixels(this.crown_silver, this.crown_silver.rect, new Point(x + param2, y + param3 - 6));
+            }
+            return;
+        }// end function*/
+
+        override public void frame(int param1)
+        {
+            this.rect2.X = param1 * 16;
+            return;
+        }// end function
+
+        override public int frame()
+        {
+            return this.rect2.X / 16;
+        }// end function
+
+        public void nameColor(int param1)
+        {
+            //this.chat.textColor = param1;
+            return;
+        }// end function
+
+        public uint minimapColor()
+        {
+            /*if (this.aura_color != 4294967295)
+            {
+                return this.aura_color;
+            }
+            return ItemManager.getSmileyById(this.frame).minimapcolor;*/
+            return 0;
+        }// end function
+
+        /*private function showCursed(param1:Boolean) : void
+        {
+            if (param1)
+            {
+                this.taggedMarker = new TaggedMarker();
+                TweenMax.to(this.taggedMarker, 0.25, {y:"-15", yoyo:true, repeat:-1, ease:Sine.easeOut});
+            }
+            else if (this.taggedMarker)
+            {
+                TweenMax.killTweensOf(this.taggedMarker);
+            }
+            return;
+        }// end function*/
+
+        /*public function drawTagged(param1:BitmapData, param2:Number, param3:Number) : void
+        {
+            if (this.cursed)
+            {
+                this.taggedMarker.draw(param1, x + param2 + 3, y + param3 - 8);
+            }
+            return;
+        }// end function*/
+
+        public void cursed(bool param1)
+        {
+            this._cursed = param1;
+            //this.showCursed(param1);
+            return;
+        }// end function
+
+        public bool cursed()
+        {
+            return this._cursed;
+        }// end function
+
+        public void zombie(bool param1)
+        {
+            this._zombie = param1;
+            return;
+        }// end function
+
+        public bool zombie()
+        {
+            if (this.isgod || this.ismod)
+            {
+                return false;
+            }
+            return this._zombie;
+        }// end function
+
+        public void addTouchPotion(string param1, double param2 = 1)
+        {
+            this.touchpotions.Add(param1, DateTime.Now.Millisecond + (int)param2 * 1000);
+            return;
+        }// end function
+
+        public void removeTouchPotion(string param1)
+        {
+            this.touchpotions.Remove(param1);
+            return;
+        }// end function
+
+        public bool hasActivePotion(string param1)
+        {
+            if (!this.touchpotions.ContainsKey(param1))
+            {
+                return false;
+            }
+            return (DateTime.Now.Millisecond - this.touchpotions[param1]) > 0;
+        }// end function
+
+        public bool hasPotion(string param1)
+        {
+            return this.touchpotions.ContainsKey(param1);
+        }// end function
+
+        public List<string> getActivePotions()
+        {
+            List<string> _loc_1 = new List<string>();
+            foreach (string _loc_2 in this.touchpotions.Keys)
+            {
+                if (this.hasActivePotion(_loc_2))
+                {
+                    _loc_1.Add(_loc_2);
+                }
+            }
+            return _loc_1;
+        }// end function
+
+        public bool getCanTag()
+        {
+            if (this.isgod || this.ismod || this.isDead)
+            {
+                return false;
+            }
+            return this.getActivePotions().Count > 0;
+        }// end function
+
+        public bool getCanBeTagged()
+        {
+            if (this.isgod || this.ismod || this.isDead)
+            {
+                return false;
+            }
+            return (DateTime.Now.Millisecond - this.last_respawn) > 1000;
+        }// end function
+
+        public void setCanTag(bool param1)
+        {
+            if (param1)
+            {
+                //TweenMax.killDelayedCallsTo(this.setCanTagDelayed);
+                //TweenMax.delayedCall(1, this.setCanTagDelayed);
+            }
+            else
+            {
+                this._canTag = false;
+            }
+            return;
+        }// end function
+
+        public void setCanTagDelayed()
+        {
+            this._canTag = true;
+            return;
+        }// end function
+
+        public void setPosition(double param1, double param2)
+        {
+            x = param1;
+            y = param2;
+            return;
+        }// end function
+
+        public void isInvulnerable(bool param1)
+        {
+            this._isInvulnerable = param1;
+            return;
+        }// end function
+
+        public bool isInvulnerable()
+        {
+            return this._isInvulnerable;
+        }// end function
+
+        public bool hasLevitation()
+        {
+            return this._hasLevitation;
+        }// end function
+
+        public void hasLevitation(bool param1)
+        {
+            this._hasLevitation = param1;
+            return;
+        }// end function
+
+        public void updateThrust()
+        {
+            if (this.mory != 0)
+            {
+                this.speedY = this.speedY - this._currentThrust * (Config.physics_jump_height / 2) * (this.mory * 0.5);
+            }
+            if (this.morx != 0)
+            {
+                this.speedX = this.speedX - this._currentThrust * (Config.physics_jump_height / 2) * (this.morx * 0.5);
+            }
+            if (!this._isThrusting)
+            {
+                if (this._currentThrust > 0)
+                {
+                    this._currentThrust = this._currentThrust - this._thrustBurnOff;
+                }
+                else
+                {
+                    this._currentThrust = 0;
+                }
+            }
+            return;
+        }// end function
+
+        public bool isThrusting()
+        {
+            return this._isThrusting;
+        }// end function
+
+        public void isThrusting(bool param1)
+        {
+            this._isThrusting = param1;
+            return;
+        }// end function
+
+        public void applyThrust()
+        {
+            this._currentThrust = this._maxThrust;
+            return;
+        }// end function
+
+        public bool isFlaunting()
+        {
+            return this._isFlaunting;
+        }// end function
+
+        public void isFlaunting(bool param1)
+        {
+            this._isFlaunting = param1;
+            return;
+        }// end function
+
+        public static bool isAdmin(string param1)
+        {
+            return admins.Contains(param1);
         }// end function
 
     }

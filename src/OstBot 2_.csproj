@@ -39,6 +39,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\ostbotlibs\PlayerIOClient.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="Skylight, Version=1.0.4940.25734, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\ostbotlibs\Skylight.dll</HintPath>
@@ -52,6 +53,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdminList.cs" />
@@ -68,7 +70,7 @@
     <Compile Include="Monster\Zombie.cs" />
     <Compile Include="Movement\BlObject.cs" />
     <Compile Include="Movement\Config.cs" />
-    <Compile Include="Movement\ItemLayer.cs" />
+    <Compile Include="Movement\ItemId.cs" />
     <Compile Include="Movement\Player.cs" />
     <Compile Include="Movement\SynchronizedObject.cs" />
     <Compile Include="Movement\SynchronizedSprite.cs" />

@@ -35,8 +35,8 @@ namespace OstBot_2_
             zombieStopWatch.Start();
             new System.Threading.Thread(() =>
             {
-                try
-                {
+                //try
+                //{
                     while (true)
                     {
 
@@ -60,21 +60,21 @@ namespace OstBot_2_
                         if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
                         {
                             playerTickTimer.Restart();
-                            try
-                            {
+                            //try
+                            //{
                                 lock (playerList)
                                 {
                                     foreach (Player player in OstBot.playerList.Values)
                                     {
                                         player.tick();
-                                        //Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
+                                        Console.WriteLine("Player " + player.name + " has position X" + player.blockX + " Y" + player.blockY);
                                     }
                                 }
-                            }
-                            catch (Exception e) { throw e; }
+                            //}
+                            //catch (Exception e) { throw e; }
                         }
                     }
-                }
+                /*}
                 catch (Exception e)
                 {
                     int line = new StackTrace(e, true).GetFrame(0).GetFileLineNumber();
@@ -83,7 +83,7 @@ namespace OstBot_2_
                         throw e;
                     else
                         throw null;
-                }
+                }*/
 
             }).Start();
         }

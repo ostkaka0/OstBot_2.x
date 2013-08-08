@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace OstBot_2_
 {
     //import SynchronizedObject.*;
@@ -20,6 +16,8 @@ namespace OstBot_2_
         protected double _no_modifier_dragY;
         protected double _water_drag;
         protected double _water_buoyancy;
+        protected double _mud_drag;
+        protected double _mud_buoyancy;
         protected double _boost;
         protected double _gravity;
         public double mox = 0;
@@ -28,7 +26,7 @@ namespace OstBot_2_
         public double my = 0;
         public DateTime last;
         protected double offset = 0;
-        public double mult;
+        private double mult;
 
         public SynchronizedObject()
         {
@@ -38,6 +36,8 @@ namespace OstBot_2_
             this._no_modifier_dragY = Config.physics_no_modifier_drag;
             this._water_drag = Config.physics_water_drag;
             this._water_buoyancy = Config.physics_water_buoyancy;
+            this._mud_drag = Config.physics_mud_drag;
+            this._mud_buoyancy = Config.physics_mud_buoyancy;
             this._boost = Config.physics_boost;
             this._gravity = Config.physics_gravity;
             this.mult = Config.physics_variable_multiplyer;

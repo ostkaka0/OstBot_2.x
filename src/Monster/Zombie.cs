@@ -68,15 +68,15 @@ namespace OstBot_2_
                         xBlock = next.x;
                         yBlock = next.y;
                         zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, -1);
-                        Room.blockSet.Add(zombieBlock);
-                        Room.blockQueue.Enqueue(zombieBlock);
+                        //Room.blockSet.Add(zombieBlock);
+                        //Room.blockQueue.Enqueue(zombieBlock);
                         //OstBot.room.blockMap[0][xBlock, yBlock].Add(zombieBlock);
-                       // OstBot.room.DrawBlock(zombieBlock);
+                        OstBot.room.DrawBlock(zombieBlock);
                         zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, -1);
-                        Room.blockSet.Add(zombieOldBlock);
-                        Room.blockQueue.Enqueue(zombieOldBlock);
+                        //Room.blockSet.Add(zombieOldBlock);
+                        //Room.blockQueue.Enqueue(zombieOldBlock);
                         //OstBot.room.blockMap[0][xOldBlock, yOldBlock].Add(zombieOldBlock);
-                        //OstBot.room.DrawBlock(zombieOldBlock);
+                        OstBot.room.DrawBlock(zombieOldBlock);
                     }
                 }
 

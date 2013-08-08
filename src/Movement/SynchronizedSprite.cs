@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Drawing;
+﻿using System.Drawing;
+using System.Windows.Media.Imaging;
 
 namespace OstBot_2_
 {
@@ -13,41 +10,39 @@ namespace OstBot_2_
     public class SynchronizedSprite : SynchronizedObject
     {
         protected Rectangle rect;
+        protected Bitmap bmd;
         protected int size;
-        
-        //protected var bmd:BitmapData;
+        protected int frames;
 
-        public SynchronizedSprite(int param2 = 0)
+        public SynchronizedSprite(Bitmap param1, int param2 = 0)
         {
-            //this.bmd = param1;
             this.size = param2;
             width = param2;
             height = this.size;
             return;
         }// end function
 
-        public double frame
+        public virtual void frame(int param1)
         {
-            get
-            {
-                return this.rect.X / this.size;
-            }
-            set
-            {
-                this.rect.X = (int)(value * this.size);
-            }
+            this.rect.X = param1 * this.size;
+            return;
+        }// end function
+
+        public virtual int frame()
+        {
+            return this.rect.X / this.size;
         }// end function
 
         public bool hitTest(int param1, int param2)
         {
-            return (param1 >= x && param2 >= y && param1 <= x + 16 && param2 <= y + 16);
+            return param1 >= x && param2 >= y && param1 <= x + this.size && param2 <= y + this.size;
         }// end function
 
-        /*override public void draw(param1:BitmapData, param2:int, param3:int) : void
+        public virtual void draw(BitmapSource param1, int param2, int param3)
         {
-            param1.copyPixels(this.bmd, this.rect, new Point(x + param2, y + param3));
+            //param1.CopyPixels(this.bmd, this.rect, new Point(x + param2, y + param3));
             return;
-        }// end function*/
+        }// end function
 
     }
 }
