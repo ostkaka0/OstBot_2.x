@@ -403,10 +403,7 @@ namespace OstBot_2_
 
             }
 
-            foreach (SubBot subBot in subBotRegister)
-            {
-                subBot.onMessage(sender, m);
-            }
+            SubBotHandler.OnMessage(sender, m);
         }
 
         private static void onDisconnect(object sender, string reason)
