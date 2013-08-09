@@ -29,6 +29,8 @@ namespace OstBot_2_
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
 
+        public static List<SubBot> subBotRegister = new List<SubBot>();
+
         public OstBot()
         {
             playerTickTimer.Start();
@@ -148,10 +150,6 @@ namespace OstBot_2_
 
                 room = new Room();
                 dig = new Dig();
-
-                connection.OnMessage += new MessageReceivedEventHandler(room.onMessage);
-                connection.OnMessage += new MessageReceivedEventHandler(dig.onMessage);
-                connection.OnDisconnect += onDisconnect; //=> this.onDisconnect();
 
                 connection.Send("init");
                 connection.Send("init2");
@@ -385,14 +383,18 @@ namespace OstBot_2_
                     break;
 
             }
+
+            foreach (SubBot subBot in subBotRegister)
+            {
+                subBot.onMessage(sender, m);
+            }
         }
 
         private static void onDisconnect(object sender, string reason)
         {
             connected = false;
 
-            dig = null;
-            room = null;
+            SubBotHandler.OnDisconnect(sender, reason);
 
             lock (playerList)
             {
@@ -401,8 +403,8 @@ namespace OstBot_2_
                     pair.Value.Save();
                 }
 
-                nameList = null;
-                playerList = null;
+                nameList.Clear();
+                playerList.Clear();
             }
 
             Program.form1.listBox_PlayerList.Items.Clear();

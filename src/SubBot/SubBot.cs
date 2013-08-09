@@ -12,6 +12,8 @@ namespace OstBot_2_
     {
         public SubBot()
         {
+            SubBotHandler.AddSubBot(this);
+
             new Thread(() =>
                 {
                     try
@@ -37,6 +39,12 @@ namespace OstBot_2_
                     }
                 }).Start();
         }
+
+        ~SubBot()
+        {
+            SubBotHandler.RemoveSubBot(this);
+        }
+
         public abstract void onMessage(object sender, PlayerIOClient.Message m);
         public abstract void onDisconnect(object sender, string reason);
         public abstract void Update();
