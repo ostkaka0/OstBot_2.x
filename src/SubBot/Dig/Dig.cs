@@ -50,10 +50,8 @@ namespace OstBot_2_
                     else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 128) > 1 - 0.75 * distanceFromCenter)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, (int)Blocks.Stone, -1);
 
-                    else if (noise.GetValue(x * 0.015625F, y * 0.015625F, 160) > 0)
+                    else// if (noise.GetValue(x * 0.015625F, y * 0.015625F, 160) > 0)
                         blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN, -1);
-                    else
-                        blockMap[x, y] = Block.CreateBlock(0, x, y, Skylight.BlockIds.Blocks.Sand.BROWN-1, -1);
 
                 }
             }
