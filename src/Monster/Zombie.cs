@@ -10,17 +10,20 @@ namespace OstBot_2_
 {
     public class Zombie : Monster
     {
-        ZombiePathFinding pathFinding = new ZombiePathFinding();
+        PathFinding pathFinding = new PathFinding();
         Block zombieBlock = null;
         Block zombieOldBlock = null;
         BotPlayer targetBotPlayer = null;
         Stopwatch updateTimer = new Stopwatch();
+        Stopwatch lagTimer = new Stopwatch();
+        Stack<Square> pathToGo = null;
 
         public Zombie(int x, int y)
             : base(x, y)
         {
-            zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
             updateTimer.Start();
+            lagTimer.Start();
+            zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, 0);
         }
 
         public static double GetDistanceBetween(BotPlayer player, int targetX, int targetY)
@@ -33,66 +36,67 @@ namespace OstBot_2_
 
         public override void Update()
         {
-            double lowestDistance = 0;
-            BotPlayer lowestDistancePlayer = null;
-            lock (OstBot.playerList)
+            if (updateTimer.ElapsedMilliseconds >= 1000)
             {
-                foreach (BotPlayer player in OstBot.playerList.Values)
+                updateTimer.Restart();
+                double lowestDistance = 0;
+                BotPlayer lowestDistancePlayer = null;
+                //lock (OstBot.playerListTemp)
                 {
-                    double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
-                    if (currentDistance < lowestDistance || lowestDistance == 0)
+                    foreach (BotPlayer player in OstBot.playerListTemp.Values)
                     {
-                        lowestDistance = currentDistance;
-                        lowestDistancePlayer = player;
+                        double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
+                        if (currentDistance < lowestDistance || lowestDistance == 0)
+                        {
+                            lowestDistance = currentDistance;
+                            lowestDistancePlayer = player;
+                        }
                     }
                 }
+                if (lowestDistancePlayer != null)
+                {
+                    targetBotPlayer = lowestDistancePlayer;
+
+                }
             }
-            if (lowestDistancePlayer != null)
-                targetBotPlayer = lowestDistancePlayer;
-            if (targetBotPlayer != null)
+
+            if (targetBotPlayer != null && xBlock != targetBotPlayer.x && yBlock != targetBotPlayer.y)
             {
-                Stack<Square> pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
+                //pathFinding = null;
+                pathFinding = new PathFinding();
+                //lagTimer.Restart();
+                pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
+                //Console.WriteLine("elapsed shitlagtime " + lagTimer.ElapsedMilliseconds + "MS");
 
                 if (pathToGo != null && pathToGo.Count != 0)
                 {
-                    if (updateTimer.ElapsedMilliseconds >= 100)
-                    {
-                        updateTimer.Restart();
-                        Square next = pathToGo.Peek();
-                        while (xBlock == next.x && yBlock == next.y && pathToGo.Count > 0)
-                        {
-                            next = pathToGo.Pop();
-                        }
-
-                        if (xBlock != next.x || yBlock != next.y)
-                        {
-                            xBlock = next.x;
-                            yBlock = next.y;
-                            zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, -1);
-                            //Room.blockSet.Add(zombieBlock);
-                            //Room.blockQueue.Enqueue(zombieBlock);
-                            //OstBot.room.blockMap[0][xBlock, yBlock].Add(zombieBlock);
-                            OstBot.room.DrawBlock(zombieBlock);
-                            zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, -1);
-                            //Room.blockSet.Add(zombieOldBlock);
-                            //Room.blockQueue.Enqueue(zombieOldBlock);
-                            //OstBot.room.blockMap[0][xOldBlock, yOldBlock].Add(zombieOldBlock);
-                            OstBot.room.DrawBlock(zombieOldBlock);
-                            //Console.WriteLine("WALKED X:" + xBlock + " Y: " + yBlock + " REMOVED X:" + xOldBlock + " Y:" + yOldBlock + " TIME:" + ostkakaTimer.ElapsedMilliseconds);
-                        }
-                    }
+                    Square temp;
+                    if (pathToGo.Count >= 2)
+                        temp = pathToGo.Pop();
+                    Square next = pathToGo.Pop();
+                    xBlock = next.x;
+                    yBlock = next.y;
+                    zombieBlock = Block.CreateBlock(0, xBlock, yBlock, 32, -1);
+                    zombieOldBlock = Block.CreateBlock(0, xOldBlock, yOldBlock, 4, -1);
+                    OstBot.room.DrawBlock(zombieBlock);
+                    OstBot.room.DrawBlock(zombieOldBlock);
                 }
 
-                if (targetBotPlayer != null)
+                /*if (targetBotPlayer != null)
                 {
                     if (!targetBotPlayer.isDead && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
                     {
                         targetBotPlayer.killPlayer();
                         OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
                     }
-                }
+                }*/
             }
             base.Update();
+        }
+
+        public override void Draw()
+        {
+            base.Draw();
         }
     }
 }

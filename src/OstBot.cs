@@ -19,7 +19,8 @@ namespace OstBot_2_
         public static string worldKey = "";
 
         public static List<Zombie> zombieList = new List<Zombie>();
-        public static Stopwatch zombieStopWatch = new Stopwatch();
+        public static Stopwatch zombieUpdateStopWatch = new Stopwatch();
+        public static Stopwatch zombieDrawStopWatch = new Stopwatch();
 
         public static Room room;
         public static Dig dig;
@@ -28,42 +29,28 @@ namespace OstBot_2_
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
+        public static Dictionary<int, BotPlayer> playerListTemp = new Dictionary<int, BotPlayer>();
 
         public OstBot()
         {
             playerTickTimer.Start();
-            zombieStopWatch.Start();
+            zombieUpdateStopWatch.Start();
+            zombieDrawStopWatch.Start();
+            Stopwatch oneZombie = new Stopwatch();
             new System.Threading.Thread(() =>
             {
                 //try
                 //{
                 while (true)
                 {
-
-                    if (zombieStopWatch.ElapsedMilliseconds >= 100)
-                    {
-                        zombieStopWatch.Restart();
-                        lock (zombieList)
-                        {
-                            foreach (Zombie zombie in zombieList)
-                            {
-                                if (zombie != null)
-                                {
-                                    zombie.Update();
-                                    zombie.Draw();
-                                    //System.Threading.Thread.Sleep(1000);
-                                }
-                            }
-                        }
-                    }
-
-                    if (playerTickTimer.ElapsedMilliseconds >= (1000 / (1000 / Config.physics_ms_per_tick)))
+                    if (playerTickTimer.ElapsedMilliseconds >= Config.physics_ms_per_tick)
                     {
                         playerTickTimer.Restart();
                         //try
                         //{
                         lock (playerList)
                         {
+                            playerListTemp = new Dictionary<int, BotPlayer>(playerList);
                             foreach (Player player in OstBot.playerList.Values)
                             {
                                 player.tick();
@@ -85,6 +72,38 @@ namespace OstBot_2_
                         throw null;
                 }*/
 
+            }).Start();
+            new System.Threading.Thread(() =>
+            {
+                while (true)
+                {
+                    /*if (zombieUpdateStopWatch.ElapsedMilliseconds >= 100)
+                    {
+                        zombieUpdateStopWatch.Restart();
+                        lock (zombieList)
+                        {
+                            foreach (Zombie zombie in zombieList)
+                            {
+                                zombie.Update();
+                                zombie.Draw();
+                            }
+                        }
+                    }
+                    System.Threading.Thread.Sleep(2);*/
+                    long lag = 0;
+                    lock (zombieList)
+                    {
+                        foreach (Zombie zombie in zombieList)
+                        {
+                            zombie.Update();
+                            zombie.Draw();
+                            System.Threading.Thread.Sleep((int)(500 / zombieList.Count) - (int)lag);
+                            //Console.WriteLine((int)(zombieUpdateStopWatch.ElapsedMilliseconds / zombieList.Count));
+                        }
+                    }
+                    lag = zombieUpdateStopWatch.ElapsedMilliseconds;
+                    zombieUpdateStopWatch.Restart();
+                }
             }).Start();
         }
 
@@ -211,7 +230,7 @@ namespace OstBot_2_
                                             zombieList.Add(zombie);
                                         }
                                         room.DrawBlock(Block.CreateBlock(0, playerList[playerId].blockX, playerList[playerId].blockY, 32, 0));
-                                        Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
+                                        //Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
                                     }
                                 }
                                 break;

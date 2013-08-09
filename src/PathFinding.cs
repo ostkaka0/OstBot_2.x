@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -69,36 +70,50 @@ namespace OstBot_2_
     {
         public Stack<Square> closedSquares = new Stack<Square>();
         public List<Square> openSquares = new List<Square>();
+        Stopwatch lagMeter = new Stopwatch();
 
-        public List<Point> squaresToAvoid = new List<Point>();
-        public List<int> walkableBlocks = new List<int>();
+        private static int maxBlocks = 200 * 400;
 
-        static Dictionary<Point, int> adjacentSquares = new Dictionary<Point, int>() { 
-            {new Point(1, 1), 14}, 
-            {new Point(-1, 1), 14}, 
-            {new Point(-1, -1), 14}, 
-            {new Point(1, -1), 14}, 
-            {new Point(1, 0), 10}, 
-            {new Point(-1, 0), 10}, 
-            {new Point(0, 1), 10}, 
-            {new Point(0, -1), 10}};
+        static Point[] adjacentSquares = new Point[8] { 
+            new Point(1, 1), 
+            new Point(-1, 1), 
+            new Point(-1, -1),
+            new Point(1, -1), 
+            new Point(1, 0), 
+            new Point(-1, 0),
+            new Point(0, 1),
+            new Point(0, -1)};
+
+        static int[] adjacentCost = new int[8] { 
+            14, 
+            14, 
+            14,
+            14, 
+            10, 
+            10,
+            10,
+            10};
 
         public Stack<Square> Begin(int startX, int startY, int targetX, int targetY)
         {
-            closedSquares = new Stack<Square>();
-            openSquares = new List<Square>();
+            lagMeter.Start();
+            closedSquares.Clear();
+            openSquares.Clear();
             Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), null);
             openSquares.Add(startingSquare);
-            GetCloseSquareData(targetX, targetY);
-            if (openSquares.Count == 0)
+            for (int i = 0; i < maxBlocks; i++)
             {
-                int lowestH = -1;
+                if (!GetCloseSquareData(targetX, targetY))
+                    break;
+            }
+            Console.WriteLine("one pathfinding took " + lagMeter.ElapsedMilliseconds + "MS");
+            if (openSquares.Count == 0 && closedSquares.Count != 0)
+            {
                 Square parent = null;
                 foreach (Square s in closedSquares)
                 {
-                    if (s.H < lowestH || lowestH == -1)
+                    if (parent == null || s.H < parent.H)
                     {
-                        lowestH = s.H;
                         parent = s;
                     }
                 }
@@ -127,7 +142,7 @@ namespace OstBot_2_
 
 
 
-        public void GetCloseSquareData(int targetX, int targetY)
+        public bool GetCloseSquareData(int targetX, int targetY)
         {
             Square parent = null;
             foreach (Square s in openSquares)
@@ -144,17 +159,14 @@ namespace OstBot_2_
             }
 
             if (parent == null || parent.x == targetX && parent.y == targetY || openSquares.Count == 0)
-                return;
+                return false;
             openSquares.Remove(parent);
 
-            foreach (KeyValuePair<Point, int> adjacentSquareVar in adjacentSquares)
+            for (int a = 0; a < 7; a++)
             {
-                int additionalCost = adjacentSquareVar.Value;
-                int adjacentSquareX = parent.x + adjacentSquareVar.Key.X;
-                int adjacentSquareY = parent.y + adjacentSquareVar.Key.Y;
-                Square adjacentSquare = new Square(adjacentSquareX, adjacentSquareY, parent.G + 10 + additionalCost, CalculateH(adjacentSquareX, adjacentSquareY, targetX, targetY), parent);
+                Square adjacentSquare = new Square(parent.x + adjacentSquares[a].X, parent.y + adjacentSquares[a].Y, parent.G + 10 + adjacentCost[a], CalculateH(parent.x + adjacentSquares[a].X, parent.y + adjacentSquares[a].Y, targetX, targetY), parent);
 
-                if (!closedSquares.Contains(adjacentSquare) && !squaresToAvoid.Contains(new Point(adjacentSquare.x, adjacentSquare.y)) && walkableBlocks.Contains(OstBot.room.getBotMapBlock(0, adjacentSquare.x, adjacentSquare.y).blockId))
+                if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getBotMapBlock(0, adjacentSquare.x, adjacentSquare.y).blockId == 4)
 
                     if (!openSquares.Contains(adjacentSquare))
                     {
@@ -163,7 +175,7 @@ namespace OstBot_2_
                     else
                     {
                         int oldG = adjacentSquare.G;
-                        int newG = parent.G + 10 + additionalCost;
+                        int newG = parent.G + 10 + adjacentCost[a];
                         if (newG < oldG)
                         {
                             adjacentSquare.parent = parent;
@@ -171,12 +183,12 @@ namespace OstBot_2_
                         }
                     }
             }
-            GetCloseSquareData(targetX, targetY);
+            return true;
         }
 
         public int CalculateH(int x1, int y1, int x2, int y2)
         {
-            return 10 * (Math.Abs(x1 - x2) + Math.Abs(y1 - y2));
+            return (Math.Abs(x1 - x2) + Math.Abs(y1 - y2));
         }
     }
 
