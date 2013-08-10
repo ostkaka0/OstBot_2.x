@@ -8,12 +8,27 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
+    public struct Positition
+    {
+        public int x;
+        public int y;
+        public int cost;
+
+        public Positition(int x, int y, int cost)
+        {
+            this.x = x;
+            this.y = y;
+            this.cost = cost;
+        }
+    }
+
     class Square
     {
         public int x;
         public int y;
         public int G;
         public int H;
+        public int cost;
         public Square parent;
         public int F
         {
@@ -22,12 +37,13 @@ namespace OstBot_2_
                 return G + H;
             }
         }
-        public Square(int x, int y, int G, int H, Square parent)
+        public Square(int x, int y, int G, int H, int cost, Square parent)
         {
             this.x = x;
             this.y = y;
             this.G = H;
             this.H = H;
+            this.cost = cost;
             this.parent = parent;
         }
 
@@ -74,32 +90,40 @@ namespace OstBot_2_
 
         private static int maxBlocks = 200 * 400;
 
-        static Point[] adjacentSquares = new Point[8] { 
-            new Point(1, 1), 
-            new Point(-1, 1), 
-            new Point(-1, -1),
-            new Point(1, -1), 
-            new Point(1, 0), 
-            new Point(-1, 0),
-            new Point(0, 1),
-            new Point(0, -1)};
+        private Positition[] adjacentSquares = null;/* = new Positition[8] { 
+            new Positition(1, 1, 14), 
+            new Positition(-1, 1, 14), 
+            new Positition(-1, -1, 14),
+            new Positition(1, -1, 14), 
+            new Positition(1, 0, 10), 
+            new Positition(-1, 0, 10),
+            new Positition(0, 1, 10),
+            new Positition(0, -1, 10)};*/
 
-        static int[] adjacentCost = new int[8] { 
-            14, 
-            14, 
-            14,
-            14, 
-            10, 
-            10,
-            10,
-            10};
 
-        public Stack<Square> Begin(int startX, int startY, int targetX, int targetY)
+        public Stack<Square> Begin(int startX, int startY, int targetX, int targetY, Positition[] adjacentSquares)
         {
+            if (adjacentSquares == null)
+            {
+                this.adjacentSquares = new Positition[8] { 
+                new Positition(1, 1, 14), 
+                new Positition(-1, 1, 14), 
+                new Positition(-1, -1, 14),
+                new Positition(1, -1, 14), 
+                new Positition(1, 0, 10), 
+                new Positition(-1, 0, 10),
+                new Positition(0, 1, 10),
+                new Positition(0, -1, 10)};
+            }
+            else
+            {
+                this.adjacentSquares = adjacentSquares;
+            }
+
             lagMeter.Start();
             closedSquares.Clear();
             openSquares.Clear();
-            Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), null);
+            Square startingSquare = new Square(startX, startY, 0, CalculateH(startX, startY, targetX, targetY), 0, null);
             openSquares.Add(startingSquare);
             for (int i = 0; i < maxBlocks; i++)
             {
@@ -120,7 +144,7 @@ namespace OstBot_2_
                 if (parent != null)
                 {
                     //Console.WriteLine("Lowest H pos X:" + parent.x + " Y:" + parent.y);
-                    Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y);
+                    Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y, adjacentSquares);
                     return temp;
                 }
 
@@ -164,7 +188,13 @@ namespace OstBot_2_
 
             for (int a = 0; a < 7; a++)
             {
-                Square adjacentSquare = new Square(parent.x + adjacentSquares[a].X, parent.y + adjacentSquares[a].Y, parent.G + 10 + adjacentCost[a], CalculateH(parent.x + adjacentSquares[a].X, parent.y + adjacentSquares[a].Y, targetX, targetY), parent);
+                Square adjacentSquare = new Square(
+                    parent.x + adjacentSquares[a].x, parent.y + adjacentSquares[a].y,
+                    parent.G + 10 + adjacentSquares[a].cost,
+                    CalculateH(
+                        parent.x + adjacentSquares[a].y, parent.y + adjacentSquares[a].y,
+                        targetX, targetY),
+                    adjacentSquares[a].cost, parent);
 
                 if (!closedSquares.Contains(adjacentSquare) && OstBot.room.getBotMapBlock(0, adjacentSquare.x, adjacentSquare.y).blockId == 4)
 
@@ -175,7 +205,7 @@ namespace OstBot_2_
                     else
                     {
                         int oldG = adjacentSquare.G;
-                        int newG = parent.G + 10 + adjacentCost[a];
+                        int newG = parent.G + 10 + adjacentSquares[a].cost;
                         if (newG < oldG)
                         {
                             adjacentSquare.parent = parent;

@@ -135,9 +135,9 @@ namespace OstBot_2_
                 dataArray[0] = 0;
             }
 
-            for (int j = 0; j < m.Count; j++)
+            for (int j = i; j < m.Count; j++)
             {
-                dataArray[i + j] = OstBot.toObject(m, (uint)(i + j));
+                dataArray[j] = OstBot.toObject(m, (uint)(j));
             }
         }
 

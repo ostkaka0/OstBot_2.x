@@ -99,7 +99,7 @@ namespace OstBot_2_
                         {
                             zombie.Update();
                             zombie.Draw();
-                            System.Threading.Thread.Sleep((int)(500 / zombieList.Count) - (int)lag);
+                            System.Threading.Thread.Sleep((int)(200 / zombieList.Count) - (int)lag);
                             //Console.WriteLine((int)(zombieUpdateStopWatch.ElapsedMilliseconds / zombieList.Count));
                         }
                     }
@@ -403,10 +403,7 @@ namespace OstBot_2_
 
             }
 
-            foreach (SubBot subBot in subBotRegister)
-            {
-                subBot.onMessage(sender, m);
-            }
+            SubBotHandler.OnMessage(sender, m);
         }
 
         private static void onDisconnect(object sender, string reason)

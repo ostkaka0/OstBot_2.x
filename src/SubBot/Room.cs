@@ -219,6 +219,9 @@ namespace OstBot_2_
                     while (blockMap == null)
                         Thread.Sleep(5);
 
+                    while (blockMap[m.GetInt(0)] == null)
+                        Thread.Sleep(5);
+
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
 
@@ -252,6 +255,12 @@ namespace OstBot_2_
                     break;
 
                 case "bc":
+                    while (blockMap == null)
+                        Thread.Sleep(5);
+
+                    while (blockMap[0] == null)
+                        Thread.Sleep(5);
+
                     lock (blockMap)
                         blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
                     break;

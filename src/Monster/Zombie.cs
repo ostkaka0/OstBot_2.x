@@ -65,7 +65,7 @@ namespace OstBot_2_
                 //pathFinding = null;
                 pathFinding = new PathFinding();
                 //lagTimer.Restart();
-                pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY);
+                pathToGo = pathFinding.Begin(xBlock, yBlock, targetBotPlayer.blockX, targetBotPlayer.blockY, null);
                 //Console.WriteLine("elapsed shitlagtime " + lagTimer.ElapsedMilliseconds + "MS");
 
                 if (pathToGo != null && pathToGo.Count != 0)
