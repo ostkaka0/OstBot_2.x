@@ -99,12 +99,13 @@ namespace OstBot_2_
                         {
                             zombie.Update();
                             zombie.Draw();
-                            System.Threading.Thread.Sleep((int)(200 / zombieList.Count) - (int)lag);
-                            //Console.WriteLine((int)(zombieUpdateStopWatch.ElapsedMilliseconds / zombieList.Count));
+                            System.Threading.Thread.Sleep((int)(100 / zombieList.Count) - (int)lag);
+                            //Console.WriteLine((int)(lag / zombieList.Count));
                         }
                     }
                     lag = zombieUpdateStopWatch.ElapsedMilliseconds;
                     zombieUpdateStopWatch.Restart();
+                    Console.WriteLine(lag);
                 }
             }).Start();
         }

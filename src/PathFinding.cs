@@ -103,6 +103,8 @@ namespace OstBot_2_
 
         public Stack<Square> Begin(int startX, int startY, int targetX, int targetY, Positition[] adjacentSquares)
         {
+            return null;
+
             if (adjacentSquares == null)
             {
                 this.adjacentSquares = new Positition[8] { 
@@ -144,8 +146,8 @@ namespace OstBot_2_
                 if (parent != null)
                 {
                     //Console.WriteLine("Lowest H pos X:" + parent.x + " Y:" + parent.y);
-                    Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y, adjacentSquares);
-                    return temp;
+                    //Stack<Square> temp = new PathFinding().Begin(startX, startY, parent.x, parent.y, adjacentSquares);
+                    return null;//temp;
                 }
 
             }
