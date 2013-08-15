@@ -85,7 +85,7 @@ namespace OstBot_2_
                     if (blockMap[layer][x, y].Count > 0)
                     {
                         if (blockMap[layer][x, y].Count <= rollbacks)
-                            return blockMap[layer][x, y][0];
+                            return Block.CreateBlock(layer, x, y, 0, -1);
                         else
                             return blockMap[layer][x, y][blockMap[layer][x, y].Count - 1 - rollbacks];
                     }
@@ -123,6 +123,7 @@ namespace OstBot_2_
             }
             return Block.CreateBlock(layer, x, y, 0, -1);
         }
+
 
         public void DrawBorder()
         {
@@ -225,7 +226,11 @@ namespace OstBot_2_
                     lock (blockMap)
                         blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
 
-                    Block block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
+                    Block block;
+                    if (m.Count >= 5)
+                        block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), m.GetInt(4));
+                    else
+                        block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
 
                     lock (blockSet)
                     {

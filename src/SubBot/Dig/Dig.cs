@@ -122,6 +122,10 @@ namespace OstBot_2_
 
         public override void onMessage(object sender, PlayerIOClient.Message m)
         {
+            return;
+            if (!OstBot.hasCode)
+                return;
+            //return;
             try
             {
                 switch (m.Type)
@@ -334,6 +338,7 @@ namespace OstBot_2_
 
                     case "m":
                         {
+                            return;
 
 
                             new Thread(() =>
@@ -394,7 +399,7 @@ namespace OstBot_2_
                                                             //if (distance == 0)
                                                             //    DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength, false);
                                                             if (distance <= 1.41421357 * (player.digRange - 1) || distance < 1.4142)
-                                                                DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digRange - distance, false);
+                                                                DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, (player.digRange - distance)*player.digStrength, false);
                                                         }
                                                     }
                                                 }
@@ -434,7 +439,7 @@ namespace OstBot_2_
             catch (Exception e)
             {
                 OstBot.shutdown();
-                throw e;
+                Console.WriteLine(e.ToString());//throw e;
             }
         }
 

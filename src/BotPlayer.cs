@@ -61,7 +61,7 @@ namespace OstBot_2_
 
         public int digMoney { get { return digMoney_; } set { digMoney_ = value; } }
 
-        public int digStrength { get { return 1; } }
+        public int digStrength { get { return 1 + digLevel/4; } }
 
         private static int getXpRequired(int level) { return BetterMath.Fibonacci(level + 2) * 8; }
 

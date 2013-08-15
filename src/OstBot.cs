@@ -24,17 +24,22 @@ namespace OstBot_2_
 
         public static Room room;
         public static Dig dig;
+        public static Commands commands;
         Stopwatch playerTickTimer = new Stopwatch();
         public static Random r = new Random();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
         public static Dictionary<int, BotPlayer> playerListTemp = new Dictionary<int, BotPlayer>();
+        public static Dictionary<string, int> leftNameList = new Dictionary<string, int>();
+        public static Dictionary<int, Player> leftPlayerList = new Dictionary<int, Player>();
 
         public static List<SubBot> subBotRegister = new List<SubBot>();
 
         public OstBot()
         {
+            return;
+
             playerTickTimer.Start();
             zombieUpdateStopWatch.Start();
             zombieDrawStopWatch.Start();
@@ -99,7 +104,7 @@ namespace OstBot_2_
                         {
                             zombie.Update();
                             zombie.Draw();
-                            System.Threading.Thread.Sleep((int)(100 / zombieList.Count) - (int)lag);
+                            System.Threading.Thread.Sleep((int)(200 / zombieList.Count) - (int)lag);
                             //Console.WriteLine((int)(lag / zombieList.Count));
                         }
                     }
@@ -167,9 +172,11 @@ namespace OstBot_2_
                 connection = client.Multiplayer.CreateJoinRoom(Program.form1.comboBox_WorldId.Text, Program.form1.comboBox_RoomType.Text, true, roomData, joinData);
                 connected = true;
                 connection.OnMessage += new MessageReceivedEventHandler(onMessage);
+                connection.OnDisconnect += new DisconnectEventHandler(onDisconnect);
 
                 room = new Room();
                 dig = new Dig();
+                commands = new Commands();
 
                 connection.Send("init");
                 connection.Send("init2");
@@ -189,7 +196,6 @@ namespace OstBot_2_
             switch (m.Type)
             {
                 case "init":
-                    connected = true;
                     if (isBB)
                     {
                         worldKey = rot13(m[3].ToString());
@@ -214,7 +220,7 @@ namespace OstBot_2_
                 case "say":
                     //lock (playerList)
                     {
-                        //Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
+                        Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
                         int playerId = m.GetInt(0);
                         string[] message = m.GetString(1).Split(' ');
                         switch (message[0])
@@ -255,26 +261,51 @@ namespace OstBot_2_
 
                 case "add":
                     {
+                        BotPlayer player = new BotPlayer(m);
                         lock (playerList)
                         {
-                            BotPlayer player = new BotPlayer(m);
-                            playerList.Add(m.GetInt(0), player);
-                            if (!nameList.ContainsKey(player.name))
-                                nameList.Add(player.name, m.GetInt(0));
-                            //Program.form1.listBox_PlayerList.Items.Add(player.name);
+                            if (!playerList.ContainsKey(m.GetInt(0)))
+                                playerList.Add(m.GetInt(0), player);
+                            else
+                                return;
+
+                        }
+                        lock (nameList)
+                        {
+                            if (nameList.ContainsKey(player.name))
+                            {
+                                nameList.Remove(player.name);
+                            }
+                            nameList.Add(player.name, m.GetInt(0));
+                            Program.form1.say("System", player.name + " joined!");
+                            Program.form1.listBox_PlayerList.Items.Add(player.name);
+
                         }
                     }
                     break;
                 case "left":
                     {
+                        int tempKey = m.GetInt(0);
+                        Player player;
+
                         lock (playerList)
                         {
-                            int tempKey = m.GetInt(0);
                             if (playerList.ContainsKey(tempKey))
-                            {
-                                playerList.Remove(tempKey);
-                            }
+                                player = playerList[tempKey];
+                            else
+                                return;
                         }
+                        string name = player.name;
+                        Program.form1.say("System", name + " left!");
+                        Program.form1.listBox_PlayerList.Items.Remove(name);
+                        lock (leftPlayerList)
+                            leftPlayerList.Add(tempKey, (Player)player);
+                        lock (leftNameList)
+                            leftNameList.Add(name, tempKey);
+                        lock (playerList)
+                            playerList.Remove(tempKey);
+                        lock (nameList)
+                            nameList.Remove(name);
                     }
                     break;
                 case "teleport":
@@ -423,6 +454,8 @@ namespace OstBot_2_
                 nameList.Clear();
                 playerList.Clear();
             }
+
+            Program.form1.listBox_PlayerList.Items.Clear();
 
             Program.form1.listBox_PlayerList.Items.Clear();
 

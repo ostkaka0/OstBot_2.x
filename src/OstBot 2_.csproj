@@ -78,6 +78,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Shop.cs" />
+    <Compile Include="SubBot\Commands.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\Dig\Dig.cs" />
     <Compile Include="Form1.cs">

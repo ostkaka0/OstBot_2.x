@@ -42,8 +42,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "b")
-                    return (int)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "b")
+                    return Convert.ToInt32(dataArray[4]);
                 return 0;
             }
         }
@@ -52,8 +52,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "bc")
-                    return (int)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "bc")
+                    return Convert.ToInt32(dataArray[4]);
                 return 0;
             }
         }
@@ -62,8 +62,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "bs")
-                    return (int)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "bs")
+                    return Convert.ToInt32(dataArray[4]);
                 return 0;
             }
         }
@@ -72,8 +72,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "pt")
-                    return (int)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "pt")
+                    return Convert.ToInt32(dataArray[4]);
                 return 0;
             }
         }
@@ -81,8 +81,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 5 && blockType == "pt")
-                    return (int)dataArray[5];
+                if (dataArray.Length >= 6 && blockType == "pt")
+                    return Convert.ToInt32(dataArray[5]);
                 return 0;
             }
         }
@@ -91,8 +91,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 6 && blockType == "pt")
-                    return (int)dataArray[6];
+                if (dataArray.Length >= 7 && blockType == "pt")
+                    return Convert.ToInt32(dataArray[6]);
                 return 0;
             }
         }
@@ -101,8 +101,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "lb")
-                    return (string)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "lb")
+                    return dataArray[4].ToString();
                 return "";
             }
         }
@@ -111,8 +111,8 @@ namespace OstBot_2_
         {
             get
             {
-                if (dataArray.Length >= 4 && blockType == "br")
-                    return (int)dataArray[4];
+                if (dataArray.Length >= 5 && blockType == "br")
+                    return Convert.ToInt32(dataArray[4]);
                 return 0;
             }
         }

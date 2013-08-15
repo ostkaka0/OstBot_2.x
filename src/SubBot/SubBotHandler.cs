@@ -48,6 +48,8 @@ namespace OstBot_2_
                         subBot.onDisconnect(sender, reason);
                     }).Start();
                 }
+
+                subBotList.Clear();
             }
         }
     }

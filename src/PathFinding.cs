@@ -103,7 +103,7 @@ namespace OstBot_2_
 
         public Stack<Square> Begin(int startX, int startY, int targetX, int targetY, Positition[] adjacentSquares)
         {
-            return null;
+            //return null;
 
             if (adjacentSquares == null)
             {

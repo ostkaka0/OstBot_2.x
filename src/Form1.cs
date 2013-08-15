@@ -494,6 +494,15 @@ namespace OstBot_2_
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
         {
             OstBot.room.setDrawSleep((int)numericUpDown1.Value);
+        }
+
+        private void button_EnterCode_Click(object sender, EventArgs e)
+        {
+            if (OstBot.connected)
+            {
+                if (OstBot.connection != null)
+                    OstBot.connection.Send("access", textBox4.Text);
+            }
         } 
     }
 }
