@@ -411,18 +411,12 @@ namespace OstBot_2_
                     {
                         BotPlayer _loc_3 = null;
                         int playerId = m.GetInt(0);
-                        /*if (param2 == myid)
+
+                        if (playerList.ContainsKey(playerId))
                         {
-                            player.killPlayer();
+                            _loc_3 = playerList[playerId];
+                            _loc_3.killPlayer();
                         }
-                        else
-                        {*/
-                        _loc_3 = playerList[playerId];
-                        //if (_loc_3)
-                        //{
-                        _loc_3.killPlayer();
-                        //}
-                        //}
                     }
                     break;
                 case "access":
