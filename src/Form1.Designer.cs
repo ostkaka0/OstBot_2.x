@@ -528,6 +528,7 @@
             this.listBox_PlayerList.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.listBox_PlayerList.Size = new System.Drawing.Size(155, 353);
             this.listBox_PlayerList.TabIndex = 3;
+            this.listBox_PlayerList.SelectedIndexChanged += new System.EventHandler(this.listBox_PlayerList_SelectedIndexChanged);
             // 
             // textBox_ChatText
             // 

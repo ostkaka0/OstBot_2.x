@@ -278,7 +278,14 @@ namespace OstBot_2_
                             }
                             nameList.Add(player.name, m.GetInt(0));
                             Program.form1.say("System", player.name + " joined!");
-                            Program.form1.listBox_PlayerList.Items.Add(player.name);
+                            lock (Program.form1.lambdaFunctionQueue)
+                            {
+                                Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                                    {
+                                        lock (Program.form1.listBox_PlayerList.Items)
+                                            Program.form1.listBox_PlayerList.Items.Add(player.name);
+                                    });
+                            }
 
                         }
                     }
@@ -297,15 +304,37 @@ namespace OstBot_2_
                         }
                         string name = player.name;
                         Program.form1.say("System", name + " left!");
-                        Program.form1.listBox_PlayerList.Items.Remove(name);
-                        lock (leftPlayerList)
-                            leftPlayerList.Add(tempKey, (Player)player);
-                        lock (leftNameList)
-                            leftNameList.Add(name, tempKey);
-                        lock (playerList)
-                            playerList.Remove(tempKey);
-                        lock (nameList)
-                            nameList.Remove(name);
+                        lock (Program.form1.lambdaFunctionQueue)
+                        {
+                            Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                                {
+                                    lock (Program.form1.listBox_PlayerList.Items)
+                                        Program.form1.listBox_PlayerList.Items.Remove(name);
+                                    lock (leftPlayerList)
+                                    {
+                                        if (leftPlayerList.ContainsKey(tempKey))
+                                            leftPlayerList.Remove(tempKey);
+                                        leftPlayerList.Add(tempKey, (Player)player);
+                                    }
+                                    lock (leftNameList)
+                                    {
+                                        if (leftNameList.ContainsKey(name))
+                                            leftNameList.Remove(name);
+                                        leftNameList.Add(name, tempKey);
+                                    }
+                                    lock (playerList)
+                                    {
+                                        if (playerList.ContainsKey(tempKey))
+                                            playerList.Remove(tempKey);
+                                    }
+                                    lock (nameList)
+                                    {
+                                        if (nameList.ContainsKey(name))
+                                            nameList.Remove(name);
+                                    }
+                                });
+                        }
+
                     }
                     break;
                 case "teleport":
@@ -378,7 +407,7 @@ namespace OstBot_2_
                         }
                     }// end function
                     break;
-                case "kill":
+                case "kill": //error
                     {
                         BotPlayer _loc_3 = null;
                         int playerId = m.GetInt(0);
@@ -454,10 +483,14 @@ namespace OstBot_2_
                 nameList.Clear();
                 playerList.Clear();
             }
-
-            Program.form1.listBox_PlayerList.Items.Clear();
-
-            Program.form1.listBox_PlayerList.Items.Clear();
+            lock (Program.form1.lambdaFunctionQueue)
+            {
+                Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                    {
+                        lock (Program.form1.listBox_PlayerList.Items)
+                            Program.form1.listBox_PlayerList.Items.Clear();
+                    });
+            }
 
             Program.form1.WriteLine("Disconnected by " + sender.ToString() + " with reason: " + reason);
 
@@ -470,9 +503,16 @@ namespace OstBot_2_
             }
             else
             {
-                Program.form1.button_Connect.Text = "Connect";
-                Program.form1.comboBox_RoomType.Enabled = true;
-                Program.form1.comboBox_WorldId.Enabled = true;
+                lock (Program.form1.lambdaFunctionQueue)
+                {
+                    Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                        {
+                            lock (Program.form1.button_Connect.Text)
+                                Program.form1.button_Connect.Text = "Connect";
+                            Program.form1.comboBox_RoomType.Enabled = true;
+                            Program.form1.comboBox_WorldId.Enabled = true;
+                        });
+                }
             }
         }
 

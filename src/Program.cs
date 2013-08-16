@@ -12,6 +12,7 @@ namespace OstBot_2_
         public static OstBot ostBot;
         public static Form1 form1;
 
+        [STAThread]
         static void Main(string[] args)
         {
             try

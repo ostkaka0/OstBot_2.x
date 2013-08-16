@@ -18,8 +18,11 @@ namespace OstBot_2_
         public int runtime = 0;
         string terminalString;
         object terminalStringLock = 0;
+        public delegate void lambdaFunction(Form1 form1);
         Queue<string[]> sayString = new Queue<string[]>();
+        public Queue<lambdaFunction> lambdaFunctionQueue = new Queue<lambdaFunction>();
         object sayStringLock = 0;
+
 
 
         public Form1()
@@ -167,32 +170,37 @@ namespace OstBot_2_
             this.groupBox_Connect.Enabled = false;
             if (!OstBot.connected)
             {
-                this.button_Connect.Text = "Connecting...";
+                lock (button_Connect.Text)
+                    this.button_Connect.Text = "Connecting...";
                 WriteLine("Connecting...");
                 OstBot.Connect();
                 if (OstBot.connected)
                 {
-                    this.button_Connect.Text = "Disconnect";
+                    lock (button_Connect.Text)
+                        this.button_Connect.Text = "Disconnect";
                     this.comboBox_RoomType.Enabled = false;
                     this.comboBox_WorldId.Enabled = false;
                     WriteLine("Connecting succeeded!");
                 }
                 else
                 {
-                    this.button_Connect.Text = "Connect";
+                    lock (button_Connect.Text)
+                        this.button_Connect.Text = "Connect";
                     WriteLine("Connecting failed!");
                 }
             }
             else
             {
-                this.button_Connect.Text = "Disconnecting...";
+                lock (button_Connect.Text)
+                    this.button_Connect.Text = "Disconnecting...";
                 WriteLine("Disconnecting...");
                 bool reconnect = this.checkBox_Reconnect.Enabled;
                 this.checkBox_Reconnect.Enabled = false;
                 OstBot.connection.Disconnect();
                 this.checkBox_Reconnect.Enabled = reconnect;
                 this.checkBox_Reconnect.Enabled = true;
-                this.button_Connect.Text = "Connect";
+                lock (button_Connect.Text)
+                    this.button_Connect.Text = "Connect";
                 this.comboBox_RoomType.Enabled = true;
                 this.comboBox_WorldId.Enabled = true;
             }
@@ -251,6 +259,14 @@ namespace OstBot_2_
             }
             //richTextBox1.Text += sayString;
             sayString.Clear();
+
+            lock (lambdaFunctionQueue)
+            {
+                while (lambdaFunctionQueue.Count > 0)
+                {
+                    lambdaFunctionQueue.Dequeue()(this);
+                }
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -503,6 +519,23 @@ namespace OstBot_2_
                 if (OstBot.connection != null)
                     OstBot.connection.Send("access", textBox4.Text);
             }
+        }
+
+        private void listBox_PlayerList_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (listBox_PlayerList.SelectedItem == null)
+                return;
+
+            Clipboard.Clear();
+            Thread.Sleep(100);
+            lock (listBox_PlayerList.Items)
+                Clipboard.SetDataObject(
+                    listBox_PlayerList.SelectedItem.ToString(), //text to store in clipboard
+                    false,       //do not keep after our app exits
+                    5,           //retry 5 times
+                    200);        //200ms delay between retries
+                //Clipboard.SetText(listBox_PlayerList.SelectedItem.ToString());
+            
         } 
     }
 }
