@@ -65,21 +65,14 @@ namespace OstBot_2_
 
             backgroundWorker_CodeCracker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_CodeCracker_RunWorkerCompleted);
 
-            using (Stream input = File.OpenRead(Environment.CurrentDirectory + @"runtime.dat"))
-            using (Stream output = File.OpenWrite(Environment.CurrentDirectory + @"runtime.dat"))
+            /*using (Stream input = File.OpenRead(Environment.CurrentDirectory + @"\\runtime.dat"))
+            using (Stream output = File.OpenWrite(Environment.CurrentDirectory + @"\\runtime.dat"))
             {
-                while (true)
-                {
-                    int value = input.ReadByte();
-                    if (value == -1)
-                    {
-                        break;
-                    }
+                int value = input.
 
-                    runtime = value + 1;
-                    output.WriteByte((byte)runtime);
-                }
-            }
+                runtime = value + 1;
+                output.WriteByte((byte)runtime);
+            }*/
 
             Console.WriteLine(runtime);
         }

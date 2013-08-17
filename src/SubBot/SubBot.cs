@@ -14,7 +14,7 @@ namespace OstBot_2_
         {
             SubBotHandler.AddSubBot(this);
 
-            new Thread(() =>
+            new Task(() =>
                 {
                     try
                     {

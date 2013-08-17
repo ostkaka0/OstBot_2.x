@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading;
+using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
@@ -29,7 +29,7 @@ namespace OstBot_2_
             {
                 foreach (SubBot subBot in subBotList)
                 {
-                    new Thread(() =>
+                    new Task(() =>//new Thread(() =>
                         {
                             subBot.onMessage(sender, m);
                         }).Start();
@@ -43,7 +43,7 @@ namespace OstBot_2_
             {
                 foreach (SubBot subBot in subBotList)
                 {
-                    new Thread(() =>
+                    new Task(() =>
                     {
                         subBot.onDisconnect(sender, reason);
                     }).Start();

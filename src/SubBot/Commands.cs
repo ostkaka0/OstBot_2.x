@@ -37,7 +37,7 @@ namespace OstBot_2_
                                     player = new Player(-1, "", 0, 0, 0, false, false, false, 0, false, false, 0);
                                 }
                             }
-                            bool isBotAdmin = (name == "ostkaka " || name == "botost" || player.ismod);
+                            bool isBotAdmin = (name == "ostkaka" || name == "botost" || name == "gustav9797" || name == "gbot" || player.ismod);
 
 
                             switch (arg[0])
@@ -59,7 +59,7 @@ namespace OstBot_2_
                                 case "!ban":
                                     break;
                                 case "!fill":       //<blocktyp><data> / <blocktyp><lager> / <blocktyp><pengar till pengardörr>..   //med arean mellan 2 block
-                                    new Thread(() =>
+                                    new Task(() =>
                                         {
                                             if (arg.Length > 1 && isBotAdmin)
                                             {
@@ -80,7 +80,7 @@ namespace OstBot_2_
                                 case "!fillarea":   //<x1><y1><x2><y2><blocktyp><data>
                                     break;
                                 case "!replace":        //med arean mellan 2 block
-                                    new Thread(() =>
+                                    new Task(() =>
                                         {
                                             if (arg.Length > 2 && isBotAdmin)
                                             {
@@ -120,7 +120,7 @@ namespace OstBot_2_
                                 case "!rollback":   //<spelarnamn>
                                     if (arg.Length > 1 && isBotAdmin)
                                     {
-                                        new Thread(() =>
+                                        new Task(() =>
                                         {
 
                                             for (int l = 0; l < 2; l++)
@@ -183,7 +183,7 @@ namespace OstBot_2_
 
 
                 case "b":
-                    new Thread(() =>
+                    new Task(() =>
                     {
                         string name = "";
                         if (m.Count >= 5)

@@ -122,7 +122,7 @@ namespace OstBot_2_
 
         public override void onMessage(object sender, PlayerIOClient.Message m)
         {
-            return;
+            //return;
             if (!OstBot.hasCode)
                 return;
             //return;
@@ -138,6 +138,7 @@ namespace OstBot_2_
                         break;
 
                     case "reset":
+                        digHardness = new float[OstBot.room.width, OstBot.room.height];
                         resetDigHardness();
                         break;
 
@@ -145,6 +146,7 @@ namespace OstBot_2_
                         {
                             int userId = m.GetInt(0);
                             string text = m.GetString(1);
+                            bool isBotMod = false;
                             if (text.StartsWith("!"))
                             {
                                 string[] arg = text.ToLower().Split(' ');
@@ -155,6 +157,8 @@ namespace OstBot_2_
                                         name = OstBot.playerList[userId].name;
                                 }
 
+                                isBotMod = (name == "ostkaka" || name == "gustav9797" || name == "botost" || name == "gbot");
+
                                 switch (arg[0])
                                 {
                                     case "!digcommands":
@@ -162,12 +166,13 @@ namespace OstBot_2_
                                         break;
 
                                     case "!generate":
-                                        if (name == "ostkaka" || name == "gustav9797")
+                                        if (isBotMod)
                                         {
-                                            new Thread(() =>
+                                            new Task(() =>
                                                 {
                                                     try
                                                     {
+                                                        digHardness = new float[OstBot.room.width, OstBot.room.height];
                                                         Generate(OstBot.room.width, OstBot.room.height);//lock(OstBot.playerList
                                                     }
                                                     catch (Exception e)
@@ -180,7 +185,7 @@ namespace OstBot_2_
                                         break;
 
                                     case "!givexp":
-                                        if (name == "ostkaka" || name == "gustav9797" && arg.Length > 2)
+                                        if (isBotMod && arg.Length > 2)
                                         {
                                             BotPlayer receiver;
                                             lock (OstBot.playerList)
@@ -338,10 +343,10 @@ namespace OstBot_2_
 
                     case "m":
                         {
-                            return;
+                            //return;
 
 
-                            new Thread(() =>
+                            new Task(() =>
                                 {
                                     try
                                     {
@@ -557,13 +562,26 @@ namespace OstBot_2_
 
         private void resetBlockHardness(int x, int y, int blockId)
         {
-            if (isDigable(blockId))
+            if (x < 0 || y < 0 || x >= OstBot.room.width || y >= OstBot.room.height)
+
+            if (digHardness == null)
             {
-                digHardness[x, y] = 1F;
+                //lock (digHardness)
+                {
+                    digHardness = new float[OstBot.room.width, OstBot.room.height];
+                }
             }
-            else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
+
+            lock (digHardness)
             {
-                digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(4));
+                if (isDigable(blockId))
+                {
+                    digHardness[x, y] = 1F;
+                }
+                else if (DigBlockMap.blockTranslator.ContainsKey(blockId))
+                {
+                    digHardness[x, y] = Convert.ToInt32(Shop.shopInventory[DigBlockMap.blockTranslator[blockId].GetName()].GetDataAt(4));
+                }
             }
         }
 
