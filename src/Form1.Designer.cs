@@ -65,9 +65,6 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label8 = new System.Windows.Forms.Label();
             this.numericUpDown1 = new System.Windows.Forms.NumericUpDown();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
             this.listBox_PlayerList = new System.Windows.Forms.ListBox();
             this.textBox_ChatText = new System.Windows.Forms.TextBox();
@@ -76,6 +73,10 @@
             this.tabPage5 = new System.Windows.Forms.TabPage();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.button1 = new System.Windows.Forms.Button();
+            this.tabPage6 = new System.Windows.Forms.TabPage();
+            this.textBox6 = new System.Windows.Forms.TextBox();
+            this.textBox5 = new System.Windows.Forms.TextBox();
+            this.checkedListBox_SubBots = new System.Windows.Forms.CheckedListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker_CodeCracker = new System.ComponentModel.BackgroundWorker();
             this.tabControl1.SuspendLayout();
@@ -88,21 +89,21 @@
             this.tabPage2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).BeginInit();
-            this.tabPage3.SuspendLayout();
             this.tabPage4.SuspendLayout();
             this.tabPage5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
+            this.tabPage6.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
             // 
             this.tabControl1.Controls.Add(this.tabPage1);
             this.tabControl1.Controls.Add(this.tabPage2);
-            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
+            this.tabControl1.Controls.Add(this.tabPage6);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -475,37 +476,6 @@
             0});
             this.numericUpDown1.ValueChanged += new System.EventHandler(this.numericUpDown1_ValueChanged);
             // 
-            // tabPage3
-            // 
-            this.tabPage3.Controls.Add(this.textBox2);
-            this.tabPage3.Controls.Add(this.textBox1);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(776, 436);
-            this.tabPage3.TabIndex = 1;
-            this.tabPage3.Text = "Terminal";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(8, 388);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(600, 20);
-            this.textBox2.TabIndex = 1;
-            this.textBox2.TextChanged += new System.EventHandler(this.textBox2_TextChanged);
-            // 
-            // textBox1
-            // 
-            this.textBox1.Location = new System.Drawing.Point(7, 7);
-            this.textBox1.Multiline = true;
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBox1.Size = new System.Drawing.Size(601, 375);
-            this.textBox1.TabIndex = 0;
-            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
-            // 
             // tabPage4
             // 
             this.tabPage4.Controls.Add(this.listBox_PlayerList);
@@ -593,6 +563,44 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
+            // tabPage6
+            // 
+            this.tabPage6.Controls.Add(this.textBox6);
+            this.tabPage6.Controls.Add(this.textBox5);
+            this.tabPage6.Controls.Add(this.checkedListBox_SubBots);
+            this.tabPage6.Location = new System.Drawing.Point(4, 22);
+            this.tabPage6.Name = "tabPage6";
+            this.tabPage6.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage6.Size = new System.Drawing.Size(776, 436);
+            this.tabPage6.TabIndex = 5;
+            this.tabPage6.Text = "Bot Systems";
+            this.tabPage6.UseVisualStyleBackColor = true;
+            // 
+            // textBox6
+            // 
+            this.textBox6.Location = new System.Drawing.Point(8, 408);
+            this.textBox6.Name = "textBox6";
+            this.textBox6.Size = new System.Drawing.Size(443, 20);
+            this.textBox6.TabIndex = 2;
+            // 
+            // textBox5
+            // 
+            this.textBox5.Location = new System.Drawing.Point(6, 6);
+            this.textBox5.Multiline = true;
+            this.textBox5.Name = "textBox5";
+            this.textBox5.Size = new System.Drawing.Size(448, 396);
+            this.textBox5.TabIndex = 1;
+            // 
+            // checkedListBox_SubBots
+            // 
+            this.checkedListBox_SubBots.Dock = System.Windows.Forms.DockStyle.Right;
+            this.checkedListBox_SubBots.FormattingEnabled = true;
+            this.checkedListBox_SubBots.Location = new System.Drawing.Point(457, 3);
+            this.checkedListBox_SubBots.Name = "checkedListBox_SubBots";
+            this.checkedListBox_SubBots.Size = new System.Drawing.Size(316, 430);
+            this.checkedListBox_SubBots.TabIndex = 0;
+            this.checkedListBox_SubBots.SelectedIndexChanged += new System.EventHandler(this.checkedListBox_SubBots_SelectedIndexChanged);
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -626,14 +634,14 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown1)).EndInit();
-            this.tabPage3.ResumeLayout(false);
-            this.tabPage3.PerformLayout();
             this.tabPage4.ResumeLayout(false);
             this.tabPage4.PerformLayout();
             this.tabPage5.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
+            this.tabPage6.ResumeLayout(false);
+            this.tabPage6.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -642,9 +650,6 @@
 
         private System.Windows.Forms.TabControl tabControl1;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TabPage tabPage3;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TabPage tabPage2;
         private System.Windows.Forms.GroupBox groupBox_Login;
         private System.Windows.Forms.Button button_Login;
@@ -689,5 +694,9 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.TabPage tabPage6;
+        private System.Windows.Forms.TextBox textBox6;
+        private System.Windows.Forms.TextBox textBox5;
+        public System.Windows.Forms.CheckedListBox checkedListBox_SubBots;
     }
 }

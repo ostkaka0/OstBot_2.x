@@ -17,6 +17,8 @@ namespace OstBot_2_
         public static bool hasCode = false;
         public static bool isOwner = false;
         public static string worldKey = "";
+        public static string title = "";
+        public static string owner = "";
 
         public static List<Zombie> zombieList = new List<Zombie>();
         public static Stopwatch zombieUpdateStopWatch = new Stopwatch();
@@ -149,7 +151,7 @@ namespace OstBot_2_
 
         public static void Login(string server, string email, string password)
         {
-            isBB = (server == "blocking-blocks-u4zmkxjugu0ap8xqbymw");
+            isBB = (server != "everybody-edits-su9rn58o40itdbnw69plyw");
 
             try
             {
@@ -157,8 +159,7 @@ namespace OstBot_2_
             }
             catch (Exception e)
             {
-                Program.form1.WriteLine("Error: " + e.ToString());
-                throw e;
+                Program.console.WriteLine("Error: " + e.ToString());
             }
         }
 
@@ -177,27 +178,30 @@ namespace OstBot_2_
                 room = new Room();
                 dig = new Dig();
                 commands = new Commands();
+                new Redstone();
 
                 connection.Send("init");
                 connection.Send("init2");
             }
             catch (Exception e)
             {
-                Program.form1.WriteLine("Error: " + e.ToString());
-                throw e;
+                Program.console.WriteLine("Error: " + e.ToString());
+                //throw e;
 
             }
         }
 
         private static void onMessage(object sender, PlayerIOClient.Message m)
         {
-            //Program.form1.WriteLine(m.ToString());
+            //Program.console.WriteLine(m.ToString());
 
             switch (m.Type)
             {
                 case "init":
                     if (isBB)
                     {
+                        owner = m.GetString(0);
+                        title = m.GetString(1);
                         worldKey = rot13(m[3].ToString());
                         //botPlayerID = m.GetInt(6);
                         //width = m.GetInt(10);
@@ -207,6 +211,8 @@ namespace OstBot_2_
                     }
                     else
                     {
+                        owner = m.GetString(0);
+                        title = m.GetString(1);
                         worldKey = rot13(m[5].ToString());
                         //botPlayerID = m.GetInt(6);
                         //width = m.GetInt(12);
@@ -214,7 +220,19 @@ namespace OstBot_2_
                         hasCode = m.GetBoolean(10);
                         isOwner = m.GetBoolean(11);
                     }
-                    hasCode = isOwner;
+                    hasCode |= isOwner;
+
+                    {
+                        string roomData = " - " + title + " ¦ by: " + owner;
+                        Program.form1.Invoke(new Action(() =>
+                            Program.form1.Text = Program.form1.Text.Substring(0, 10) + roomData
+                            ));
+
+                        Program.console.Invoke(new Action(() =>
+                            Program.console.Text = Program.console.Text.Substring(0, 7) + roomData
+                            ));
+                    }
+
                     break;
 
                 case "say":
@@ -226,10 +244,11 @@ namespace OstBot_2_
                                 Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
                         }
                         int playerId = m.GetInt(0);
+                        SubBotHandler.onCommand(sender, m.GetString(1).Substring(1), playerId);
                         string[] message = m.GetString(1).Split(' ');
                         switch (message[0])
                         {
-                            case "!zombie":
+                            case "zombie":
                                 {
                                     //lock (playerList)
                                     {
@@ -243,7 +262,7 @@ namespace OstBot_2_
                                     }
                                 }
                                 break;
-                            case "!zombies":
+                            case "zombies":
                                 {
                                     for (int i = 0; i < 50; i++)
                                     {
@@ -425,7 +444,7 @@ namespace OstBot_2_
                     break;
                 case "access":
                     hasCode = true;
-                    Program.form1.WriteLine("Code Cracked!");
+                    Program.console.WriteLine("Code Cracked!");
                     //connection.Send("say", "I know the code.");
                     break;
                 case "m":
@@ -490,12 +509,12 @@ namespace OstBot_2_
                     });
             }
 
-            Program.form1.WriteLine("Disconnected by " + sender.ToString() + " with reason: " + reason);
+            Program.console.WriteLine("Disconnected by " + sender.ToString() + " with reason: " + reason);
 
             if (Program.form1.checkBox_Reconnect.Checked)
             {
                 Program.form1.button_Connect.Enabled = false;
-                Program.form1.WriteLine("Reconnecting...");
+                Program.console.WriteLine("Reconnecting...");
                 Connect();
                 Program.form1.button_Connect.Enabled = true;
             }

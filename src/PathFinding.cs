@@ -8,13 +8,13 @@ using System.Threading.Tasks;
 
 namespace OstBot_2_
 {
-    public struct Positition
+    public struct Position
     {
         public int x;
         public int y;
         public int cost;
 
-        public Positition(int x, int y, int cost)
+        public Position(int x, int y, int cost)
         {
             this.x = x;
             this.y = y;
@@ -90,32 +90,32 @@ namespace OstBot_2_
 
         private static int maxBlocks = 200 * 400;
 
-        private Positition[] adjacentSquares = null;/* = new Positition[8] { 
-            new Positition(1, 1, 14), 
-            new Positition(-1, 1, 14), 
-            new Positition(-1, -1, 14),
-            new Positition(1, -1, 14), 
-            new Positition(1, 0, 10), 
-            new Positition(-1, 0, 10),
-            new Positition(0, 1, 10),
-            new Positition(0, -1, 10)};*/
+        private Position[] adjacentSquares = null;/* = new Position[8] { 
+            new Position(1, 1, 14), 
+            new Position(-1, 1, 14), 
+            new Position(-1, -1, 14),
+            new Position(1, -1, 14), 
+            new Position(1, 0, 10), 
+            new Position(-1, 0, 10),
+            new Position(0, 1, 10),
+            new Position(0, -1, 10)};*/
 
 
-        public Stack<Square> Begin(int startX, int startY, int targetX, int targetY, Positition[] adjacentSquares)
+        public Stack<Square> Begin(int startX, int startY, int targetX, int targetY, Position[] adjacentSquares)
         {
             //return null;
 
             if (adjacentSquares == null)
             {
-                this.adjacentSquares = new Positition[8] { 
-                new Positition(1, 1, 14), 
-                new Positition(-1, 1, 14), 
-                new Positition(-1, -1, 14),
-                new Positition(1, -1, 14), 
-                new Positition(1, 0, 10), 
-                new Positition(-1, 0, 10),
-                new Positition(0, 1, 10),
-                new Positition(0, -1, 10)};
+                this.adjacentSquares = new Position[8] { 
+                new Position(1, 1, 14), 
+                new Position(-1, 1, 14), 
+                new Position(-1, -1, 14),
+                new Position(1, -1, 14), 
+                new Position(1, 0, 10), 
+                new Position(-1, 0, 10),
+                new Position(0, 1, 10),
+                new Position(0, -1, 10)};
             }
             else
             {

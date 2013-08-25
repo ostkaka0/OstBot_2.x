@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Threading.Tasks;
+
 
 namespace OstBot_2_
 {
@@ -15,6 +15,12 @@ namespace OstBot_2_
         {
             lock (subBotList)
                 subBotList.Add(subBot);
+
+            Program.form1.Invoke(new Action(() =>
+                {
+                    Program.form1.checkedListBox_SubBots.Items.Add(subBot);
+                    subBot.id = Program.form1.checkedListBox_SubBots.Items.Count - 1;
+                }));
         }
 
         public static void RemoveSubBot(SubBot subBot)
@@ -29,10 +35,13 @@ namespace OstBot_2_
             {
                 foreach (SubBot subBot in subBotList)
                 {
-                    new Task(() =>//new Thread(() =>
-                        {
-                            subBot.onMessage(sender, m);
-                        }).Start();
+                    if (subBot.enabled)
+                    {
+                        new Task(() =>//new Thread(() =>
+                            {
+                                subBot.onMessage(sender, m);
+                            }).Start();
+                    }
                 }
             }
         }
@@ -43,13 +52,57 @@ namespace OstBot_2_
             {
                 foreach (SubBot subBot in subBotList)
                 {
-                    new Task(() =>
+                    if (subBot.enabled)
                     {
-                        subBot.onDisconnect(sender, reason);
-                    }).Start();
+                        new Task(() =>
+                        {
+                            subBot.onDisconnect(sender, reason);
+                        }).Start();
+                    }
                 }
 
                 subBotList.Clear();
+
+                Program.form1.Invoke(new Action(()=>
+                    Program.form1.checkedListBox_SubBots.Items.Clear()
+                    ));
+            }
+        }
+
+        public static void onCommand(object sender, string text, int userId)
+        {
+            string[] args = text.Split(' ');
+
+            string[] arg = text.ToLower().Split(' ');
+            string name = "";
+            Player player;
+
+            lock (OstBot.playerList)
+            {
+                if (OstBot.playerList.ContainsKey(userId))
+                {
+                    player = OstBot.playerList[userId];
+                    name = player.name;
+                }
+                else
+                {
+                    player = new Player(-1, "", 0, 0, 0, false, false, false, 0, false, false, 0);
+                }
+            }
+            bool isBotMod = (name == "ostkaka" || name == "botost" || name == "gustav9797" || name == "gbot" || player.ismod || userId == -1);
+
+            lock (subBotList)
+            {
+                foreach (SubBot subBot in subBotList)
+                {
+                    if (subBot.enabled)
+                    {
+                        new Task(() =>//new Thread(() =>
+                        {
+                            subBot.onCommand(sender, text, args, userId, player, name, isBotMod);
+                        }).Start();
+                    }
+                }
             }
         }
     }

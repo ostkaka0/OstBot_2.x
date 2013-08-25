@@ -26,7 +26,7 @@ namespace OstBot_2_
         public Room()
             : base()
         {
-
+            enabled = true;
         }
 
         public void setDrawSleep(int drawSleep)
@@ -311,6 +311,12 @@ namespace OstBot_2_
 
         public override void onDisconnect(object sender, string reason)
         {
+
+        }
+
+        public override void onCommand(object sender, string text, string[] args, int userId, Player player, string name, bool isBotMod)
+        {
+
         }
 
         public override void Update()

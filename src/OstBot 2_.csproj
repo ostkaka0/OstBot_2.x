@@ -63,13 +63,27 @@
     <Compile Include="AdminList.cs" />
     <Compile Include="BetterMath.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="BlockPos.cs" />
     <Compile Include="BotPlayer.cs" />
     <Compile Include="Building\Building.cs" />
     <Compile Include="Building\Structure\Structure.cs" />
+    <Compile Include="ConsoleWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConsoleWindow.Designer.cs">
+      <DependentUpon>ConsoleWindow.cs</DependentUpon>
+    </Compile>
     <Compile Include="Inventory\DigMap.cs" />
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
     <Compile Include="Inventory\Key.cs" />
+    <Compile Include="MazeGenerator.cs" />
+    <Compile Include="Minimap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Minimap.Designer.cs">
+      <DependentUpon>Minimap.cs</DependentUpon>
+    </Compile>
     <Compile Include="Monster\Monster.cs" />
     <Compile Include="Monster\Zombie.cs" />
     <Compile Include="Movement\BlObject.cs" />
@@ -83,6 +97,12 @@
     </Compile>
     <Compile Include="Shop.cs" />
     <Compile Include="SubBot\Commands.cs" />
+    <Compile Include="SubBot\Redstone\Destination.cs" />
+    <Compile Include="SubBot\Redstone\Lamp.cs" />
+    <Compile Include="SubBot\Redstone\PowerSource.cs" />
+    <Compile Include="SubBot\Redstone\Redstone.cs" />
+    <Compile Include="SubBot\Redstone\Torch.cs" />
+    <Compile Include="SubBot\Redstone\Wire.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\Dig\Dig.cs" />
     <Compile Include="Form1.cs">
@@ -101,6 +121,9 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ConsoleWindow.resx">
+      <DependentUpon>ConsoleWindow.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>

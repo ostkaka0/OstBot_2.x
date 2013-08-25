@@ -11,177 +11,16 @@ namespace OstBot_2_
     {
         private List<string> disabledPlayers = new List<string>();
 
+        public Commands()
+            : base()
+        {
+            enabled = true;
+        }
+
         public override void onMessage(object sender, PlayerIOClient.Message m)
         {
             switch (m.Type)
             {
-                case "say":
-                    {
-                        int userId = m.GetInt(0);
-                        string text = m.GetString(1).Replace("|", "");
-                        if (text.StartsWith("!"))
-                        {
-                            string[] arg = text.ToLower().Split(' ');
-                            string name = "";
-                            Player player;
-
-                            lock (OstBot.playerList)
-                            {
-                                if (OstBot.playerList.ContainsKey(userId))
-                                {
-                                    player = OstBot.playerList[userId];
-                                    name = player.name;
-                                }
-                                else
-                                {
-                                    player = new Player(-1, "", 0, 0, 0, false, false, false, 0, false, false, 0);
-                                }
-                            }
-                            bool isBotAdmin = (name == "ostkaka" || name == "botost" || name == "gustav9797" || name == "gbot" || player.ismod);
-
-
-                            switch (arg[0])
-                            {
-                                case "!reset":
-                                    if (isBotAdmin)
-                                        OstBot.connection.Send("say", "/reset");
-                                    break;
-                                case "!loadlevel":
-                                    if (isBotAdmin)
-                                        OstBot.connection.Send("say", "/loadlevel");
-                                    break;
-                                case "!clear":
-                                    if (isBotAdmin)
-                                        OstBot.connection.Send("clear");
-                                    break;
-                                case "!kick":
-                                    break;
-                                case "!ban":
-                                    break;
-                                case "!fill":       //<blocktyp><data> / <blocktyp><lager> / <blocktyp><pengar till pengardörr>..   //med arean mellan 2 block
-                                    new Task(() =>
-                                        {
-                                            if (arg.Length > 1 && isBotAdmin)
-                                            {
-                                                int blockId = Int32.Parse(arg[1]);
-                                                int layer = (blockId >= 500) ? 1 : 0;
-                                                for (int y = 1; y < OstBot.room.height - 1; y++)
-                                                {
-                                                    for (int x = 1; x < OstBot.room.width - 1; x++)
-                                                    {
-                                                        OstBot.room.DrawBlock(Block.CreateBlock(layer, x, y, blockId, -1));
-                                                    }
-                                                }
-                                            }
-                                        }).Start();
-                                    break;
-                                case "!fillworld":  //<blocktyp><data>
-                                    break;
-                                case "!fillarea":   //<x1><y1><x2><y2><blocktyp><data>
-                                    break;
-                                case "!replace":        //med arean mellan 2 block
-                                    new Task(() =>
-                                        {
-                                            if (arg.Length > 2 && isBotAdmin)
-                                            {
-                                                int blockId1 = Int32.Parse(arg[1]);
-                                                int blockId2 = Int32.Parse(arg[2]);
-                                                int layer1 = (blockId1 >= 500) ? 1 : 0;
-                                                int layer2 = (blockId2 >= 500) ? 1 : 0;
-                                                for (int y = 1; y < OstBot.room.height - 1; y++)
-                                                {
-                                                    for (int x = 1; x < OstBot.room.width - 1; x++)
-                                                    {
-                                                        if (OstBot.room.getBotMapBlock(layer1, x, y).blockId == blockId1)
-                                                            OstBot.room.DrawBlock(Block.CreateBlock(layer2, x, y, blockId2, -1));
-                                                    }
-                                                }
-                                            }
-                                        }).Start();
-                                    break;
-                                case "!replaceworld":
-                                    break;
-                                case "!replacearea":
-                                    break;
-                                case "!disableedit":    //<spelarnamn>
-                                    if (arg.Length > 1 && isBotAdmin)
-                                    {
-                                        if (!disabledPlayers.Contains(arg[1]))
-                                            disabledPlayers.Add(arg[1]);
-                                    }
-                                    break;
-                                case "!enableedit":    //<spelarnamn>
-                                    if (arg.Length > 1 && isBotAdmin)
-                                    {
-                                        if (disabledPlayers.Contains(arg[1]))
-                                            disabledPlayers.Remove(arg[1]);
-                                    }
-                                    break;
-                                case "!rollback":   //<spelarnamn>
-                                    if (arg.Length > 1 && isBotAdmin)
-                                    {
-                                        new Task(() =>
-                                        {
-
-                                            for (int l = 0; l < 2; l++)
-                                            {
-                                                for (int y = 0; y < OstBot.room.height; y++)
-                                                {
-                                                    for (int x = 0; x < OstBot.room.width; x++)
-                                                    {
-                                                        Block block;
-
-                                                        if (OstBot.room.getBotMapBlock(l, x, y).b_userId == -1)
-                                                            continue;
-
-
-                                                        for (int i = 0; true; i++)
-                                                        {
-                                                            block = OstBot.room.getMapBlock(l, x, y, i);
-                                                            string userName = "";
-                                                            lock (OstBot.playerList)
-                                                            {
-                                                                if (OstBot.playerList.ContainsKey(block.b_userId))
-                                                                {
-                                                                    userName = OstBot.playerList[block.b_userId].name;
-                                                                }
-                                                            }
-                                                            if (userName == "") //else if
-                                                            {
-                                                                lock (OstBot.leftPlayerList)
-                                                                {
-                                                                    if (OstBot.leftPlayerList.ContainsKey(block.b_userId))
-                                                                    {
-                                                                        userName = OstBot.leftPlayerList[block.b_userId].name;
-                                                                    }
-                                                                }
-                                                            }
-
-                                                            if (userName != arg[1])
-                                                            {
-                                                                OstBot.room.DrawBlock(block);
-                                                                break;
-                                                            }
-                                                            else
-                                                            {
-                                                                Console.WriteLine("block borttaget från" + userName);
-                                                            }
-
-
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }).Start();
-                                    }
-                                    break;
-
-                            }
-                        }
-                    }
-                    break;
-
-
                 case "b":
                     new Task(() =>
                     {
@@ -247,6 +86,176 @@ namespace OstBot_2_
         public override void onDisconnect(object sender, string reason)
         {
 
+        }
+
+        public override void onCommand(object sender, string text, string[] args, int userId, Player player, string name, bool isBotMod)
+        {
+            
+
+            switch (args[0])
+            {
+                case "reset":
+                    if (isBotMod)
+                        OstBot.connection.Send("say", "/reset");
+                    break;
+                case "loadlevel":
+                    if (isBotMod)
+                        OstBot.connection.Send("say", "/loadlevel");
+                    break;
+                case "clear":
+                    if (isBotMod)
+                        OstBot.connection.Send("clear");
+                    break;
+                case "kick":
+                    break;
+                case "ban":
+                    break;
+                case "fill":       //<blocktyp><data> / <blocktyp><lager> / <blocktyp><pengar till pengardörr>..   //med arean mellan 2 block
+                    new Task(() =>
+                    {
+                        if (args.Length > 1 && isBotMod)
+                        {
+                            int blockId;
+                            Int32.TryParse(args[1], out blockId);
+                            int layer = (blockId >= 500) ? 1 : 0;
+                            for (int y = 1; y < OstBot.room.height - 1; y++)
+                            {
+                                for (int x = 1; x < OstBot.room.width - 1; x++)
+                                {
+                                    OstBot.room.DrawBlock(Block.CreateBlock(layer, x, y, blockId, -1));
+                                }
+                            }
+                        }
+                    }).Start();
+                    break;
+                case "fillworld":  //<blocktyp><data>
+                    break;
+                case "fillarea":   //<x1><y1><x2><y2><blocktyp><data>
+                    break;
+                case "replace":        //med arean mellan 2 block
+                    new Task(() =>
+                    {
+                        if (args.Length > 2 && isBotMod)
+                        {
+                            int blockId1, blockId2;
+                            Int32.TryParse(args[1], out blockId1);
+                            Int32.TryParse(args[2], out blockId2);
+                            int layer1 = (blockId1 >= 500) ? 1 : 0;
+                            int layer2 = (blockId2 >= 500) ? 1 : 0;
+                            for (int y = 1; y < OstBot.room.height - 1; y++)
+                            {
+                                for (int x = 1; x < OstBot.room.width - 1; x++)
+                                {
+                                    if (OstBot.room.getBotMapBlock(layer1, x, y).blockId == blockId1)
+                                        OstBot.room.DrawBlock(Block.CreateBlock(layer2, x, y, blockId2, -1));
+                                }
+                            }
+                        }
+                    }).Start();
+                    break;
+                case "replaceworld":
+                    break;
+                case "replacearea":
+                    break;
+                case "disableedit":    //<spelarnamn>
+                    if (args.Length > 1 && isBotMod)
+                    {
+                        if (!disabledPlayers.Contains(args[1]))
+                            disabledPlayers.Add(args[1]);
+                    }
+                    break;
+                case "enableedit":    //<spelarnamn>
+                    if (args.Length > 1 && isBotMod)
+                    {
+                        if (disabledPlayers.Contains(args[1]))
+                            disabledPlayers.Remove(args[1]);
+                    }
+                    break;
+                case "rollback":   //<spelarnamn>
+                    if (args.Length > 1 && isBotMod)
+                    {
+                        for (int l = 0; l < 2; l++)
+                        {
+                            for (int y = 0; y < OstBot.room.height; y++)
+                            {
+                                for (int x = 0; x < OstBot.room.width; x++)
+                                {
+                                    Block block;
+
+                                    if (OstBot.room.getBotMapBlock(l, x, y).b_userId == -1)
+                                        continue;
+
+
+                                    for (int i = 0; true; i++)
+                                    {
+                                        block = OstBot.room.getMapBlock(l, x, y, i);
+                                        string userName = "";
+                                        lock (OstBot.playerList)
+                                        {
+                                            if (OstBot.playerList.ContainsKey(block.b_userId))
+                                            {
+                                                userName = OstBot.playerList[block.b_userId].name;
+                                            }
+                                        }
+                                        if (userName == "") //else if
+                                        {
+                                            lock (OstBot.leftPlayerList)
+                                            {
+                                                if (OstBot.leftPlayerList.ContainsKey(block.b_userId))
+                                                {
+                                                    userName = OstBot.leftPlayerList[block.b_userId].name;
+                                                }
+                                            }
+                                        }
+
+                                        if (userName != args[1])
+                                        {
+                                            OstBot.room.DrawBlock(block);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            Console.WriteLine("block borttaget från" + userName);
+                                        }
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                case "votedisable":
+                    if (args.Length > 1)
+                    {
+                        int playerId;
+                        lock (OstBot.nameList)
+                        {
+                            if (OstBot.nameList.ContainsKey(args[1]))
+                            {
+                                playerId = OstBot.nameList[args[1]];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                        Player playerToDisable;
+                        lock (OstBot.playerList)
+                        {
+                            if (OstBot.playerList.ContainsKey(playerId))
+                            {
+                                playerToDisable = OstBot.playerList[playerId];
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+                    break;
+            }
         }
 
         public override void Update()

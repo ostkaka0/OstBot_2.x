@@ -16,8 +16,6 @@ namespace OstBot_2_
     public partial class Form1 : Form
     {
         public int runtime = 0;
-        string terminalString;
-        object terminalStringLock = 0;
         public delegate void lambdaFunction(Form1 form1);
         Queue<string[]> sayString = new Queue<string[]>();
         public Queue<lambdaFunction> lambdaFunctionQueue = new Queue<lambdaFunction>();
@@ -31,22 +29,6 @@ namespace OstBot_2_
             updateComboBoxes(0);
         }
 
-        public void Write(string str)
-        {
-            lock (terminalStringLock)
-            {
-                terminalString += str;
-            }
-        }
-
-        public void WriteLine(string str)
-        {
-            lock (terminalStringLock)
-            {
-                terminalString += str + Environment.NewLine;
-            }
-        }
-
         public void say(string player, string text)
         {
             lock (sayStringLock)
@@ -57,7 +39,6 @@ namespace OstBot_2_
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckKeys);
             this.textBox_ChatText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckKeys);
 
             backgroundWorker_CodeCracker.ProgressChanged += new ProgressChangedEventHandler
@@ -86,11 +67,6 @@ namespace OstBot_2_
         {
             if (e.KeyChar == (char)13)
             {
-                if (textBox2.Focused)
-                {
-                    textBox1.Text += textBox2.Text + System.Environment.NewLine;
-                    textBox2.Text = "";
-                }
                 if (textBox_ChatText.Focused)
                 {
                     OstBot.connection.Send(PlayerIOClient.Message.Create("say", new object[] {textBox_ChatText.Text}));
@@ -152,12 +128,6 @@ namespace OstBot_2_
             }
         }
 
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            textBox1.SelectionStart = textBox1.Text.Length;
-            textBox1.ScrollToCaret();
-        }
-
         private void button2_Click(object sender, EventArgs e)
         {
             this.groupBox_Connect.Enabled = false;
@@ -165,7 +135,7 @@ namespace OstBot_2_
             {
                 lock (button_Connect.Text)
                     this.button_Connect.Text = "Connecting...";
-                WriteLine("Connecting...");
+                Program.console.WriteLine("Connecting...");
                 OstBot.Connect();
                 if (OstBot.connected)
                 {
@@ -173,20 +143,20 @@ namespace OstBot_2_
                         this.button_Connect.Text = "Disconnect";
                     this.comboBox_RoomType.Enabled = false;
                     this.comboBox_WorldId.Enabled = false;
-                    WriteLine("Connecting succeeded!");
+                    Program.console.WriteLine("Connecting succeeded!");
                 }
                 else
                 {
                     lock (button_Connect.Text)
                         this.button_Connect.Text = "Connect";
-                    WriteLine("Connecting failed!");
+                    Program.console.WriteLine("Connecting failed!");
                 }
             }
             else
             {
                 lock (button_Connect.Text)
                     this.button_Connect.Text = "Disconnecting...";
-                WriteLine("Disconnecting...");
+                Program.console.WriteLine("Disconnecting...");
                 bool reconnect = this.checkBox_Reconnect.Enabled;
                 this.checkBox_Reconnect.Enabled = false;
                 OstBot.connection.Disconnect();
@@ -222,11 +192,6 @@ namespace OstBot_2_
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            lock (terminalStringLock)
-            {
-                textBox1.Text += terminalString;
-                terminalString = "";
-            }
             string lastPlayer = "";
             while (sayString.Count > 0)
             {
@@ -314,7 +279,7 @@ namespace OstBot_2_
                     //checkedListBox_Rooms.Items.Add(room.ToString());
                     foreach (var pair in room.RoomData)
                     {
-                        WriteLine(pair.Key + "\t" + pair.Value);
+                        Program.console.WriteLine(pair.Key + "\t" + pair.Value);
                     }
                     Console.WriteLine(room.ToString());
                 }
@@ -339,7 +304,7 @@ namespace OstBot_2_
 
         private void richTextBox1_TextChanged(object sender, EventArgs e)
         {
-            richTextBox1.SelectionStart = textBox1.Text.Length;
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
         }
 
@@ -391,7 +356,7 @@ namespace OstBot_2_
 
                 if ((codeMinValue + i) % 100 == 0)
                 {
-                    WriteLine((codeMinValue + i).ToString());
+                    Program.console.WriteLine((codeMinValue + i).ToString());
                     backgroundWorker_CodeCracker.ReportProgress(codeMinValue + i);
                 }
 
@@ -415,7 +380,7 @@ namespace OstBot_2_
 
                 if ((codeMinValue + i) % 100 == 0)
                 {
-                    WriteLine((i+codeMinValue).ToString());
+                    Program.console.WriteLine((i + codeMinValue).ToString());
                     backgroundWorker_CodeCracker.ReportProgress(codeMinValue+i);
                 }
 
@@ -435,7 +400,7 @@ namespace OstBot_2_
 
                 Thread.Sleep(50);
 
-                WriteLine((i+codeMinValue).ToString());
+                Program.console.WriteLine((i + codeMinValue).ToString());
                 backgroundWorker_CodeCracker.ReportProgress(codeMinValue + i);
 
                 if (OstBot.hasCode)
@@ -454,7 +419,7 @@ namespace OstBot_2_
 
                 Thread.Sleep(500);
 
-                WriteLine((i + codeMinValue).ToString());
+                Program.console.WriteLine((i + codeMinValue).ToString());
                 backgroundWorker_CodeCracker.ReportProgress(codeMinValue + i);
 
                 if (OstBot.hasCode)
@@ -529,6 +494,15 @@ namespace OstBot_2_
                     200);        //200ms delay between retries
                 //Clipboard.SetText(listBox_PlayerList.SelectedItem.ToString());
             
+        }
+
+        private void checkedListBox_SubBots_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            for (int i = 0; i < checkedListBox_SubBots.Items.Count; i++)
+            {
+                var subBot = checkedListBox_SubBots.Items[i] as SubBot;
+                subBot.enabled = checkedListBox_SubBots.GetItemChecked(i);
+            }
         } 
     }
 }
