@@ -37,7 +37,84 @@ namespace OstBot_2_
             {
                 case "init":
                     {
-                        resetRed();
+                        ResetRed();
+                    }
+                    break;
+
+                case "b":
+                    {
+                        Block block = new Block(m);
+                        Block oldBlock = OstBot.room.getMapBlock(block.layer, block.x, block.y, 1);
+
+                        BlockPos position = new BlockPos(block.x, block.y, block.layer);
+
+                        if (wireTypes.ContainsKey(oldBlock.blockId))
+                        {
+                            if (!wireTypes.ContainsKey(block.blockId))
+                            {
+                                lock (this)
+                                    ResetPowerSources();
+                                break;
+                            }
+                        }
+                        else if (powerSourceTypes.ContainsKey(oldBlock.blockId))
+                        {
+                            if (!powerSourceTypes.ContainsKey(block.blockId))
+                            {
+                                lock (this)
+                                {
+                                    RemoveWiresFromPowerSource(new KeyValuePair<BlockPos, PowerSource>(
+                                        position,
+                                        powerSourceTypes[oldBlock.blockId]));
+
+                                    powerSources.Remove(position);
+                                }
+                            }
+                        }
+                        else if (destinationTypes.ContainsKey(oldBlock.blockId))
+                        {
+                            if (!destinationTypes.ContainsKey(block.blockId))
+                            {
+                                lock (this)
+                                    ResetPowerSources();
+                                break;
+                                /*lock (this)
+                                    RemoveWiresFromDestination(new KeyValuePair<BlockPos, Destination>(
+                                        new BlockPos(block.x, block.y, block.layer),
+                                        destinationTypes[oldBlock.blockId]));*/
+                            }
+                        }
+
+                        if (wireTypes.ContainsKey(block.blockId))
+                        {
+                            lock (this)
+                                ResetPowerSources();
+                        }
+                        else if (powerSourceTypes.ContainsKey(block.blockId))
+                        {
+                            lock (this)
+                            {
+                                if (!powerSources.ContainsKey(new BlockPos(block.x, block.y, block.layer)))
+                                {
+                                    KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair = new KeyValuePair<BlockPos, PowerSource>(new BlockPos(block.x, block.y, block.layer),
+                                        powerSourceTypes[block.blockId].Clone() as PowerSource);
+                                    powerSources.Add(powerSourceKeyValuePair.Key, powerSourceKeyValuePair.Value);
+                                    ResetPowerSources();//ResetPowerSourceWires(powerSourceKeyValuePair);
+                                }
+                            }
+                        }
+                        else if (destinationTypes.ContainsKey(block.blockId))
+                        {
+                            lock (this)
+                            {
+                                if (!destinations.ContainsKey(new BlockPos(block.x, block.y, block.layer)))
+                                {
+                                    destinations.Add(new BlockPos(block.x, block.y, block.layer),
+                                        destinationTypes[block.blockId].Clone() as Destination);
+                                    ResetPowerSources();
+                                }
+                            }
+                        }
                     }
                     break;
             }
@@ -54,7 +131,7 @@ namespace OstBot_2_
             {
                 case "resetredstone":
                     if (isBotMod)
-                        resetRed();
+                        ResetRed();
                     break;
             }
         }
@@ -123,7 +200,7 @@ namespace OstBot_2_
             }
         }
 
-        private void resetRed()
+        private void ResetRed()
         {
             lock (this)
             {
@@ -158,85 +235,138 @@ namespace OstBot_2_
                     }
                 }
 
-                foreach (var powerSourcePair in powerSources)
+                foreach (var powerSourceKeyValuePair in powerSources)
                 {
-                    BlockPos pos = powerSourcePair.Key;
-                    BlockPos newPos;
-
-                    float[, ,] redMap = new float[OstBot.room.width, OstBot.room.height, 2];
-                    Queue<BlockPos> blockQueue = new Queue<BlockPos>();
-
-                    redMap[pos.x, pos.y, pos.l] = 1.0F;
-                    blockQueue.Enqueue(pos);
-
-                    while (blockQueue.Count > 0)
-                    {
-                        pos = blockQueue.Dequeue();
-
-                        for (int i = 0; i < 4; i++)
-                        {
-                            float power = redMap[pos.x, pos.y, pos.l];
-                            newPos = new BlockPos(pos.x, pos.y, pos.l);
-
-                            for (int j = 0; j < 2; j++)
-                            {
-                                if (j == 1)
-                                {
-                                    if (pos.x == powerSourcePair.Key.x && pos.y == powerSourcePair.Key.y)
-                                        break;
-                                }
-
-                                if (i % 2 == 0)
-                                    newPos.x += (i > 1) ? 1 : -1;
-                                else
-                                    newPos.y += (i > 1) ? 1 : -1;
-
-                                power -= 0.01F;
-                                if (power > redMap[newPos.x, newPos.y, newPos.l])
-                                    redMap[newPos.x, newPos.y, newPos.l] = power;
-                                else
-                                    break;
-
-                                Block block = OstBot.room.getBotMapBlock(newPos.l, newPos.x, newPos.y);
-                                if (wireTypes.ContainsKey(block.blockId))
-                                {
-                                    blockQueue.Enqueue(newPos);
-                                    break;
-                                }
-                                else if (destinationTypes.ContainsKey(block.blockId))
-                                {
-                                    if (!wires.ContainsKey(powerSourcePair.Key))
-                                        wires.Add(powerSourcePair.Key, new Dictionary<BlockPos, float>());
-
-                                    if (wires[powerSourcePair.Key].ContainsKey(newPos))
-                                        wires[powerSourcePair.Key].Remove(newPos);
-                                    wires[powerSourcePair.Key].Add(newPos, 1.0F - power);
-                                    break;
-                                }
-                                else if (powerSourceTypes.ContainsKey(block.blockId))
-                                {
-                                    if (j == 0)
-                                        continue;
-
-                                    if (!wires.ContainsKey(powerSourcePair.Key))
-                                        wires.Add(powerSourcePair.Key, new Dictionary<BlockPos, float>());
-
-                                    if (wires[powerSourcePair.Key].ContainsKey(newPos))
-                                        wires[powerSourcePair.Key].Remove(newPos);
-                                    wires[powerSourcePair.Key].Add(newPos, 1.0F - power);
-                                    break;
-                                }
-                                else if (block.blockId < 9 || block.blockId > 15)
-                                {
-                                    break;
-                                }
-                            }
-                        }
-                    }
+                    ResetPowerSourceWires(powerSourceKeyValuePair);
                 }
+                
             }
 
         }
 
+        private void ResetPowerSources()
+        {
+            wires.Clear();
+            foreach (KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair in powerSources)
+            {
+                ResetPowerSourceWires(powerSourceKeyValuePair);
+            }
+        }
+
+        private void ResetPowerSourceWires(KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair)
+        {
+            RemoveWiresFromPowerSource(powerSourceKeyValuePair);
+
+            BlockPos pos = powerSourceKeyValuePair.Key;
+            BlockPos newPos;
+
+            float[, ,] redMap = new float[OstBot.room.width, OstBot.room.height, 2];
+            Queue<BlockPos> blockQueue = new Queue<BlockPos>();
+
+            redMap[pos.x, pos.y, pos.l] = 1.0F;
+            blockQueue.Enqueue(pos);
+
+            while (blockQueue.Count > 0)
+            {
+                pos = blockQueue.Dequeue();
+
+                for (int i = 0; i < 4; i++)
+                {
+                    float power = redMap[pos.x, pos.y, pos.l];
+                    newPos = new BlockPos(pos.x, pos.y, pos.l);
+
+                    for (int j = 0; j < 2; j++)
+                    {
+                        if (j == 1)
+                        {
+                            if (pos.x == powerSourceKeyValuePair.Key.x && pos.y == powerSourceKeyValuePair.Key.y)
+                                break;
+                        }
+
+                        if (i % 2 == 0)
+                            newPos.x += (i > 1) ? 1 : -1;
+                        else
+                            newPos.y += (i > 1) ? 1 : -1;
+
+                        power -= 0.01F;
+                        if (power > redMap[newPos.x, newPos.y, newPos.l])
+                            redMap[newPos.x, newPos.y, newPos.l] = power;
+                        else
+                            break;
+
+                        Block block = OstBot.room.getBotMapBlock(newPos.l, newPos.x, newPos.y);
+                        if (wireTypes.ContainsKey(block.blockId))
+                        {
+                            blockQueue.Enqueue(newPos);
+                            break;
+                        }
+                        else if (destinationTypes.ContainsKey(block.blockId))
+                        {
+                            if (!wires.ContainsKey(powerSourceKeyValuePair.Key))
+                                wires.Add(powerSourceKeyValuePair.Key, new Dictionary<BlockPos, float>());
+
+                            if (wires[powerSourceKeyValuePair.Key].ContainsKey(newPos))
+                                wires[powerSourceKeyValuePair.Key][newPos] = 1.0F - power;//wires[powerSourceKeyValuePair.Key].Remove(newPos);
+                            else
+                                wires[powerSourceKeyValuePair.Key].Add(newPos, 1.0F - power);
+                            break;
+                        }
+                        else if (powerSourceTypes.ContainsKey(block.blockId))
+                        {
+                            if (j == 0)
+                                continue;
+
+                            if (!wires.ContainsKey(powerSourceKeyValuePair.Key))
+                                wires.Add(powerSourceKeyValuePair.Key, new Dictionary<BlockPos, float>());
+
+                            if (wires[powerSourceKeyValuePair.Key].ContainsKey(newPos))
+                                wires[powerSourceKeyValuePair.Key][newPos] = 1.0F - power;
+                            else    //wires[powerSourceKeyValuePair.Key].Remove(newPos);
+                                wires[powerSourceKeyValuePair.Key].Add(newPos, 1.0F - power);
+                            break;
+                        }
+                        else if (block.blockId < 9 || block.blockId > 15)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void ResetPowerSourcesFromWire()//(BlockPos pos)
+        {
+            foreach (KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair in powerSources)
+            {
+                ResetPowerSourceWires(powerSourceKeyValuePair);
+            }
+        }
+
+        private void RemoveWiresFromDestination(KeyValuePair<BlockPos, Destination> destinationKeyValuePair)
+        {
+            foreach (var wiresKeyValuePair in wires)
+            {
+                if (wiresKeyValuePair.Value.ContainsKey(destinationKeyValuePair.Key))
+                {
+                    wiresKeyValuePair.Value.Remove(destinationKeyValuePair.Key);
+                }
+            }
+        }
+
+        private void RemoveWiresFromPowerSource(KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair)
+        {
+            if (wires.ContainsKey(powerSourceKeyValuePair.Key))
+            {
+                wires.Remove(powerSourceKeyValuePair.Key);
+            }
+
+            foreach (var wiresKeyValuePair in wires)
+            {
+                if (wiresKeyValuePair.Value.ContainsKey(powerSourceKeyValuePair.Key))
+                {
+                    wiresKeyValuePair.Value.Remove(powerSourceKeyValuePair.Key);
+                }
+            }
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace OstBot_2_
         public override void onSignal(System.Diagnostics.Stopwatch currentRedTime, float power)
         {
             willEnable = false;
-            enabled = false;
+            //enabled = false;
             base.onSignal(currentRedTime, power);
         }
 
