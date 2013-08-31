@@ -49,7 +49,7 @@ namespace OstBot_2_
 
                         BlockPos position = new BlockPos(block.x, block.y, block.layer);
 
-                        if (wireTypes.ContainsKey(oldBlock.blockId))
+                        if (wireTypes.ContainsKey(oldBlock.blockId) || (block.blockId >= 9 && block.blockId <= 15))
                         {
                             if (!wireTypes.ContainsKey(block.blockId))
                             {
