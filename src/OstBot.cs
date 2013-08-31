@@ -180,8 +180,15 @@ namespace OstBot_2_
                 commands = new Commands();
                 new Redstone();
 
-                connection.Send("init");
-                connection.Send("init2");
+                if (isBB)
+                {
+                    connection.Send("botinit");
+                }
+                else
+                {
+                    connection.Send("init");
+                    connection.Send("init2");
+                }
             }
             catch (Exception e)
             {

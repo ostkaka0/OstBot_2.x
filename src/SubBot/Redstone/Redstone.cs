@@ -23,6 +23,7 @@ namespace OstBot_2_
         public Redstone()
             : base()
             {
+                UpdateSleep = 100;
                 currentRedTime.Start();
 
                 wireTypes.Add(189, 0.001F);
@@ -255,7 +256,7 @@ namespace OstBot_2_
 
         private void ResetPowerSourceWires(KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair)
         {
-            RemoveWiresFromPowerSource(powerSourceKeyValuePair);
+            //RemoveWiresFromPowerSource(powerSourceKeyValuePair);
 
             BlockPos pos = powerSourceKeyValuePair.Key;
             BlockPos newPos;

@@ -10,6 +10,7 @@ namespace OstBot_2_
 {
     public abstract class SubBot
     {
+        protected int UpdateSleep = 200;
         public int id = -1;
         private bool enabledValue;
         public bool enabled
@@ -58,8 +59,8 @@ namespace OstBot_2_
                             {
                                 Update();
                                 int time = (int)stopwatch.ElapsedMilliseconds;
-                                if (time < 500)
-                                    Thread.Sleep(500 - time);
+                                if (time < UpdateSleep)
+                                    Thread.Sleep(UpdateSleep - time);
                                 stopwatch.Reset();
                             }
                             Thread.Sleep(200);

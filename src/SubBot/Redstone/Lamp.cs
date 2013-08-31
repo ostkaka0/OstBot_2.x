@@ -20,9 +20,12 @@ namespace OstBot_2_
         {
             if (enabled)
             {
-                OstBot.room.DrawBlock(Block.CreateBlock(pos.l, pos.x, pos.y, Skylight.BlockIds.Blocks.Cloud.WHITE, -2));
+                if (OstBot.room.getBotMapBlock(pos.l, pos.x, pos.y).blockId == Skylight.BlockIds.Blocks.Special.GLOSSYBLACK)
+                {
+                    OstBot.room.DrawBlock(Block.CreateBlock(pos.l, pos.x, pos.y, Skylight.BlockIds.Blocks.Cloud.WHITE, -2));
+                }
             }
-            else
+            else if (OstBot.room.getBotMapBlock(pos.l, pos.x, pos.y).blockId == Skylight.BlockIds.Blocks.Cloud.WHITE)
             {
                 OstBot.room.DrawBlock(Block.CreateBlock(pos.l, pos.x, pos.y, Skylight.BlockIds.Blocks.Special.GLOSSYBLACK, -2));
             }
