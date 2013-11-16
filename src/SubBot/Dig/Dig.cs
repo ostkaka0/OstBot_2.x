@@ -413,6 +413,12 @@ namespace OstBot_2_
                     }
                     break;
 
+                case "!placestones":
+                    {
+
+                    }
+                    break;
+
             }
         }
 

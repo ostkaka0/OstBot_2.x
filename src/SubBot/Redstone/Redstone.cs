@@ -77,7 +77,13 @@ namespace OstBot_2_
                             if (!destinationTypes.ContainsKey(block.blockId))
                             {
                                 lock (this)
-                                    ResetPowerSources();
+                                {
+                                    if (destinations.ContainsKey(position))
+                                    {
+                                        destinations.Remove(position);
+                                        ResetPowerSources();
+                                    }
+                                }
                                 break;
                                 /*lock (this)
                                     RemoveWiresFromDestination(new KeyValuePair<BlockPos, Destination>(

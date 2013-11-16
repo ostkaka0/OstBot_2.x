@@ -20,7 +20,7 @@ namespace OstBot_2_
         Queue<string[]> sayString = new Queue<string[]>();
         public Queue<lambdaFunction> lambdaFunctionQueue = new Queue<lambdaFunction>();
         object sayStringLock = 0;
-
+        AnnoyingBot annoyingBot;
 
 
         public Form1()
@@ -181,6 +181,8 @@ namespace OstBot_2_
             updateComboBoxes(1);
             if (this.comboBox_Email.Items.Count > 0)
                 this.comboBox_Email.Text = this.comboBox_Email.Items[0].ToString();
+
+            annoyingBot = new AnnoyingBot(comboBox_Server.Text, "annoying.ostkaka@gmail.com", "kasekakorna");
         }
 
         private void comboBox_Email_SelectedIndexChanged(object sender, EventArgs e)
@@ -503,6 +505,20 @@ namespace OstBot_2_
                 var subBot = checkedListBox_SubBots.Items[i] as SubBot;
                 subBot.enabled = checkedListBox_SubBots.GetItemChecked(i);
             }
-        } 
+        }
+
+        private void button2_Click_2(object sender, EventArgs e)
+        {
+            if (annoyingBot != null)
+            {
+                annoyingBot.Connect(comboBox_RoomType.Text);
+            }
+        }
+
+        private void button3_Click_1(object sender, EventArgs e)
+        {
+            annoyingBot = null;
+        }
+
     }
 }

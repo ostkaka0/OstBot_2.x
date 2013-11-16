@@ -27,6 +27,7 @@ namespace OstBot_2_
         public static Room room;
         public static Dig dig;
         public static Commands commands;
+        public static BanList banList;
         Stopwatch playerTickTimer = new Stopwatch();
         public static Random r = new Random();
 
@@ -37,6 +38,8 @@ namespace OstBot_2_
         public static Dictionary<int, Player> leftPlayerList = new Dictionary<int, Player>();
 
         public static List<SubBot> subBotRegister = new List<SubBot>();
+
+        private static Queue<string> listToSay = new Queue<string>();
 
         public OstBot()
         {
@@ -84,7 +87,7 @@ namespace OstBot_2_
             }).Start();
             new System.Threading.Thread(() =>
             {
-                while (true)
+                while (OstBot.connected)
                 {
                     /*if (zombieUpdateStopWatch.ElapsedMilliseconds >= 100)
                     {
@@ -176,6 +179,7 @@ namespace OstBot_2_
                 connection.OnDisconnect += new DisconnectEventHandler(onDisconnect);
 
                 room = new Room();
+                banList = new BanList();
                 dig = new Dig();
                 commands = new Commands();
                 new Redstone();
@@ -538,6 +542,11 @@ namespace OstBot_2_
                         });
                 }
             }
+        }
+
+        public static void Say(string message)
+        {
+            listToSay.Enqueue(message);
         }
 
         private static string rot13(string str)

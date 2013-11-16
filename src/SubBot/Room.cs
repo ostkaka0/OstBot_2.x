@@ -217,57 +217,45 @@ namespace OstBot_2_
                     break;
 
                 case "b":
-                    while (blockMap == null)
-                        Thread.Sleep(5);
-
-                    while (blockMap[m.GetInt(0)] == null)
-                        Thread.Sleep(5);
-
-                    lock (blockMap)
-                        blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
-
-                    Block block;
-                    if (m.Count >= 5)
-                        block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), m.GetInt(4));
-                    else
-                        block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
-
-                    lock (blockSet)
                     {
-                        if (blockSet.Contains(block))
-                            blockSet.Remove(block);
-                    }
+                        Block block;
 
-                    lock (blockSet)
-                    {
-                        foreach (Block b in blockSet)
-                        {
-                            if (block.Equals(b))
-                            {
-                                blockSet.Remove(b);
-                                break;
-                            }
-                            /*if (Block.Compare(block, b))
-                            {
-                                if (b.x == block.x && b.y == block.y)
-                                {
-                                    blockSet.Remove(b);
-                                }
-                            }*/
-                        }
-                    }
+                        while (blockMap == null)
+                            Thread.Sleep(5);
 
+                        while (blockMap[m.GetInt(0)] == null)
+                            Thread.Sleep(5);
+
+                        lock (blockMap)
+                            blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
+
+                        if (m.Count >= 5)
+                            block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), m.GetInt(4));
+                        else
+                            block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), -1);
+
+                        OnBlockDraw(block);
+
+                    }
                     break;
 
-                case "bc":
-                    while (blockMap == null)
-                        Thread.Sleep(5);
+                case "bc": // bc, bs, pt, lb, br
+                    {
+                        Block block;
 
-                    while (blockMap[0] == null)
-                        Thread.Sleep(5);
+                        while (blockMap == null)
+                            Thread.Sleep(5);
 
-                    lock (blockMap)
-                        blockMap[0][m.GetInt(0), m.GetInt(1)].Add(new Block(m));
+                        while (blockMap[0] == null)
+                            Thread.Sleep(5);
+
+                        block = new Block(m);
+
+                        lock (blockMap)
+                            blockMap[0][m.GetInt(0), m.GetInt(1)].Add(block);
+
+                        OnBlockDraw(block);
+                    }
                     break;
 
                 case "bs":
@@ -281,6 +269,7 @@ namespace OstBot_2_
 
                 case "br":
                     goto case "bc";
+
                 case "clear":
                     {
                         //Redstone.ClearLists();
@@ -311,7 +300,10 @@ namespace OstBot_2_
 
         public override void onDisconnect(object sender, string reason)
         {
-
+            blockMap = new List<Block>[2][,];
+            blockQueue = new Queue<Block>();
+            blockRepairQueue = new Queue<Block>();
+            blockSet = new HashSet<Block>();
         }
 
         public override void onCommand(object sender, string text, string[] args, int userId, Player player, string name, bool isBotMod)
@@ -322,6 +314,34 @@ namespace OstBot_2_
         public override void Update()
         {
 
+        }
+
+        private void OnBlockDraw(Block block)
+        {
+            lock (blockSet)
+            {
+                if (blockSet.Contains(block))
+                    blockSet.Remove(block);
+            }
+
+            lock (blockSet)
+            {
+                foreach (Block b in blockSet)
+                {
+                    if (block.Equals(b))
+                    {
+                        blockSet.Remove(b);
+                        break;
+                    }
+                    /*if (Block.Compare(block, b))
+                    {
+                        if (b.x == block.x && b.y == block.y)
+                        {
+                            blockSet.Remove(b);
+                        }
+                    }*/
+                }
+            }
         }
 
         private void LoadMap(Message m, uint position)

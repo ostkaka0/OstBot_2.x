@@ -79,6 +79,10 @@
             this.checkedListBox_SubBots = new System.Windows.Forms.CheckedListBox();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker_CodeCracker = new System.ComponentModel.BackgroundWorker();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button2 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.groupBox_Code.SuspendLayout();
@@ -95,6 +99,7 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabPage6.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -104,6 +109,7 @@
             this.tabControl1.Controls.Add(this.tabPage4);
             this.tabControl1.Controls.Add(this.tabPage5);
             this.tabControl1.Controls.Add(this.tabPage6);
+            this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
@@ -113,6 +119,7 @@
             // 
             // tabPage1
             // 
+            this.tabPage1.Controls.Add(this.groupBox2);
             this.tabPage1.Controls.Add(this.groupBox_Code);
             this.tabPage1.Controls.Add(this.listView1);
             this.tabPage1.Controls.Add(this.groupBox_Connect);
@@ -138,14 +145,14 @@
             this.groupBox_Code.Controls.Add(this.textBox4);
             this.groupBox_Code.Location = new System.Drawing.Point(9, 253);
             this.groupBox_Code.Name = "groupBox_Code";
-            this.groupBox_Code.Size = new System.Drawing.Size(267, 177);
+            this.groupBox_Code.Size = new System.Drawing.Size(267, 131);
             this.groupBox_Code.TabIndex = 3;
             this.groupBox_Code.TabStop = false;
             this.groupBox_Code.Text = "Code";
             // 
             // numericUpDown_CrackCodeDigits
             // 
-            this.numericUpDown_CrackCodeDigits.Location = new System.Drawing.Point(48, 69);
+            this.numericUpDown_CrackCodeDigits.Location = new System.Drawing.Point(182, 48);
             this.numericUpDown_CrackCodeDigits.Name = "numericUpDown_CrackCodeDigits";
             this.numericUpDown_CrackCodeDigits.Size = new System.Drawing.Size(79, 20);
             this.numericUpDown_CrackCodeDigits.TabIndex = 8;
@@ -159,7 +166,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 71);
+            this.label7.Location = new System.Drawing.Point(140, 50);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(36, 13);
             this.label7.TabIndex = 7;
@@ -168,7 +175,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 97);
+            this.label6.Location = new System.Drawing.Point(6, 50);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(30, 13);
             this.label6.TabIndex = 6;
@@ -176,7 +183,7 @@
             // 
             // numericUpDown_MaxCrackCode
             // 
-            this.numericUpDown_MaxCrackCode.Location = new System.Drawing.Point(42, 95);
+            this.numericUpDown_MaxCrackCode.Location = new System.Drawing.Point(42, 48);
             this.numericUpDown_MaxCrackCode.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -193,7 +200,7 @@
             // 
             // progressBar_CodeCracker
             // 
-            this.progressBar_CodeCracker.Location = new System.Drawing.Point(6, 148);
+            this.progressBar_CodeCracker.Location = new System.Drawing.Point(6, 103);
             this.progressBar_CodeCracker.MarqueeAnimationSpeed = 1000;
             this.progressBar_CodeCracker.Maximum = 11100;
             this.progressBar_CodeCracker.Name = "progressBar_CodeCracker";
@@ -203,7 +210,7 @@
             // 
             // textBox_CrackedCode
             // 
-            this.textBox_CrackedCode.Location = new System.Drawing.Point(87, 121);
+            this.textBox_CrackedCode.Location = new System.Drawing.Point(87, 77);
             this.textBox_CrackedCode.Name = "textBox_CrackedCode";
             this.textBox_CrackedCode.Size = new System.Drawing.Size(174, 20);
             this.textBox_CrackedCode.TabIndex = 3;
@@ -211,7 +218,7 @@
             // 
             // button_CrackCode
             // 
-            this.button_CrackCode.Location = new System.Drawing.Point(6, 119);
+            this.button_CrackCode.Location = new System.Drawing.Point(6, 74);
             this.button_CrackCode.Name = "button_CrackCode";
             this.button_CrackCode.Size = new System.Drawing.Size(75, 23);
             this.button_CrackCode.TabIndex = 2;
@@ -231,7 +238,7 @@
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(8, 21);
+            this.textBox4.Location = new System.Drawing.Point(9, 21);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(172, 20);
             this.textBox4.TabIndex = 0;
@@ -611,6 +618,47 @@
             this.backgroundWorker_CodeCracker.WorkerReportsProgress = true;
             this.backgroundWorker_CodeCracker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_CodeCracker_DoWork);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(776, 436);
+            this.tabPage3.TabIndex = 6;
+            this.tabPage3.Text = "AnnoyingBot";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.button3);
+            this.groupBox2.Controls.Add(this.button2);
+            this.groupBox2.Location = new System.Drawing.Point(8, 390);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(268, 43);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "AnnoyingBot";
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(6, 14);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "Annoy";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_2);
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(87, 14);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 2;
+            this.button3.Text = "Abort";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -642,6 +690,7 @@
             this.splitContainer1.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -698,5 +747,9 @@
         private System.Windows.Forms.TextBox textBox6;
         private System.Windows.Forms.TextBox textBox5;
         public System.Windows.Forms.CheckedListBox checkedListBox_SubBots;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button button3;
+        private System.Windows.Forms.Button button2;
     }
 }
