@@ -188,7 +188,7 @@ namespace OstBot_2_
                 return false;
             openSquares.Remove(parent);
 
-            for (int a = 0; a < 7; a++)
+            for (int a = 0; a < 8; a++)
             {
                 Square adjacentSquare = new Square(
                     parent.x + adjacentSquares[a].x, parent.y + adjacentSquares[a].y,
