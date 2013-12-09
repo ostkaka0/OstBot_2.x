@@ -21,6 +21,11 @@ namespace OstBot_2_
         Dictionary<int, PowerSource> powerSourceTypes = new Dictionary<int, PowerSource>();
         Dictionary<int, Destination> destinationTypes = new Dictionary<int, Destination>();
 
+        // *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+        /// Bra lösning för att testa om material leder ström
+        delegate bool IsConductive(BlockPos pos, int jumps, float power, Block sourceBlock, Block block);
+        List<IsConductive> conductivityDelegateList = new List<IsConductive>();
+
         public Redstone()
             : base()
             {
@@ -29,6 +34,21 @@ namespace OstBot_2_
 
                 wireTypes.Add(189, 0.001F);
                 wireTypes.Add(Skylight.BlockIds.Background.Checker.RED, 0.001F);
+
+                conductivityDelegateList.Add(new IsConductive((BlockPos pos, int jumps, float power, Block sourceBlock, Block block)=>  // colored wires
+                {
+                    return (block.blockId >= Skylight.BlockIds.Blocks.Checker.GRAY
+                        && block.blockId <= Skylight.BlockIds.Blocks.Checker.CYAN
+                        && (block.blockId == sourceBlock.blockId
+                            || sourceBlock.blockId == 20 // redstone
+                            || powerSourceTypes.ContainsKey(sourceBlock.blockId)
+                            || layerSwitches.Contains(sourceBlock.blockId)));
+                }));
+                conductivityDelegateList.Add(new IsConductive((BlockPos pos, int jumps, float power, Block sourceBlock, Block block) =>
+                {
+                    return block.blockId == 20;
+                }));
+
                 layerSwitches.Add(Skylight.BlockIds.Blocks.Industrial.CROSSSUPPORT);
                 layerSwitches.Add(Skylight.BlockIds.Background.Carnival.CHECKER);
                 powerSourceTypes.Add(Skylight.BlockIds.Blocks.Metal.BRONZE, new Torch());
@@ -149,6 +169,9 @@ namespace OstBot_2_
             }
         }
 
+        /// <summary>
+        /// Updates the redstone.
+        /// </summary>
         public override void Update()
         {
             lock (this)
@@ -213,6 +236,9 @@ namespace OstBot_2_
             }
         }
 
+        /// <summary>
+        /// Resets all redstone.
+        /// </summary>
         private void ResetRed()
         {
             lock (this)
@@ -257,6 +283,9 @@ namespace OstBot_2_
 
         }
 
+        /// <summary>
+        /// Resets the power sources
+        /// </summary>
         private void ResetPowerSources()
         {
             wires.Clear();
@@ -266,6 +295,10 @@ namespace OstBot_2_
             }
         }
 
+        /// <summary>
+        /// Resets the wires from a power source.
+        /// </summary>
+        /// <param name="powerSourceKeyValuePair">Resets the wires from this power source.</param>
         private void ResetPowerSourceWires(KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair)
         {
             //RemoveWiresFromPowerSource(powerSourceKeyValuePair);
@@ -344,7 +377,7 @@ namespace OstBot_2_
                                 wires[powerSourceKeyValuePair.Key].Add(newPos, 1.0F - power);
                             break;
                         }
-                        else if (block.blockId < 9 || block.blockId > 15)
+                        else if ((block.blockId < 9 || block.blockId > 15) && (block.blockId < 500 || block.blockId > 507))
                         {
                             break;
                         }
@@ -353,6 +386,9 @@ namespace OstBot_2_
             }
         }
 
+        /// <summary>
+        /// ?
+        /// </summary>
         private void ResetPowerSourcesFromWire()//(BlockPos pos)
         {
             foreach (KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair in powerSources)

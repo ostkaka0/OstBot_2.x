@@ -49,7 +49,7 @@ namespace OstBot_2_
         {
             get
             {
-                return (int)((this.x + 8) / 16);
+                return (int)Math.Round(((this.x) / 16.0));
             }
         }
 
@@ -57,7 +57,7 @@ namespace OstBot_2_
         {
             get
             {
-                return (int)((this.y + 8) / 16);
+                return (int)Math.Round((this.y) / 16.0);
             }
         }
 

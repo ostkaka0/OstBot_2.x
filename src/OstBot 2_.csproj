@@ -109,6 +109,7 @@
     <Compile Include="SubBot\Redstone\Destination.cs" />
     <Compile Include="SubBot\Redstone\Lamp.cs" />
     <Compile Include="SubBot\Redstone\PowerSource.cs" />
+    <Compile Include="SubBot\Redstone\PressurePlate.cs" />
     <Compile Include="SubBot\Redstone\Redstone.cs" />
     <Compile Include="SubBot\Redstone\Torch.cs" />
     <Compile Include="SubBot\Redstone\Wire.cs" />
