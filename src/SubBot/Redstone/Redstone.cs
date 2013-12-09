@@ -16,6 +16,7 @@ namespace OstBot_2_
         Dictionary<BlockPos, Destination> destinations = new Dictionary<BlockPos, Destination>();
         Stopwatch currentRedTime = new Stopwatch();
 
+        List<int> layerSwitches = new List<int>();
         Dictionary<int, float> wireTypes = new Dictionary<int, float>();
         Dictionary<int, PowerSource> powerSourceTypes = new Dictionary<int, PowerSource>();
         Dictionary<int, Destination> destinationTypes = new Dictionary<int, Destination>();
@@ -27,7 +28,12 @@ namespace OstBot_2_
                 currentRedTime.Start();
 
                 wireTypes.Add(189, 0.001F);
+                wireTypes.Add(Skylight.BlockIds.Background.Checker.RED, 0.001F);
+                layerSwitches.Add(Skylight.BlockIds.Blocks.Industrial.CROSSSUPPORT);
+                layerSwitches.Add(Skylight.BlockIds.Background.Carnival.CHECKER);
                 powerSourceTypes.Add(Skylight.BlockIds.Blocks.Metal.BRONZE, new Torch());
+                powerSourceTypes.Add(Skylight.BlockIds.Decorative.Cloud.BOTTOM, new PressurePlate());
+                powerSourceTypes.Add(Skylight.BlockIds.Decorative.Sand.WHITE, new PressurePlate());
                 destinationTypes.Add(Skylight.BlockIds.Blocks.Special.GLOSSYBLACK, new Lamp());
                 destinationTypes.Add(Skylight.BlockIds.Blocks.Cloud.WHITE, new Lamp());
             }
@@ -305,6 +311,12 @@ namespace OstBot_2_
                         if (wireTypes.ContainsKey(block.blockId))
                         {
                             blockQueue.Enqueue(newPos);
+                            break;
+                        }
+                        else if (layerSwitches.Contains(block.blockId))
+                        {
+                            blockQueue.Enqueue(new BlockPos(newPos.x, newPos.y, newPos.l^1));
+                            redMap[newPos.x, newPos.y, newPos.l ^ 1] = power;
                             break;
                         }
                         else if (destinationTypes.ContainsKey(block.blockId))

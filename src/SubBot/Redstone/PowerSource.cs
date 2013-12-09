@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace OstBot_2_
 {
-    class PowerSource : Destination
+    abstract class PowerSource : Destination
     {
         public virtual float getOutput(Stopwatch currentRedTime)
         {
