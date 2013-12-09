@@ -28,6 +28,7 @@ namespace OstBot_2_
         public static Dig dig;
         public static Commands commands;
         public static BanList banList;
+        public static TrollFinder trollFinder;
         Stopwatch playerTickTimer = new Stopwatch();
         public static Random r = new Random();
 
@@ -180,6 +181,7 @@ namespace OstBot_2_
 
                 room = new Room();
                 banList = new BanList();
+                trollFinder = new TrollFinder();
                 dig = new Dig();
                 commands = new Commands();
                 new Redstone();

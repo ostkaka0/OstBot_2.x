@@ -29,8 +29,13 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.button3 = new System.Windows.Forms.Button();
+            this.button2 = new System.Windows.Forms.Button();
             this.groupBox_Code = new System.Windows.Forms.GroupBox();
             this.numericUpDown_CrackCodeDigits = new System.Windows.Forms.NumericUpDown();
             this.label7 = new System.Windows.Forms.Label();
@@ -77,14 +82,13 @@
             this.textBox6 = new System.Windows.Forms.TextBox();
             this.textBox5 = new System.Windows.Forms.TextBox();
             this.checkedListBox_SubBots = new System.Windows.Forms.CheckedListBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.chartPlacedBlocks = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.backgroundWorker_CodeCracker = new System.ComponentModel.BackgroundWorker();
-            this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.button2 = new System.Windows.Forms.Button();
-            this.button3 = new System.Windows.Forms.Button();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.groupBox_Code.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CrackCodeDigits)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_MaxCrackCode)).BeginInit();
@@ -99,7 +103,8 @@
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.tabPage6.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.tabPage3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.chartPlacedBlocks)).BeginInit();
             this.SuspendLayout();
             // 
             // tabControl1
@@ -131,6 +136,37 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Login";
             this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.button3);
+            this.groupBox2.Controls.Add(this.button2);
+            this.groupBox2.Location = new System.Drawing.Point(8, 390);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(268, 43);
+            this.groupBox2.TabIndex = 4;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "AnnoyingBot";
+            // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(87, 14);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(75, 23);
+            this.button3.TabIndex = 2;
+            this.button3.Text = "Abort";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.button3_Click_1);
+            // 
+            // button2
+            // 
+            this.button2.Location = new System.Drawing.Point(6, 14);
+            this.button2.Name = "button2";
+            this.button2.Size = new System.Drawing.Size(75, 23);
+            this.button2.TabIndex = 1;
+            this.button2.Text = "Annoy";
+            this.button2.UseVisualStyleBackColor = true;
+            this.button2.Click += new System.EventHandler(this.button2_Click_2);
             // 
             // groupBox_Code
             // 
@@ -608,6 +644,31 @@
             this.checkedListBox_SubBots.TabIndex = 0;
             this.checkedListBox_SubBots.SelectedIndexChanged += new System.EventHandler(this.checkedListBox_SubBots_SelectedIndexChanged);
             // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.chartPlacedBlocks);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(776, 436);
+            this.tabPage3.TabIndex = 6;
+            this.tabPage3.Text = "Trolls";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // chartPlacedBlocks
+            // 
+            chartArea1.Name = "ChartArea1";
+            this.chartPlacedBlocks.ChartAreas.Add(chartArea1);
+            this.chartPlacedBlocks.Dock = System.Windows.Forms.DockStyle.Fill;
+            legend1.Name = "Legend1";
+            this.chartPlacedBlocks.Legends.Add(legend1);
+            this.chartPlacedBlocks.Location = new System.Drawing.Point(3, 3);
+            this.chartPlacedBlocks.Name = "chartPlacedBlocks";
+            this.chartPlacedBlocks.Size = new System.Drawing.Size(770, 430);
+            this.chartPlacedBlocks.TabIndex = 0;
+            this.chartPlacedBlocks.Text = "chart1";
+            this.chartPlacedBlocks.Click += new System.EventHandler(this.chartPlacedBlocks_Click);
+            // 
             // timer1
             // 
             this.timer1.Enabled = true;
@@ -617,47 +678,6 @@
             // 
             this.backgroundWorker_CodeCracker.WorkerReportsProgress = true;
             this.backgroundWorker_CodeCracker.DoWork += new System.ComponentModel.DoWorkEventHandler(this.backgroundWorker_CodeCracker_DoWork);
-            // 
-            // tabPage3
-            // 
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
-            this.tabPage3.Name = "tabPage3";
-            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(776, 436);
-            this.tabPage3.TabIndex = 6;
-            this.tabPage3.Text = "AnnoyingBot";
-            this.tabPage3.UseVisualStyleBackColor = true;
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.button3);
-            this.groupBox2.Controls.Add(this.button2);
-            this.groupBox2.Location = new System.Drawing.Point(8, 390);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(268, 43);
-            this.groupBox2.TabIndex = 4;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "AnnoyingBot";
-            // 
-            // button2
-            // 
-            this.button2.Location = new System.Drawing.Point(6, 14);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 1;
-            this.button2.Text = "Annoy";
-            this.button2.UseVisualStyleBackColor = true;
-            this.button2.Click += new System.EventHandler(this.button2_Click_2);
-            // 
-            // button3
-            // 
-            this.button3.Location = new System.Drawing.Point(87, 14);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(75, 23);
-            this.button3.TabIndex = 2;
-            this.button3.Text = "Abort";
-            this.button3.UseVisualStyleBackColor = true;
-            this.button3.Click += new System.EventHandler(this.button3_Click_1);
             // 
             // Form1
             // 
@@ -670,6 +690,7 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
+            this.groupBox2.ResumeLayout(false);
             this.groupBox_Code.ResumeLayout(false);
             this.groupBox_Code.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDown_CrackCodeDigits)).EndInit();
@@ -690,7 +711,8 @@
             this.splitContainer1.ResumeLayout(false);
             this.tabPage6.ResumeLayout(false);
             this.tabPage6.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
+            this.tabPage3.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.chartPlacedBlocks)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -751,5 +773,6 @@
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Button button3;
         private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.DataVisualization.Charting.Chart chartPlacedBlocks;
     }
 }

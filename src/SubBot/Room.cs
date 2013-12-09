@@ -226,8 +226,10 @@ namespace OstBot_2_
                         while (blockMap[m.GetInt(0)] == null)
                             Thread.Sleep(5);
 
+                        Block newBlock = new Block(m);
+
                         lock (blockMap)
-                            blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(new Block(m));
+                            blockMap[m.GetInt(0)][m.GetInt(1), m.GetInt(2)].Add(newBlock);
 
                         if (m.Count >= 5)
                             block = Block.CreateBlock(m.GetInt(0), m.GetInt(1), m.GetInt(2), m.GetInt(3), m.GetInt(4));
@@ -330,6 +332,11 @@ namespace OstBot_2_
                 {
                     if (block.Equals(b))
                     {
+                        lock (blockMap)
+                        {
+                            blockMap[block.layer][block.x, block.y].Add(b);
+                        }
+
                         blockSet.Remove(b);
                         break;
                     }

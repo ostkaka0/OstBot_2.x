@@ -39,6 +39,8 @@ namespace OstBot_2_
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            Console.WriteLine(System.DateTime.Now.ToShortDateString() + "_" + System.DateTime.Now.ToShortTimeString().Replace(":", "-"));
+
             this.textBox_ChatText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckKeys);
 
             backgroundWorker_CodeCracker.ProgressChanged += new ProgressChangedEventHandler
@@ -281,9 +283,9 @@ namespace OstBot_2_
                     //checkedListBox_Rooms.Items.Add(room.ToString());
                     foreach (var pair in room.RoomData)
                     {
-                        Program.console.WriteLine(pair.Key + "\t" + pair.Value);
+                        //Program.console.WriteLine(pair.Key);
                     }
-                    Console.WriteLine(room.ToString());
+                    Console.WriteLine(room.Id.ToString());
                 }
             }
         }
@@ -518,6 +520,50 @@ namespace OstBot_2_
         private void button3_Click_1(object sender, EventArgs e)
         {
             annoyingBot = null;
+        }
+
+        public void PushPlacedData(Dictionary<int,int> data)
+        {
+            foreach(var i in data)
+            {
+                string name;
+                lock (OstBot.playerList)
+                {
+                    if (OstBot.playerList.ContainsKey(i.Key))
+                        name = OstBot.playerList[i.Key].name;
+                    else if (OstBot.leftPlayerList.ContainsKey(i.Key))
+                        name = OstBot.leftPlayerList[i.Key].name;
+                    else
+                        name = "[" + i.Key.ToString() + "]";
+                }
+
+                if (chartPlacedBlocks.Series.FindByName(name) == null)
+                {
+                    var v = new System.Windows.Forms.DataVisualization.Charting.Series(name, 0);
+                    v.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.StackedArea;
+
+                    for (int ii = 0; ii < 250; ii++)
+                        v.Points.AddY(0);
+
+                    //v.Label = name;
+                    //v.SmartLabelStyle.CalloutLineWidth = 2560;
+
+                    chartPlacedBlocks.Series.Add(v);
+                }
+                chartPlacedBlocks.Series[name].Points.AddY(i.Value);
+                chartPlacedBlocks.Series[name].Points.RemoveAt(0);
+
+                /*if (chartPlacedBlocks.Series[name].Points.Count > 100)
+                {
+                    chartPlacedBlocks.Series[name].Points.RemoveAt(0);
+                }*/
+
+            }
+        }
+
+        private void chartPlacedBlocks_Click(object sender, EventArgs e)
+        {
+
         }
 
     }
