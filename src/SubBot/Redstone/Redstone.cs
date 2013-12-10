@@ -29,7 +29,7 @@ namespace OstBot_2_
         public Redstone()
             : base()
             {
-                UpdateSleep = 100;
+                UpdateSleep = 10;
                 currentRedTime.Start();
 
                 wireTypes.Add(189, 0.001F);
