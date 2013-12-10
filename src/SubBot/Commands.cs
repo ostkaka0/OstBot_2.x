@@ -11,6 +11,7 @@ namespace OstBot_2_
     {
         private List<string> disabledPlayers = new List<string>();
         private List<string> protectedPlayers = new List<string>();
+        private List<string> getPlacerPlayers = new List<string>();
 
         public Commands()
             : base()
@@ -97,6 +98,23 @@ namespace OstBot_2_
                                     }
                                 }
                             }
+                        }
+                        if (getPlacerPlayers.Contains(name))
+                        {
+                            getPlacerPlayers.Remove(name);
+                            string name2 = "[undefined]";
+                            Block block = new Block(m);
+                            Block oldBlock = OstBot.room.getMapBlock(block.layer, block.x, block.y, 1);
+
+                            lock(OstBot.playerList)
+                            {
+                                if (OstBot.playerList.ContainsKey(oldBlock.b_userId))
+                                {
+                                    name2 = OstBot.playerList[oldBlock.b_userId].name;
+                                }
+                            }
+
+                            OstBot.connection.Send("say", name + ": Block placed by " + name2);
                         }
                     }).Start();
                     break;
@@ -186,6 +204,10 @@ namespace OstBot_2_
                 case "replacearea":
                     break;
 
+                case "getplacer":
+                    if (!getPlacerPlayers.Contains(name))
+                        getPlacerPlayers.Add(name);
+                    break;
                 case "protect":         //<name>
                     if (args.Length > 1 && isBotMod)
                     {
