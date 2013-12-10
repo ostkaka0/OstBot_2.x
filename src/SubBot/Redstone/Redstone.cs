@@ -56,6 +56,8 @@ namespace OstBot_2_
                 powerSourceTypes.Add(Skylight.BlockIds.Decorative.Sand.WHITE, new PressurePlate());
                 destinationTypes.Add(Skylight.BlockIds.Blocks.Special.GLOSSYBLACK, new Lamp());
                 destinationTypes.Add(Skylight.BlockIds.Blocks.Cloud.WHITE, new Lamp());
+                destinationTypes.Add(Skylight.BlockIds.Blocks.Scifi.GRAY, new Door());
+                destinationTypes.Add(Skylight.BlockIds.Blocks.Secrets.NONSOLID, new Door());
             }
 
         public override void onMessage(object sender, PlayerIOClient.Message m)

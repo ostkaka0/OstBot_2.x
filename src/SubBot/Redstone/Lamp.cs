@@ -8,7 +8,7 @@ namespace OstBot_2_
 {
     class Lamp : Destination
     {
-        bool enabled = false;
+        protected bool enabled = false;
 
         public override void onSignal(System.Diagnostics.Stopwatch currentRedTime, float power)
         {

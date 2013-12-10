@@ -107,6 +107,7 @@
     <Compile Include="SubBot\Dig\Dig.cs" />
     <Compile Include="SubBot\Dig\Dig_Generator.cs" />
     <Compile Include="SubBot\Redstone\Destination.cs" />
+    <Compile Include="SubBot\Redstone\Door.cs" />
     <Compile Include="SubBot\Redstone\Lamp.cs" />
     <Compile Include="SubBot\Redstone\PowerSource.cs" />
     <Compile Include="SubBot\Redstone\PressurePlate.cs" />
