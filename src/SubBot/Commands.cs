@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Drawing;
 
 namespace OstBot_2_
 {
@@ -106,7 +107,7 @@ namespace OstBot_2_
                             Block block = new Block(m);
                             Block oldBlock = OstBot.room.getMapBlock(block.layer, block.x, block.y, 1);
 
-                            lock(OstBot.playerList)
+                            lock (OstBot.playerList)
                             {
                                 if (OstBot.playerList.ContainsKey(oldBlock.b_userId))
                                 {
@@ -115,7 +116,7 @@ namespace OstBot_2_
                             }
                             if (name2 == "[undefined]")
                             {
-                                lock(OstBot.leftPlayerList)
+                                lock (OstBot.leftPlayerList)
                                 {
                                     if (OstBot.leftPlayerList.ContainsKey(oldBlock.b_userId))
                                     {
@@ -138,7 +139,7 @@ namespace OstBot_2_
 
         public override void onCommand(object sender, string text, string[] args, int userId, Player player, string name, bool isBotMod)
         {
-            
+
 
             switch (args[0])
             {
@@ -187,6 +188,63 @@ namespace OstBot_2_
                 case "fillworld":  //<blocktyp><data>
                     break;
                 case "fillarea":   //<x1><y1><x2><y2><blocktyp><data>
+                    break;
+                case "fillexpand":
+                    {
+                        int toReplace = 0;
+                        int toReplaceWith = 0;
+                        if (args.Length == 2)
+                        {
+                            if (!int.TryParse(args[1], out toReplaceWith))
+                            {
+                                OstBot.connection.Send("say", "Usage: !fillexpand <from id=0> <to id>");
+                                return;
+                            }
+                        }
+                        else if (args.Length == 3)
+                        {
+                            if (!int.TryParse(args[2], out toReplaceWith) || !int.TryParse(args[1], out toReplace))
+                            {
+                                OstBot.connection.Send("say", "Usage: !fillexpand <from id=0> <to id>");
+                                return;
+                            }
+                        }
+                        Block startBlock = OstBot.room.getBotMapBlock(0, player.blockX, player.blockY);
+                        if (startBlock.blockId == toReplace)
+                        {
+                            int total = 0;
+                            List<Point> closeBlocks = new List<Point> { new Point(1, 0), new Point(-1, 0), new Point(0, 1), new Point(0, -1) };
+                            Queue<Point> blocksToCheck = new Queue<Point>();
+                            List<Point> blocksToFill = new List<Point>();
+                            blocksToCheck.Enqueue(new Point(startBlock.x, startBlock.y));
+                            while (blocksToCheck.Count > 0)
+                            {
+                                Point parent = blocksToCheck.Dequeue();
+                                //if (!blocksToFill.Contains(parent))
+                                    for (int i = 0; i < closeBlocks.Count; i++)
+                                    {
+                                        Point current = new Point(closeBlocks[i].X + parent.X, closeBlocks[i].Y + parent.Y);
+                                        Block currentBlock = OstBot.room.getBotMapBlock(0, current.X, current.Y);
+                                        if (currentBlock.blockId == toReplace && !blocksToCheck.Contains(current) && !blocksToFill.Contains(current) && current.X >= 0 && current.Y >= 0 && current.X <= OstBot.room.width && current.Y <= OstBot.room.height)
+                                        {
+                                            blocksToFill.Add(current);
+                                            blocksToCheck.Enqueue(current);
+                                            total++;
+                                            if (total > 10000)
+                                            {
+                                                OstBot.connection.Send("say", "Don't try to fill the whole world, fool!");
+                                                return;
+                                            }
+                                        }
+                                    }
+                            }
+                            OstBot.connection.Send("say", "total blocks: " + total + ". Filling..");
+                            foreach (Point p in blocksToFill)
+                            {
+                                OstBot.room.DrawBlock(Block.CreateBlock(0, (int)p.X, (int)p.Y, toReplaceWith, player.id()));
+                            }
+                        }
+                    }
                     break;
                 case "replace":        //med arean mellan 2 block
                     new Task(() =>
