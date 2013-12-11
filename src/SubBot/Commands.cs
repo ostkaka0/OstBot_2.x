@@ -113,6 +113,16 @@ namespace OstBot_2_
                                     name2 = OstBot.playerList[oldBlock.b_userId].name;
                                 }
                             }
+                            if (name2 == "[undefined]")
+                            {
+                                lock(OstBot.leftPlayerList)
+                                {
+                                    if (OstBot.leftPlayerList.ContainsKey(oldBlock.b_userId))
+                                    {
+                                        name2 = OstBot.leftPlayerList[oldBlock.b_userId].name;
+                                    }
+                                }
+                            }
 
                             OstBot.connection.Send("say", name + ": Block placed by " + name2);
                         }
@@ -259,10 +269,67 @@ namespace OstBot_2_
                                             }
                                         }
 
-                                        if (protectedPlayers.Contains(userName))
-                                            break;
+                                        //if (protectedPlayers.Contains(userName))
+                                        //    break;
 
                                         if (userName == args[1])
+                                        {
+                                            OstBot.room.DrawBlock(block);
+                                            break;
+                                        }
+                                        else
+                                        {
+                                            //Console.WriteLine("block borttaget från" + userName);
+                                        }
+
+
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "repairprotected":          //<name>
+                    if (args.Length > 1 && isBotMod)
+                    {
+                        for (int l = 0; l < 2; l++)
+                        {
+                            for (int y = 0; y < OstBot.room.height; y++)
+                            {
+                                for (int x = 0; x < OstBot.room.width; x++)
+                                {
+                                    Block block;
+
+                                    //if (OstBot.room.getBotMapBlock(l, x, y).b_userId == -1)
+                                    //    continue;
+
+
+                                    for (int i = 0; true; i++)
+                                    {
+                                        block = OstBot.room.getMapBlock(l, x, y, i);
+                                        string userName = "";
+                                        lock (OstBot.playerList)
+                                        {
+                                            if (OstBot.playerList.ContainsKey(block.b_userId))
+                                            {
+                                                userName = OstBot.playerList[block.b_userId].name;
+                                            }
+                                        }
+                                        if (userName == "") //else if
+                                        {
+                                            lock (OstBot.leftPlayerList)
+                                            {
+                                                if (OstBot.leftPlayerList.ContainsKey(block.b_userId))
+                                                {
+                                                    userName = OstBot.leftPlayerList[block.b_userId].name;
+                                                }
+                                            }
+                                        }
+
+                                        //
+                                        //    break;
+
+                                        if (protectedPlayers.Contains(userName))//if (userName == args[1])
                                         {
                                             OstBot.room.DrawBlock(block);
                                             break;
