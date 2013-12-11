@@ -336,6 +336,9 @@ namespace OstBot_2_
                         else
                             newPos.y += (i > 1) ? 1 : -1;
 
+                        if (newPos.x <= 1 || newPos.x >= OstBot.room.width - 2 || newPos.y <= 1 || newPos.y >= OstBot.room.height - 2)
+                            break;
+
                         power -= 0.01F;
                         if (power > redMap[newPos.x, newPos.y, newPos.l])
                             redMap[newPos.x, newPos.y, newPos.l] = power;
