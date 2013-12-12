@@ -17,21 +17,22 @@ namespace OstBot_2_
         [STAThread]
         static void Main(string[] args)
         {
-            
-            try
-            {
-                Application.EnableVisualStyles();
-                console = new ConsoleWindow();
-                console.Show();
-                ostBot = new OstBot();
-                Application.Run(form1 = new Form1());
-            }
+
+            /*try
+            {*/
+            Application.EnableVisualStyles();
+            console = new ConsoleWindow();
+            console.Show();
+            ostBot = new OstBot();
+            form1 = new Form1();
+            Application.Run(form1);
+            /*}
             catch (Exception e)
             {
                 OstBot.shutdown();
                 ostBot = null;
                 throw e;
-            }
+            }*/
         }
     }
 }

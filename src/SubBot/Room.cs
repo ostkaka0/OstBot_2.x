@@ -49,7 +49,8 @@ namespace OstBot_2_
                 {
                     if (block == b)//(false && block.Equals(b))
                     {
-                        //Console.WriteLine("== failar inte>.<");
+                        //Console.
+                        //("== failar inte>.<");
                         return;
                     }
                     else if (b.layer == block.layer && b.x == block.x && b.y == block.y)
@@ -135,7 +136,7 @@ namespace OstBot_2_
                     {
                         blockMap[0][x, y].Clear();
                         blockMap[0][x, y].Add(Block.CreateBlock(0, x, y, 9, -1));
-                        Console.WriteLine("Border at " + x + " " + y);
+                        //Console.WriteLine("Border at " + x + " " + y);
                     }
                 }
             }

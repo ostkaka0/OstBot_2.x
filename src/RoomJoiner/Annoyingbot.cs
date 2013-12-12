@@ -15,8 +15,8 @@ namespace OstBot_2_
         public AnnoyingBot(string gameId, string email, string password)
             : base(gameId, email, password)
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\lol.txt");
-            Console.WriteLine(System.DateTime.Now.ToShortDateString());
+            //System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\lol.txt");
+            //Console.WriteLine(System.DateTime.Now.ToShortDateString());
         }
 
         ~AnnoyingBot()
@@ -40,7 +40,7 @@ namespace OstBot_2_
                 case "init":
                     new Task(()=>
                         {
-                    Console.WriteLine(sender.Room);
+                    //Console.WriteLine(sender.Room);
                     //sender.Connection.Send("say", @"Hi, everybody! Yes, I am annoying.");
                     //System.Threading.Thread.Sleep(25);
                     sender.Connection.Send("say", @"Play Cheese Edits: https://www.mediafire.com/?9114ak36c52wqe6");
