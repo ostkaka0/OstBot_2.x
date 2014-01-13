@@ -53,11 +53,11 @@ namespace OstBot_2_
             }
         }
 
-        public int digRange { get { return ((digLevel_ > 0 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); } }
+        public int digRange { get { return ((digLevel_ > -1 && fastDig) ? 2 : 1) + ((betaDig) ? 1 : 0); } }
 
         public int xpRequired_ { get { return xpRequired; } }
 
-        public int digLevel { get { return digLevel_; } }
+        public int digLevel { get { return ((digLevel_ < 1)? 1 : digLevel_); } }
 
         public int digMoney { get { return digMoney_; } set { digMoney_ = value; } }
 

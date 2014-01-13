@@ -7,8 +7,10 @@ using System.Diagnostics;
 
 namespace OstBot_2_
 {
-    class Destination : ICloneable
+    abstract class Destination
     {
+        public abstract object Create();
+
         public virtual void Update(Stopwatch currentRedTime, BlockPos pos)
         {
 

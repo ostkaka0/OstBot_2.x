@@ -32,5 +32,10 @@ namespace OstBot_2_
             enabled = false;
             base.Update(currentRedTime, pos);
         }
+
+        public override object Create()
+        {
+            return new Lamp();
+        }
     }
 }

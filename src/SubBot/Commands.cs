@@ -125,6 +125,7 @@ namespace OstBot_2_
                             }
 
                             OstBot.connection.Send("say", name + ": Block placed by " + name2);
+                            OstBot.room.DrawBlock(oldBlock);
                         }
                     }).Start();
                     break;
@@ -169,7 +170,21 @@ namespace OstBot_2_
                 case "fill":       //<blocktyp><data> / <blocktyp><lager> / <blocktyp><pengar till pengardörr>..   //med arean mellan 2 block
                     new Task(() =>
                     {
-                        if (args.Length > 1 && isBotMod)
+                        if (args.Length > 2 && isBotMod)
+                        {
+                            int blockId;
+                            int layer;
+                            Int32.TryParse(args[1], out blockId);
+                            Int32.TryParse(args[2], out layer);
+                            for (int y = 1; y < OstBot.room.height - 1; y++)
+                            {
+                                for (int x = 1; x < OstBot.room.width - 1; x++)
+                                {
+                                    OstBot.room.DrawBlock(Block.CreateBlock(layer, x, y, blockId, -1));
+                                }
+                            }
+                        }
+                        else if (args.Length > 1 && isBotMod)
                         {
                             int blockId;
                             Int32.TryParse(args[1], out blockId);
@@ -250,6 +265,8 @@ namespace OstBot_2_
                                     for (int i = 0; true; i++)
                                     {
                                         block = OstBot.room.getMapBlock(l, x, y, i);
+                                        if (block == null)
+                                            break;
                                         string userName = "";
                                         lock (OstBot.playerList)
                                         {
@@ -307,6 +324,8 @@ namespace OstBot_2_
                                     for (int i = 0; true; i++)
                                     {
                                         block = OstBot.room.getMapBlock(l, x, y, i);
+                                        if (block == null)
+                                            break;
                                         string userName = "";
                                         lock (OstBot.playerList)
                                         {
@@ -378,6 +397,10 @@ namespace OstBot_2_
                                     for (int i = 0; true; i++)
                                     {
                                         block = OstBot.room.getMapBlock(l, x, y, i);
+
+                                        if (block == null)
+                                            break;
+
                                         string userName = "";
                                         lock (OstBot.playerList)
                                         {

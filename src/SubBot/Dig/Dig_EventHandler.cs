@@ -57,6 +57,8 @@ namespace OstBot_2_
                                     player = OstBot.playerList[userId];
                             }
 
+                            int digRange = Math.Max(minDigRange, player.digRange);
+
                             //if (player.isgod)
                             //    return;
 
@@ -64,11 +66,11 @@ namespace OstBot_2_
                             if (isDigable(blockId))//(blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                             {
 
-                                if (player.digRange > 1)
+                                if (digRange > 1)
                                 {
-                                    for (int x = (horizontal == 1) ? -1 : -player.digRange + 1; x < ((horizontal == -1) ? 2 : player.digRange); x++)
+                                    for (int x = (horizontal == 1) ? -1 : -digRange + 1; x < ((horizontal == -1) ? 2 : digRange); x++)
                                     {
-                                        for (int y = (vertical == 1) ? -1 : -player.digRange + 1; y < ((vertical == -1) ? 2 : player.digRange); y++)
+                                        for (int y = (vertical == 1) ? -1 : -digRange + 1; y < ((vertical == -1) ? 2 : digRange); y++)
                                         {
                                             Console.WriteLine("snor är :" + x.ToString() + "    och skit är: " + y.ToString());
 
@@ -82,8 +84,11 @@ namespace OstBot_2_
 
                                                 //if (distance == 0)
                                                 //    DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, player.digStrength, false);
-                                                if (distance <= 1.41421357 * (player.digRange - 1) || distance < 1.4142)
-                                                    DigBlock(blockX + x + (int)Math.Ceiling(horizontal), blockY + y + (int)Math.Ceiling(vertical), player, (player.digRange - distance) * player.digStrength, false);
+                                                int x_x = blockX + x + (int)Math.Ceiling(horizontal);
+                                                int y_y = blockY + y + (int)Math.Ceiling(vertical);
+                                                
+                                                if ((distance <= 1.41421357 * (digRange - 1) || distance < 1.4142) &&  (true ||isReachAble(new BlockPos(blockX, blockY, 0), new BlockPos(x_x, y_y, 0))))
+                                                    DigBlock(x_x, y_y, player, (digRange - distance) * player.digStrength, false);
                                             }
                                         }
                                     }
@@ -127,6 +132,19 @@ namespace OstBot_2_
 
         public override void onCommand(object sender, string text, string[] args, int userId, Player player, string name, bool isBotMod)
         {
+            if (isBotMod)
+            {
+                switch (args[0])
+                {
+                    case "setmindigrange":
+                        if (args.Length >= 2)
+                        {
+                            Int32.TryParse(args[1], out this.minDigRange);
+                        }
+                        return;
+                }
+            }
+
             switch (args[0])
             {
                 case "digcommands":

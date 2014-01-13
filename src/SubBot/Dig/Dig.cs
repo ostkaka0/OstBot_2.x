@@ -14,6 +14,7 @@ namespace OstBot_2_
         protected Queue<Block> dugBlocksToPlaceQueue = new Queue<Block>();
         protected object dugBlocksToPlaceQueueLock = 0;
         protected float[,] digHardness;
+        protected int minDigRange;
 
         public override void Update()
         {
@@ -31,7 +32,7 @@ namespace OstBot_2_
 
         private bool isDigable(int blockId)
         {
-            if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN - 5 && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
+            if (blockId >= Skylight.BlockIds.Blocks.Sand.BROWN && blockId <= Skylight.BlockIds.Blocks.Sand.BROWN)
                 return true;
             else if (blockId >= 16 && blockId <= 21)
                 return true;
@@ -64,7 +65,7 @@ namespace OstBot_2_
 
                     InventoryItem temp = DigBlockMap.blockTranslator[block.blockId];
 
-                    if (player.digLevel>= Convert.ToInt32(temp.GetDataAt(5)))
+                    if (player.digLevel >= Convert.ToInt32(temp.GetDataAt(5)))
                     {
                         //Shop.shopInventory[DigBlockMap.blockTranslator[block.blockId]].GetDataAt(3)//för hårdhet
                         if (digHardness[x, y] <= digStrength)
@@ -79,8 +80,13 @@ namespace OstBot_2_
                     {
                         return;
                     }
-                    
+
                 }
+            }
+            else
+            {
+                //if (!isReachAble(new BlockPos(player.blockX, player.blockY, 0), new BlockPos(x, y, 0)))
+                 //   return;
             }
 
             switch (block.blockId)
@@ -112,6 +118,37 @@ namespace OstBot_2_
                 lock (dugBlocksToPlaceQueueLock)
                     dugBlocksToPlaceQueue.Enqueue(block);
             }
+        }
+
+        private bool isReachAble(BlockPos start, BlockPos end)
+        {
+            int deltaX = start.x - end.x;
+            int deltaY = start.y - end.y;
+            Block block;
+
+            while (deltaX != 0 || deltaY != 0)
+            {
+                block = OstBot.room.getBotMapBlock(0, start.x, start.y);
+
+                if (!isDigable(block.blockId) && block.blockId >= 9)
+                    return false;
+
+                if (deltaX != 0)
+                {
+                    start.x += deltaX / Math.Abs(deltaX);
+                }
+                if (deltaY != 0)
+                {
+                    start.y += deltaY / Math.Abs(deltaY);
+                }
+
+                deltaX = start.x - end.x;
+                deltaY = start.y - end.y;
+            }
+
+            block = OstBot.room.getBotMapBlock(0, start.x, start.y);
+
+            return (isDigable(block.blockId) || block.blockId < 9);
         }
 
         private void resetDigHardness()

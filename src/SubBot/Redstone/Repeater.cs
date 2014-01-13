@@ -7,14 +7,19 @@ using System.Diagnostics;
 
 namespace OstBot_2_
 {
-    class Torch : PowerSource
+    class Repeater : PowerSource
     {
-        bool willEnable = true;
-        bool enabled = true;
+        List<bool> inputSequence = new List<bool>();
+
+        public Repeater()
+        {
+            for (int i = 0; i < 25; i++)
+                inputSequence.Add(false);
+        }
 
         public override float getOutput(Stopwatch currentRedTime)
         {
-            if (enabled)
+            if (inputSequence[24])
                 return 1.0F;
             else
                 return 0.0F;
@@ -23,21 +28,21 @@ namespace OstBot_2_
 
         public override void onSignal(System.Diagnostics.Stopwatch currentRedTime, float power)
         {
-            willEnable = false;
+            inputSequence[0] = true;
             //enabled = false;
             base.onSignal(currentRedTime, power);
         }
 
         public override void Update(System.Diagnostics.Stopwatch currentRedTime, BlockPos pos)
         {
-            enabled = willEnable;
-            willEnable = true;
+            inputSequence.RemoveAt(24);
+            inputSequence.Insert(0, false);
             base.Update(currentRedTime, pos);
         }
 
         public override object Create()
         {
-            return new Torch();
+            return new Repeater();
         }
     }
 }

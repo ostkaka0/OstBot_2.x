@@ -29,6 +29,8 @@ namespace OstBot_2_
         public static Commands commands;
         public static BanList banList;
         public static TrollFinder trollFinder;
+        public static MazeGenerator mazeGenerator;
+        public static MazeDig mazeDig;
         Stopwatch playerTickTimer = new Stopwatch();
         public static Random r = new Random();
 
@@ -44,7 +46,7 @@ namespace OstBot_2_
 
         public OstBot()
         {
-            return;
+            //return;
 
             playerTickTimer.Start();
             zombieUpdateStopWatch.Start();
@@ -182,6 +184,8 @@ namespace OstBot_2_
                 room = new Room();
                 banList = new BanList();
                 trollFinder = new TrollFinder();
+                mazeGenerator = new MazeGenerator();
+                mazeDig = new MazeDig();
                 dig = new Dig();
                 commands = new Commands();
                 new Redstone();

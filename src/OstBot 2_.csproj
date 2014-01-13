@@ -81,7 +81,6 @@
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
     <Compile Include="Inventory\Key.cs" />
-    <Compile Include="MazeGenerator.cs" />
     <Compile Include="Minimap.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,12 +105,15 @@
     <Compile Include="SubBot\Commands.cs" />
     <Compile Include="SubBot\Dig\Dig.cs" />
     <Compile Include="SubBot\Dig\Dig_Generator.cs" />
+    <Compile Include="SubBot\Maze\MazeDig.cs" />
+    <Compile Include="SubBot\Maze\MazeGenerator.cs" />
     <Compile Include="SubBot\Redstone\Destination.cs" />
     <Compile Include="SubBot\Redstone\Door.cs" />
     <Compile Include="SubBot\Redstone\Lamp.cs" />
     <Compile Include="SubBot\Redstone\PowerSource.cs" />
     <Compile Include="SubBot\Redstone\PressurePlate.cs" />
     <Compile Include="SubBot\Redstone\Redstone.cs" />
+    <Compile Include="SubBot\Redstone\Repeater.cs" />
     <Compile Include="SubBot\Redstone\Torch.cs" />
     <Compile Include="SubBot\Redstone\Wire.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />

@@ -33,7 +33,7 @@ namespace OstBot_2_
         {
             lock (sayStringLock)
             {
-                sayString.Enqueue(new string[] {player + ": ", text + Environment.NewLine});
+                sayString.Enqueue(new string[] { player + ": ", text + Environment.NewLine });
             }
         }
 
@@ -71,7 +71,7 @@ namespace OstBot_2_
             {
                 if (textBox_ChatText.Focused)
                 {
-                    OstBot.connection.Send(PlayerIOClient.Message.Create("say", new object[] {textBox_ChatText.Text}));
+                    OstBot.connection.Send(PlayerIOClient.Message.Create("say", new object[] { textBox_ChatText.Text }));
                     say("You: ", textBox_ChatText.Text);
                     textBox_ChatText.Text = "";
                 }
@@ -233,7 +233,7 @@ namespace OstBot_2_
 
         private void button1_Click(object sender, EventArgs e)
         {
-            PlayerIOClient.RoomInfo[] roomInfo = OstBot.client.Multiplayer.ListRooms(comboBox_RoomType.Text, new Dictionary<string,string>(), 200000, 0);
+            PlayerIOClient.RoomInfo[] roomInfo = OstBot.client.Multiplayer.ListRooms(comboBox_RoomType.Text, new Dictionary<string, string>(), 200000, 0);
 
             //checkedListBox_Rooms.Items.Clear();
             listView1.Items.Clear();
@@ -277,15 +277,32 @@ namespace OstBot_2_
                     string plays = (!room.RoomData.ContainsKey("plays")) ? "" : room.RoomData["plays"];
 
 
-                    listView1.Items.Add(new ListViewItem(new string[] { name , room.OnlineUsers.ToString(), plays, room.Id}));
+                    listView1.Items.Add(new ListViewItem(new string[] { name, room.OnlineUsers.ToString(), plays, room.Id }));
                     //checkedListBox_Rooms.Items.Add(room.Id.ToString());
                     //checkedListBox_Rooms.Items.Add(room.OnlineUsers.ToString());
                     //checkedListBox_Rooms.Items.Add(room.ToString());
+
+                    Console.WriteLine(room.Id.ToString() + "\t" + name);
+
+                    if (room.RoomData.ContainsKey("owner"))
+                    {
+                        if (room.RoomData["owner"] != "ostkaka")
+                            continue;
+
+
+                    }
+                    else if (!(name.ToLower().Contains("ostkaka") || name.ToLower().Contains("bot") || name.ToLower().Contains("maze") || name.ToLower().Contains("labyrinth") || name.ToLower().Contains("dig")))
+                    {
+                        continue;
+                    }
+
+
+
                     foreach (var pair in room.RoomData)
                     {
-                        //Program.console.WriteLine(pair.Key);
+                        Program.console.WriteLine(" -\t" + pair.Key + " \t" + pair.Value);
                     }
-                    Console.WriteLine(room.Id.ToString());
+
                 }
             }
         }
@@ -352,8 +369,8 @@ namespace OstBot_2_
 
             for (int i = 0; i + codeMinValue < numericUpDown_MaxCrackCode.Value; i++)
             {
-                    OstBot.connection.Send("access",
-                        toDigits((int)numericUpDown_CrackCodeDigits.Value, codeMinValue + i));
+                OstBot.connection.Send("access",
+                    toDigits((int)numericUpDown_CrackCodeDigits.Value, codeMinValue + i));
 
                 if ((codeMinValue + i) % 2 == 0)
                     Thread.Sleep(1);
@@ -385,13 +402,13 @@ namespace OstBot_2_
                 if ((codeMinValue + i) % 100 == 0)
                 {
                     Program.console.WriteLine((i + codeMinValue).ToString());
-                    backgroundWorker_CodeCracker.ReportProgress(codeMinValue+i);
+                    backgroundWorker_CodeCracker.ReportProgress(codeMinValue + i);
                 }
 
                 if (OstBot.hasCode)
                 {
                     OstBot.hasCode = false;
-                    codeMinValue = codeMinValue +i - 100;
+                    codeMinValue = codeMinValue + i - 100;
                     backgroundWorker_CodeCracker.ReportProgress(codeMinValue);
                     break;
                 }
@@ -410,7 +427,7 @@ namespace OstBot_2_
                 if (OstBot.hasCode)
                 {
                     OstBot.hasCode = false;
-                    codeMinValue = codeMinValue+  i-10;
+                    codeMinValue = codeMinValue + i - 10;
                     backgroundWorker_CodeCracker.ReportProgress(codeMinValue);
                     break;
                 }
@@ -496,8 +513,8 @@ namespace OstBot_2_
                     false,       //do not keep after our app exits
                     5,           //retry 5 times
                     200);        //200ms delay between retries
-                //Clipboard.SetText(listBox_PlayerList.SelectedItem.ToString());
-            
+            //Clipboard.SetText(listBox_PlayerList.SelectedItem.ToString());
+
         }
 
         private void checkedListBox_SubBots_SelectedIndexChanged(object sender, EventArgs e)
@@ -522,9 +539,9 @@ namespace OstBot_2_
             annoyingBot = null;
         }
 
-        public void PushPlacedData(Dictionary<int,int> data)
+        public void PushPlacedData(Dictionary<int, int> data)
         {
-            foreach(var i in data)
+            foreach (var i in data)
             {
                 string name;
                 lock (OstBot.playerList)

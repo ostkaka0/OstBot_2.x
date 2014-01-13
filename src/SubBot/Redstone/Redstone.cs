@@ -52,6 +52,7 @@ namespace OstBot_2_
                 layerSwitches.Add(Skylight.BlockIds.Blocks.Industrial.CROSSSUPPORT);
                 layerSwitches.Add(Skylight.BlockIds.Background.Carnival.CHECKER);
                 powerSourceTypes.Add(Skylight.BlockIds.Blocks.Metal.BRONZE, new Torch());
+                powerSourceTypes.Add(Skylight.BlockIds.Blocks.Metal.SILVER, new Repeater());
                 powerSourceTypes.Add(Skylight.BlockIds.Decorative.Cloud.BOTTOM, new PressurePlate());
                 powerSourceTypes.Add(Skylight.BlockIds.Decorative.Sand.WHITE, new PressurePlate());
                 destinationTypes.Add(Skylight.BlockIds.Blocks.Special.GLOSSYBLACK, new Lamp());
@@ -132,7 +133,7 @@ namespace OstBot_2_
                                 if (!powerSources.ContainsKey(new BlockPos(block.x, block.y, block.layer)))
                                 {
                                     KeyValuePair<BlockPos, PowerSource> powerSourceKeyValuePair = new KeyValuePair<BlockPos, PowerSource>(new BlockPos(block.x, block.y, block.layer),
-                                        powerSourceTypes[block.blockId].Clone() as PowerSource);
+                                        powerSourceTypes[block.blockId].Create() as PowerSource);
                                     powerSources.Add(powerSourceKeyValuePair.Key, powerSourceKeyValuePair.Value);
                                     ResetPowerSources();//ResetPowerSourceWires(powerSourceKeyValuePair);
                                 }
@@ -145,7 +146,7 @@ namespace OstBot_2_
                                 if (!destinations.ContainsKey(new BlockPos(block.x, block.y, block.layer)))
                                 {
                                     destinations.Add(new BlockPos(block.x, block.y, block.layer),
-                                        destinationTypes[block.blockId].Clone() as Destination);
+                                        destinationTypes[block.blockId].Create() as Destination);
                                     ResetPowerSources();
                                 }
                             }
@@ -262,14 +263,14 @@ namespace OstBot_2_
                             if (powerSourceTypes.ContainsKey(block.blockId))
                             {
                                 powerSources.Add(new BlockPos(x, y, l),
-                                    powerSourceTypes[block.blockId].Clone() as PowerSource
+                                    powerSourceTypes[block.blockId].Create() as PowerSource
                                     );
                             }
 
                             if (destinationTypes.ContainsKey(block.blockId))
                             {
                                 destinations.Add(new BlockPos(x, y, l),
-                                    destinationTypes[block.blockId].Clone() as Destination
+                                    destinationTypes[block.blockId].Create() as Destination
                                     );
                             }
                         }

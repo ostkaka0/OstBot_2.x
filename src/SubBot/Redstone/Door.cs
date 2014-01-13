@@ -23,5 +23,10 @@ namespace OstBot_2_
             }
             enabled = false;
         }
+
+        public override object Create()
+        {
+            return new Door();
+        }
     }
 }

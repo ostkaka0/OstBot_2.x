@@ -43,7 +43,7 @@ namespace OstBot_2_
                     Console.WriteLine(sender.Room);
                     //sender.Connection.Send("say", @"Hi, everybody! Yes, I am annoying.");
                     //System.Threading.Thread.Sleep(25);
-                    sender.Connection.Send("say", @"Play Cheese Edits: https://www.mediafire.com/?9114ak36c52wqe6");
+                    sender.Connection.Send("say", @"new EE mod: http://ostkaka.weebly.com/everybody-edits-07x-mod.html");
                     System.Threading.Thread.Sleep(100);
                     sender.Connection.Disconnect();
                     this.connections.Remove(sender.Room);

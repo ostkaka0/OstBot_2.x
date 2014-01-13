@@ -52,5 +52,10 @@ namespace OstBot_2_
 
         }
 
+        public override object Create()
+        {
+            return new PressurePlate();
+        }
+
     }
 }
