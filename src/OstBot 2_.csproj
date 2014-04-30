@@ -107,6 +107,7 @@
     <Compile Include="SubBot\Dig\Dig_Generator.cs" />
     <Compile Include="SubBot\Maze\MazeDig.cs" />
     <Compile Include="SubBot\Maze\MazeGenerator.cs" />
+    <Compile Include="SubBot\PlayerPhysics.cs" />
     <Compile Include="SubBot\Redstone\Destination.cs" />
     <Compile Include="SubBot\Redstone\Door.cs" />
     <Compile Include="SubBot\Redstone\Lamp.cs" />
@@ -130,6 +131,7 @@
     <Compile Include="SubBot\Room.cs" />
     <Compile Include="SubBot\SubBot.cs" />
     <Compile Include="SubBot\TrollFinder.cs" />
+    <Compile Include="SubBot\Zombies.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

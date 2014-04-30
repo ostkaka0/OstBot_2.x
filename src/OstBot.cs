@@ -20,23 +20,24 @@ namespace OstBot_2_
         public static string title = "";
         public static string owner = "";
 
-        public static List<Zombie> zombieList = new List<Zombie>();
-        public static Stopwatch zombieUpdateStopWatch = new Stopwatch();
-        public static Stopwatch zombieDrawStopWatch = new Stopwatch();
-
         public static Room room;
         public static Dig dig;
         public static Commands commands;
         public static BanList banList;
         public static TrollFinder trollFinder;
+<<<<<<< HEAD
         public static MazeGenerator mazeGenerator;
         public static MazeDig mazeDig;
         Stopwatch playerTickTimer = new Stopwatch();
+=======
+        public static PlayerPhysics playerPhysics;
+        public static Zombies zombies;
+>>>>>>> b3253e88aeee9a1d6c456fc9330785b0a14ecc3b
         public static Random r = new Random();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
         public static Dictionary<int, BotPlayer> playerList = new Dictionary<int, BotPlayer>();
-        public static Dictionary<int, BotPlayer> playerListTemp = new Dictionary<int, BotPlayer>();
+        //public static Dictionary<int, BotPlayer> playerListTemp = new Dictionary<int, BotPlayer>();
         public static Dictionary<string, int> leftNameList = new Dictionary<string, int>();
         public static Dictionary<int, Player> leftPlayerList = new Dictionary<int, Player>();
 
@@ -46,6 +47,7 @@ namespace OstBot_2_
 
         public OstBot()
         {
+<<<<<<< HEAD
             //return;
 
             playerTickTimer.Start();
@@ -86,41 +88,9 @@ namespace OstBot_2_
                     else
                         throw null;
                 }*/
+=======
+>>>>>>> b3253e88aeee9a1d6c456fc9330785b0a14ecc3b
 
-            }).Start();
-            new System.Threading.Thread(() =>
-            {
-                while (OstBot.connected)
-                {
-                    /*if (zombieUpdateStopWatch.ElapsedMilliseconds >= 100)
-                    {
-                        zombieUpdateStopWatch.Restart();
-                        lock (zombieList)
-                        {
-                            foreach (Zombie zombie in zombieList)
-                            {
-                                zombie.Update();
-                                zombie.Draw();
-                            }
-                        }
-                    }
-                    System.Threading.Thread.Sleep(2);*/
-                    long lag = 0;
-                    lock (zombieList)
-                    {
-                        foreach (Zombie zombie in zombieList)
-                        {
-                            zombie.Update();
-                            zombie.Draw();
-                            System.Threading.Thread.Sleep((int)(200 / zombieList.Count) - (int)lag);
-                            //Console.WriteLine((int)(lag / zombieList.Count));
-                        }
-                    }
-                    lag = zombieUpdateStopWatch.ElapsedMilliseconds;
-                    zombieUpdateStopWatch.Restart();
-                    Console.WriteLine(lag);
-                }
-            }).Start();
         }
 
         ~OstBot()
@@ -137,20 +107,12 @@ namespace OstBot_2_
 
         public static void shutdown()
         {
-            //connected = false;
-            //client = null;
-            //connection = null;
-            //room = null;
-            //dig = null;
-
             if (playerList != null)
             {
                 lock (OstBot.playerList)
                 {
                     foreach (var pair in OstBot.playerList)
                         pair.Value.Save();
-
-                    //playerList = null;
                 }
             }
         }
@@ -188,6 +150,8 @@ namespace OstBot_2_
                 mazeDig = new MazeDig();
                 dig = new Dig();
                 commands = new Commands();
+                playerPhysics = new PlayerPhysics();
+                zombies = new Zombies();
                 new Redstone();
 
                 if (isBB)
@@ -210,50 +174,41 @@ namespace OstBot_2_
 
         private static void onMessage(object sender, PlayerIOClient.Message m)
         {
-            //Program.console.WriteLine(m.ToString());
-
             switch (m.Type)
             {
                 case "init":
-                    if (isBB)
                     {
-                        owner = m.GetString(0);
-                        title = m.GetString(1);
-                        worldKey = rot13(m[3].ToString());
-                        //botPlayerID = m.GetInt(6);
-                        //width = m.GetInt(10);
-                        //height = m.GetInt(11);
-                        hasCode = m.GetBoolean(8);
-                        isOwner = m.GetBoolean(9);
+                        if (isBB)
+                        {
+                            owner = m.GetString(0);
+                            title = m.GetString(1);
+                            worldKey = rot13(m[3].ToString());
+                            hasCode = m.GetBoolean(8);
+                            isOwner = m.GetBoolean(9);
+                        }
+                        else
+                        {
+                            owner = m.GetString(0);
+                            title = m.GetString(1);
+                            worldKey = rot13(m[5].ToString());
+                            hasCode = m.GetBoolean(10);
+                            isOwner = m.GetBoolean(11);
+                        }
+                        hasCode |= isOwner;
+                        {
+                            string roomData = " - " + title + " ¦ by: " + owner;
+                            Program.form1.Invoke(new Action(() =>
+                                Program.form1.Text = Program.form1.Text.Substring(0, 10) + roomData
+                                ));
+
+                            Program.console.Invoke(new Action(() =>
+                                Program.console.Text = Program.console.Text.Substring(0, 7) + roomData
+                                ));
+                        }
+
+                        break;
                     }
-                    else
-                    {
-                        owner = m.GetString(0);
-                        title = m.GetString(1);
-                        worldKey = rot13(m[5].ToString());
-                        //botPlayerID = m.GetInt(6);
-                        //width = m.GetInt(12);
-                        //height = m.GetInt(13);
-                        hasCode = m.GetBoolean(10);
-                        isOwner = m.GetBoolean(11);
-                    }
-                    hasCode |= isOwner;
-
-                    {
-                        string roomData = " - " + title + " ¦ by: " + owner;
-                        Program.form1.Invoke(new Action(() =>
-                            Program.form1.Text = Program.form1.Text.Substring(0, 10) + roomData
-                            ));
-
-                        Program.console.Invoke(new Action(() =>
-                            Program.console.Text = Program.console.Text.Substring(0, 7) + roomData
-                            ));
-                    }
-
-                    break;
-
                 case "say":
-                    //lock (playerList)
                     {
                         lock (playerList)
                         {
@@ -262,43 +217,8 @@ namespace OstBot_2_
                         }
                         int playerId = m.GetInt(0);
                         SubBotHandler.onCommand(sender, m.GetString(1).Substring(1), playerId);
-                        string[] message = m.GetString(1).Split(' ');
-                        switch (message[0])
-                        {
-                            case "zombie":
-                                {
-                                    //lock (playerList)
-                                    {
-                                        Zombie zombie = new Zombie(playerList[playerId].blockX * 16, playerList[playerId].blockY * 16);
-                                        lock (zombieList)
-                                        {
-                                            zombieList.Add(zombie);
-                                        }
-                                        room.DrawBlock(Block.CreateBlock(0, playerList[playerId].blockX, playerList[playerId].blockY, 32, 0));
-                                        //Console.WriteLine(playerList[playerId].blockX + " " + (10), playerList[playerId].blockX);
-                                    }
-                                }
-                                break;
-                            case "zombies":
-                                {
-                                    for (int i = 0; i < 50; i++)
-                                    {
-                                        int x = r.Next(1, room.width - 1);
-                                        int y = r.Next(1, room.height - 1);
-                                        Zombie zombie = new Zombie(x * 16, y * 16);
-                                        lock (zombieList)
-                                        {
-                                            zombieList.Add(zombie);
-                                        }
-                                        //room.DrawBlock(Block.CreateBlock(0, x, y, 32, 0));
-                                    }
-                                }
-                                break;
-
-                        }
+                        break;
                     }
-                    break;
-
                 case "add":
                     {
                         BotPlayer player = new BotPlayer(m);

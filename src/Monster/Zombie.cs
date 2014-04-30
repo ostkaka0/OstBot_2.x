@@ -41,10 +41,12 @@ namespace OstBot_2_
                 updateTimer.Restart();
                 double lowestDistance = 0;
                 BotPlayer lowestDistancePlayer = null;
-                //lock (OstBot.playerListTemp)
+                lock (OstBot.playerList)
                 {
-                    foreach (BotPlayer player in OstBot.playerListTemp.Values)
+                    foreach (BotPlayer player in OstBot.playerList.Values)
                     {
+                        if (player.isgod)
+                            continue;
                         double currentDistance = GetDistanceBetween(player, xBlock, yBlock);
                         if (currentDistance < lowestDistance || lowestDistance == 0)
                         {
@@ -82,14 +84,14 @@ namespace OstBot_2_
                     OstBot.room.DrawBlock(zombieOldBlock);
                 }
 
-                /*if (targetBotPlayer != null)
+                if (targetBotPlayer != null)
                 {
-                    if (!targetBotPlayer.isDead && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1)
+                    if (!targetBotPlayer.isDead && GetDistanceBetween(targetBotPlayer, xBlock, yBlock) <= 1 && !targetBotPlayer.isgod)
                     {
                         targetBotPlayer.killPlayer();
                         OstBot.connection.Send("say", "/kill " + targetBotPlayer.name);
                     }
-                }*/
+                }
             }
             base.Update();
         }

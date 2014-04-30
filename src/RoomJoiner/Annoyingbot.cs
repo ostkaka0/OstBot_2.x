@@ -15,22 +15,22 @@ namespace OstBot_2_
         public AnnoyingBot(string gameId, string email, string password)
             : base(gameId, email, password)
         {
-            System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\lol.txt");
-            Console.WriteLine(System.DateTime.Now.ToShortDateString());
+            //System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\lol.txt");
+            //Console.WriteLine(System.DateTime.Now.ToShortDateString());
         }
 
         ~AnnoyingBot()
         {
             //File.WriteAllLines(Environment.CurrentDirectory + @"\players\" + System.DateTime.Now.ToLongTimeString() + ".txt",players.ToArray());
-            System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\"
-                + System.DateTime.Now.ToShortDateString() + "_" + System.DateTime.Now.ToShortTimeString().Replace(":", "-") + ".txt");
+            //System.IO.StreamWriter file = new System.IO.StreamWriter(Environment.CurrentDirectory + "\\players\\"
+                //+ System.DateTime.Now.ToShortDateString() + "_" + System.DateTime.Now.ToShortTimeString().Replace(":", "-") + ".txt");
 
-            foreach (var s in players)
+            /*foreach (var s in players)
             {
                 file.WriteLine(s);
             }
 
-            file.Close();
+            file.Close();*/
         }
 
         public override void OnMessage(RoomConnection sender, Message m)
@@ -40,7 +40,7 @@ namespace OstBot_2_
                 case "init":
                     new Task(()=>
                         {
-                    Console.WriteLine(sender.Room);
+                    //Console.WriteLine(sender.Room);
                     //sender.Connection.Send("say", @"Hi, everybody! Yes, I am annoying.");
                     //System.Threading.Thread.Sleep(25);
                     sender.Connection.Send("say", @"new EE mod: http://ostkaka.weebly.com/everybody-edits-07x-mod.html");
