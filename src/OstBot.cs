@@ -25,14 +25,14 @@ namespace OstBot_2_
         public static Commands commands;
         public static BanList banList;
         public static TrollFinder trollFinder;
-<<<<<<< HEAD
+
         public static MazeGenerator mazeGenerator;
         public static MazeDig mazeDig;
         Stopwatch playerTickTimer = new Stopwatch();
-=======
+
         public static PlayerPhysics playerPhysics;
         public static Zombies zombies;
->>>>>>> b3253e88aeee9a1d6c456fc9330785b0a14ecc3b
+
         public static Random r = new Random();
 
         public static Dictionary<string, int> nameList = new Dictionary<string, int>();
@@ -47,7 +47,7 @@ namespace OstBot_2_
 
         public OstBot()
         {
-<<<<<<< HEAD
+/*<<<<<<< HEAD
             //return;
 
             playerTickTimer.Start();
@@ -87,9 +87,9 @@ namespace OstBot_2_
                         throw e;
                     else
                         throw null;
-                }*/
+                }* /
 =======
->>>>>>> b3253e88aeee9a1d6c456fc9330785b0a14ecc3b
+>>>>>>> b3253e88aeee9a1d6c456fc9330785b0a14ecc3b*/
 
         }
 
