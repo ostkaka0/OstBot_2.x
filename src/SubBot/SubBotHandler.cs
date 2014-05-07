@@ -16,10 +16,10 @@ namespace OstBot_2_
             lock (subBotList)
                 subBotList.Add(subBot);
 
-            Program.form1.Invoke(new Action(() =>
+            Program.mainForm.Invoke(new Action(() =>
                 {
-                    Program.form1.checkedListBox_SubBots.Items.Add(subBot);
-                    subBot.id = Program.form1.checkedListBox_SubBots.Items.Count - 1;
+                    Program.mainForm.checkedListBox_SubBots.Items.Add(subBot);
+                    subBot.id = Program.mainForm.checkedListBox_SubBots.Items.Count - 1;
                 }));
         }
 
@@ -63,8 +63,8 @@ namespace OstBot_2_
 
                 subBotList.Clear();
 
-                Program.form1.Invoke(new Action(()=>
-                    Program.form1.checkedListBox_SubBots.Items.Clear()
+                Program.mainForm.Invoke(new Action(()=>
+                    Program.mainForm.checkedListBox_SubBots.Items.Clear()
                     ));
             }
         }

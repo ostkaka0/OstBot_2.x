@@ -246,7 +246,7 @@ namespace OstBot_2_
         {
             lock (this)
             {
-                Program.console.WriteLine("Reseting redstone...");
+                Program.mainForm.WriteToConsole("Reseting redstone...");
                 wires.Clear();
                 activations.Clear();
                 powerSources.Clear();

@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{1D40CCA6-2C04-47CD-A893-6FDFED7E1B39}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>OstBot_2_</RootNamespace>
     <AssemblyName>OstBot 2_</AssemblyName>
@@ -35,18 +35,21 @@
     <DocumentationFile>
     </DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="libnoise">
-      <HintPath>..\..\..\..\..\..\ostbotlibs\libnoise.dll</HintPath>
+      <HintPath>.\libnoise.dll</HintPath>
     </Reference>
     <Reference Include="PlayerIOClient, Version=2.3.6.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\ostbotlibs\PlayerIOClient.dll</HintPath>
+      <HintPath>.\PlayerIOClient.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="Skylight, Version=1.0.4940.25734, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\ostbotlibs\Skylight.dll</HintPath>
+      <HintPath>.\Skylight.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,22 +74,10 @@
     <Compile Include="BotPlayer.cs" />
     <Compile Include="Building\Building.cs" />
     <Compile Include="Building\Structure\Structure.cs" />
-    <Compile Include="ConsoleWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ConsoleWindow.Designer.cs">
-      <DependentUpon>ConsoleWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Inventory\DigMap.cs" />
     <Compile Include="Inventory\Inventory.cs" />
     <Compile Include="Inventory\InventoryItem.cs" />
     <Compile Include="Inventory\Key.cs" />
-    <Compile Include="Minimap.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Minimap.Designer.cs">
-      <DependentUpon>Minimap.cs</DependentUpon>
-    </Compile>
     <Compile Include="Monster\Monster.cs" />
     <Compile Include="Monster\Zombie.cs" />
     <Compile Include="Movement\BlObject.cs" />
@@ -119,11 +110,11 @@
     <Compile Include="SubBot\Redstone\Wire.cs" />
     <Compile Include="SubBot\SubBotHandler.cs" />
     <Compile Include="SubBot\Dig\Dig_EventHandler.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="OstBot.cs" />
     <Compile Include="Program.cs" />
@@ -137,11 +128,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ConsoleWindow.resx">
-      <DependentUpon>ConsoleWindow.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Form1.resx">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

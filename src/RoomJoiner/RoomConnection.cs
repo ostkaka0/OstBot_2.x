@@ -30,7 +30,7 @@ namespace OstBot_2_
                         connection.Send("init");
                         connection.Send("init2");
                     }
-                    catch (Exception e)
+                    catch
                     {
                         roomJoiner.OnConnectFailed(this);
                     }

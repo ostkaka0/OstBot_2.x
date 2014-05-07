@@ -61,11 +61,11 @@ namespace OstBot_2_
         {
             lock (playerPlaced)
             {
-                Program.form1.Invoke(new Action(() =>
+                /*Program.mainForm.Invoke(new Action(() =>
                 {
-                    Program.form1.PushPlacedData(playerPlaced);
+                    Program.mainForm.PushPlacedData(playerPlaced);
 
-                }));
+                }));*/
 
                 List<int> keys = new List<int>();
                 foreach (var p in playerPlaced)

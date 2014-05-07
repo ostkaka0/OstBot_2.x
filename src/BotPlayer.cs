@@ -34,10 +34,10 @@ namespace OstBot_2_
 
         public void Save()
         {
-            Pair<IFormatter, Stream> writeStuff = inventory.Save(@"data\" + name);
+            /*Pair<IFormatter, Stream> writeStuff = inventory.Save(@"data\" + name);
             writeStuff.first.Serialize(writeStuff.second, digXp);
             writeStuff.first.Serialize(writeStuff.second, digMoney);
-            writeStuff.second.Close();
+            writeStuff.second.Close();*/
         }
 
         public void Load()

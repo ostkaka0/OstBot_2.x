@@ -23,18 +23,18 @@ namespace OstBot_2_
                     enabledValue = value;
                     if (id != -1)
                     {
-                        Program.form1.Invoke(new Action(() =>
-                            Program.form1.checkedListBox_SubBots.SetItemChecked(id, value)
+                        Program.mainForm.Invoke(new Action(() =>
+                            Program.mainForm.checkedListBox_SubBots.SetItemChecked(id, value)
                         ));
                     }
 
                     if (value)
                     {
-                        Program.console.WriteLine(this.GetType().Name + ".cs is enabled.");
+                        Program.mainForm.WriteToConsole(this.GetType().Name + ".cs is enabled.");
                     }
                     else
                     {
-                        Program.console.WriteLine(this.GetType().Name + ".cs is disabled.");
+                        Program.mainForm.WriteToConsole(this.GetType().Name + ".cs is disabled.");
                     }
                 }
             }

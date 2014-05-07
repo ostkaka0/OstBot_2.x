@@ -13,20 +13,28 @@ using System.Threading;
 
 namespace OstBot_2_
 {
-    public partial class Form1 : Form
+    public partial class MainForm : Form
     {
         public int runtime = 0;
-        public delegate void lambdaFunction(Form1 form1);
+        public delegate void lambdaFunction(MainForm mainForm);
         Queue<string[]> sayString = new Queue<string[]>();
         public Queue<lambdaFunction> lambdaFunctionQueue = new Queue<lambdaFunction>();
         object sayStringLock = 0;
         AnnoyingBot annoyingBot;
 
 
-        public Form1()
+        public MainForm()
         {
             InitializeComponent();
             updateComboBoxes(0);
+        }
+
+        public void WriteToConsole(string text)
+        {
+            textBoxConsole.Invoke(new Action(() => 
+            { 
+                textBoxConsole.Text += text + Environment.NewLine; 
+            }));
         }
 
         public void say(string player, string text)
@@ -43,10 +51,10 @@ namespace OstBot_2_
 
             this.textBox_ChatText.KeyPress += new System.Windows.Forms.KeyPressEventHandler(CheckKeys);
 
-            backgroundWorker_CodeCracker.ProgressChanged += new ProgressChangedEventHandler
-                    (backgroundWorker_CodeCracker_ProgressChanged);
+            //backgroundWorker_CodeCracker.ProgressChanged += new ProgressChangedEventHandler
+            //      (backgroundWorker_CodeCracker_ProgressChanged);
 
-            backgroundWorker_CodeCracker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_CodeCracker_RunWorkerCompleted);
+            //backgroundWorker_CodeCracker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_CodeCracker_RunWorkerCompleted);
 
             /*using (Stream input = File.OpenRead(Environment.CurrentDirectory + @"\\runtime.dat"))
             using (Stream output = File.OpenWrite(Environment.CurrentDirectory + @"\\runtime.dat"))
@@ -137,7 +145,7 @@ namespace OstBot_2_
             {
                 lock (button_Connect.Text)
                     this.button_Connect.Text = "Connecting...";
-                Program.console.WriteLine("Connecting...");
+                Program.mainForm.WriteToConsole("Connecting...");
                 OstBot.Connect();
                 if (OstBot.connected)
                 {
@@ -145,20 +153,20 @@ namespace OstBot_2_
                         this.button_Connect.Text = "Disconnect";
                     this.comboBox_RoomType.Enabled = false;
                     this.comboBox_WorldId.Enabled = false;
-                    Program.console.WriteLine("Connecting succeeded!");
+                    Program.mainForm.WriteToConsole("Connecting succeeded!");
                 }
                 else
                 {
                     lock (button_Connect.Text)
                         this.button_Connect.Text = "Connect";
-                    Program.console.WriteLine("Connecting failed!");
+                    Program.mainForm.WriteToConsole("Connecting failed!");
                 }
             }
             else
             {
                 lock (button_Connect.Text)
                     this.button_Connect.Text = "Disconnecting...";
-                Program.console.WriteLine("Disconnecting...");
+                Program.mainForm.WriteToConsole("Disconnecting...");
                 bool reconnect = this.checkBox_Reconnect.Enabled;
                 this.checkBox_Reconnect.Enabled = false;
                 OstBot.connection.Disconnect();
@@ -170,11 +178,13 @@ namespace OstBot_2_
                 this.comboBox_WorldId.Enabled = true;
             }
             this.groupBox_Connect.Enabled = true;
+            UpdateRoomlist();
         }
 
         private void button_Login_Click(object sender, EventArgs e)
         {
             OstBot.Login(comboBox_Server.Text, comboBox_Email.Text, textBox_Password.Text);
+            UpdateRoomlist();
         }
 
         private void comboBox_Server_SelectedIndexChanged(object sender, EventArgs e)
@@ -219,7 +229,6 @@ namespace OstBot_2_
                 }
                 richTextBox1.Text += pair[1];
             }
-            //richTextBox1.Text += sayString;
             sayString.Clear();
 
             lock (lambdaFunctionQueue)
@@ -231,38 +240,9 @@ namespace OstBot_2_
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void UpdateRoomlist()
         {
-            PlayerIOClient.RoomInfo[] roomInfo = OstBot.client.Multiplayer.ListRooms(comboBox_RoomType.Text, new Dictionary<string, string>(), 200000, 0);
-
-            //checkedListBox_Rooms.Items.Clear();
-            listView1.Items.Clear();
-
-            Array.Sort(roomInfo, delegate(PlayerIOClient.RoomInfo a, PlayerIOClient.RoomInfo b) { return b.OnlineUsers.CompareTo(a.OnlineUsers); });
-
-            foreach (var room in roomInfo)
-            {
-                listView1.Items.Add(new ListViewItem(new string[] { room.Id, room.OnlineUsers.ToString(), room.RoomType }));
-                //checkedListBox_Rooms.Items.Add(room.Id.ToString());
-                //checkedListBox_Rooms.Items.Add(room.OnlineUsers.ToString());
-                //checkedListBox_Rooms.Items.Add(room.ToString());
-                Console.WriteLine(room.ToString());
-            }
-        }
-
-        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
-        {
-
-        }
-
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void comboBox_RoomType_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (OstBot.client != null)
+            if (OstBot.loggedIn)
             {
                 PlayerIOClient.RoomInfo[] roomInfo = OstBot.client.Multiplayer.ListRooms(comboBox_RoomType.Text, new Dictionary<string, string>(), 200000, 0);
 
@@ -300,11 +280,31 @@ namespace OstBot_2_
 
                     foreach (var pair in room.RoomData)
                     {
-                        Program.console.WriteLine(" -\t" + pair.Key + " \t" + pair.Value);
+                        Program.mainForm.WriteToConsole(" -\t" + pair.Key + " \t" + pair.Value);
                     }
 
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            UpdateRoomlist();
+        }
+
+        private void splitContainer1_Panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox_RoomType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            UpdateRoomlist();
         }
 
         private void listView1_SelectedIndexChanged_1(object sender, EventArgs e)
@@ -353,7 +353,7 @@ namespace OstBot_2_
             return r;
         }
 
-        private void button_CrackCode_Click(object sender, EventArgs e)
+        /*private void button_CrackCode_Click(object sender, EventArgs e)
         {
             button_CrackCode.Enabled = false;
 
@@ -474,7 +474,7 @@ namespace OstBot_2_
         private void progressBar_CodeCracker_Click(object sender, EventArgs e)
         {
 
-        }
+        }*/
 
         private void groupBox_Login_Enter(object sender, EventArgs e)
         {
@@ -539,7 +539,7 @@ namespace OstBot_2_
             annoyingBot = null;
         }
 
-        public void PushPlacedData(Dictionary<int, int> data)
+        /*public void PushPlacedData(Dictionary<int, int> data)
         {
             foreach (var i in data)
             {
@@ -573,13 +573,38 @@ namespace OstBot_2_
                 /*if (chartPlacedBlocks.Series[name].Points.Count > 100)
                 {
                     chartPlacedBlocks.Series[name].Points.RemoveAt(0);
-                }*/
+                }
 
             }
         }
 
         private void chartPlacedBlocks_Click(object sender, EventArgs e)
         {
+
+        }*/
+
+        private void button_EnterCode_Click_1(object sender, EventArgs e)
+        {
+            if (OstBot.connected)
+            {
+                if (OstBot.connection != null)
+                    OstBot.connection.Send("access", textBox4.Text);
+            }
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            UpdateRoomlist();
+        }
+
+        private void textBoxConsoleInput_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                textBoxConsole.Text += "> " + textBoxConsoleInput.Text + System.Environment.NewLine;
+                SubBotHandler.onCommand(sender, textBoxConsoleInput.Text, -1);
+                textBoxConsoleInput.Text = "";
+            }
 
         }
 

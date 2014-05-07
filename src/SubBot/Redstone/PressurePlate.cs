@@ -47,11 +47,6 @@ namespace OstBot_2_
             }
         }
 
-        public virtual void onSignal(Stopwatch currentRedTime, float power)
-        {
-
-        }
-
         public override object Create()
         {
             return new PressurePlate();

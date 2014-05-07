@@ -33,27 +33,27 @@ namespace OstBot_2_
         //protected var ding:Sound;
         //private var world:World;
         public bool isme;
-        private Bitmap crown;
+        /*private Bitmap crown;
         private Bitmap crown_silver;
         private Bitmap aura;
         private Bitmap modaura;
         private Bitmap fireAura;
         private Bitmap invulnerableAura;
         private Bitmap levitationAnimaitonBitmapData;
-        private Bitmap clubaura;
+        private Bitmap clubaura;*/
         //private var connection:Connection;
         //private var state:PlayState;
         //private var chat:Chat;
         //private var badge:LevelBadge;
         //private var badgevisible:Boolean = false;
         //private var flauntBadge:FlauntLevelBadge;
-        private Bitmap deadAnim;
+        //private Bitmap deadAnim;
         public bool isDead = false;
-        private bool deathsend = false;
+        //private bool deathsend = false;
         private bool worldportalsend = false;
         private bool _isInvulnerable = false;
         public string name;
-        private uint textcolor;
+        //private uint textcolor;
         private int morx = 0;
         private int mory = 0;
         public int woots = 0;
@@ -73,8 +73,8 @@ namespace OstBot_2_
         public int overlapy = 0;
         public double gravityMultiplier = 1;
         private double last_respawn = 0;
-        private bool _tagged = false;
-        private bool _canTag = false;
+        //private bool _tagged = false;
+        //private bool _canTag = false;
         //private var taggedMarker:TaggedMarker;
         private Rectangle rect2;
         public double aura_color = 4.29497e+009;
@@ -84,26 +84,26 @@ namespace OstBot_2_
         //private var levitationAnimation:BlSprite;
         private bool _hasLevitation = false;
         private bool _isFlaunting = false;
-        private double total = 0;
+        /*private double total = 0;
         private int pastx = 0;
-        private int pasty = 0;
+        private int pasty = 0;*/
         private Queue<int> queue;
-        private DateTime lastJump;
+        /*private DateTime lastJump;
         private bool changed = false;
         private int leftdown = 0;
         private int rightdown = 0;
         private int updown = 0;
         private int downdown = 0;
-        private bool spacedown = false;
+        private bool spacedown = false;*/
         private bool spacejustdown = false;
         public int horizontal = 0;
         public int vertical = 0;
         public int oh = 0;
         public int ov = 0;
         private Point lastPortal;
-        private int lastOverlap = 0;
+        //private int lastOverlap = 0;
         private SynchronizedObject that;
-        private double bbest = 0;
+        //private double bbest = 0;
         private bool donex = false;
         private bool doney = false;
         private double animoffset = 0;
@@ -135,9 +135,9 @@ namespace OstBot_2_
         double osy = 0;
         double ox = 0;
         double oy = 0;
-        int mod = 0;
-        bool injump = false;
-        bool cchanged = false;
+        //int mod = 0;
+        //bool injump = false;
+        //bool cchanged = false;
         double tx = 0;
         double ty = 0;
 
@@ -165,7 +165,7 @@ namespace OstBot_2_
             //this.protectionAnimation = new BlSprite(this.invulnerableAura, 0, 0, 26, 26, 24);
             //this.levitationAnimation = new BlSprite(this.levitationAnimaitonBitmapData, 0, 0, 26, 26, 32);
             this.queue = new Queue<int>(Config.physics_queue_length);
-            this.lastJump = new DateTime();
+            //this.lastJump = new DateTime();
             this.lastPortal = new Point();
             this.that = this as SynchronizedObject;
             this.modrect = new Rectangle(0, 0, 64, 64);
@@ -821,7 +821,7 @@ namespace OstBot_2_
                 this.horizontal = 0;
                 this.vertical = 0;
                 this.spacejustdown = false;
-                this.spacedown = false;
+                //this.spacedown = false;
             }
             isgodmod = this.isgod || this.ismod;
             if (isgodmod)
@@ -1464,7 +1464,7 @@ namespace OstBot_2_
             speedX = 0;
             speedY = 0;
             this.isDead = false;
-            this.deathsend = false;
+            //this.deathsend = false;
             this.last_respawn = DateTime.Now.Millisecond;
             return;
         }// end function
@@ -1816,14 +1816,14 @@ namespace OstBot_2_
             }
             else
             {
-                this._canTag = false;
+                //this._canTag = false;
             }
             return;
         }// end function
 
         public void setCanTagDelayed()
         {
-            this._canTag = true;
+           // this._canTag = true;
             return;
         }// end function
 

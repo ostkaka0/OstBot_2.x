@@ -87,7 +87,7 @@ namespace OstBot_2_
                                                 int x_x = blockX + x + (int)Math.Ceiling(horizontal);
                                                 int y_y = blockY + y + (int)Math.Ceiling(vertical);
                                                 
-                                                if ((distance <= 1.41421357 * (digRange - 1) || distance < 1.4142) &&  (true ||isReachAble(new BlockPos(blockX, blockY, 0), new BlockPos(x_x, y_y, 0))))
+                                                if ((distance <= 1.41421357 * (digRange - 1) || distance < 1.4142) &&  (isReachAble(new BlockPos(blockX, blockY, 0), new BlockPos(x_x, y_y, 0))))
                                                     DigBlock(x_x, y_y, player, (digRange - distance) * player.digStrength, false);
                                             }
                                         }

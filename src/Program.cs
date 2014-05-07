@@ -11,8 +11,7 @@ namespace OstBot_2_
     public class Program
     {
         public static OstBot ostBot;
-        public static Form1 form1;
-        public static ConsoleWindow console;
+        public static MainForm mainForm;
 
         [STAThread]
         static void Main(string[] args)
@@ -21,11 +20,9 @@ namespace OstBot_2_
             /*try
             {*/
             Application.EnableVisualStyles();
-            console = new ConsoleWindow();
-            console.Show();
             ostBot = new OstBot();
-            form1 = new Form1();
-            Application.Run(form1);
+            mainForm = new MainForm();
+            Application.Run(mainForm);
             /*}
             catch (Exception e)
             {

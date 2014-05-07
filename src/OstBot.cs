@@ -12,6 +12,7 @@ namespace OstBot_2_
     {
         public static Client client;
         public static Connection connection;
+        public static bool loggedIn { get { return client != null; } }
         public static bool connected = false;
         public static bool isBB = false;
         public static bool hasCode = false;
@@ -124,10 +125,11 @@ namespace OstBot_2_
             try
             {
                 client = PlayerIO.QuickConnect.SimpleConnect(server, email, password);
+                
             }
             catch (Exception e)
             {
-                Program.console.WriteLine("Error: " + e.ToString());
+                Program.mainForm.WriteToConsole("Error: " + e.ToString());
             }
         }
 
@@ -138,7 +140,7 @@ namespace OstBot_2_
                 Dictionary<string, string> roomData = new Dictionary<string, string>();
                 Dictionary<string, string> joinData = new Dictionary<string, string>();
 
-                connection = client.Multiplayer.CreateJoinRoom(Program.form1.comboBox_WorldId.Text, Program.form1.comboBox_RoomType.Text, true, roomData, joinData);
+                connection = client.Multiplayer.CreateJoinRoom(Program.mainForm.comboBox_WorldId.Text, Program.mainForm.comboBox_RoomType.Text, true, roomData, joinData);
                 connected = true;
                 connection.OnMessage += new MessageReceivedEventHandler(onMessage);
                 connection.OnDisconnect += new DisconnectEventHandler(onDisconnect);
@@ -166,7 +168,7 @@ namespace OstBot_2_
             }
             catch (Exception e)
             {
-                Program.console.WriteLine("Error: " + e.ToString());
+                Program.mainForm.WriteToConsole("Error: " + e.ToString());
                 //throw e;
 
             }
@@ -197,13 +199,13 @@ namespace OstBot_2_
                         hasCode |= isOwner;
                         {
                             string roomData = " - " + title + " ¦ by: " + owner;
-                            Program.form1.Invoke(new Action(() =>
-                                Program.form1.Text = Program.form1.Text.Substring(0, 10) + roomData
+                            Program.mainForm.Invoke(new Action(() =>
+                                Program.mainForm.Text = Program.mainForm.Text.Substring(0, 10) + roomData
                                 ));
 
-                            Program.console.Invoke(new Action(() =>
+                            /*Program.mainForm.Invoke(new Action(() =>
                                 Program.console.Text = Program.console.Text.Substring(0, 7) + roomData
-                                ));
+                                ));*/
                         }
 
                         break;
@@ -213,7 +215,7 @@ namespace OstBot_2_
                         lock (playerList)
                         {
                             if (playerList.ContainsKey(m.GetInt(0)))
-                                Program.form1.say(playerList[m.GetInt(0)].name, m.GetString(1));
+                                Program.mainForm.say(playerList[m.GetInt(0)].name, m.GetString(1));
                         }
                         int playerId = m.GetInt(0);
                         SubBotHandler.onCommand(sender, m.GetString(1).Substring(1), playerId);
@@ -237,13 +239,13 @@ namespace OstBot_2_
                                 nameList.Remove(player.name);
                             }
                             nameList.Add(player.name, m.GetInt(0));
-                            Program.form1.say("System", player.name + " joined!");
-                            lock (Program.form1.lambdaFunctionQueue)
+                            Program.mainForm.say("System", player.name + " joined!");
+                            lock (Program.mainForm.lambdaFunctionQueue)
                             {
-                                Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                                Program.mainForm.lambdaFunctionQueue.Enqueue((MainForm mainForm) =>
                                     {
-                                        lock (Program.form1.listBox_PlayerList.Items)
-                                            Program.form1.listBox_PlayerList.Items.Add(player.name);
+                                        lock (Program.mainForm.listBox_PlayerList.Items)
+                                            Program.mainForm.listBox_PlayerList.Items.Add(player.name);
                                     });
                             }
 
@@ -263,13 +265,13 @@ namespace OstBot_2_
                                 return;
                         }
                         string name = player.name;
-                        Program.form1.say("System", name + " left!");
-                        lock (Program.form1.lambdaFunctionQueue)
+                        Program.mainForm.say("System", name + " left!");
+                        lock (Program.mainForm.lambdaFunctionQueue)
                         {
-                            Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                            Program.mainForm.lambdaFunctionQueue.Enqueue((MainForm mainForm) =>
                                 {
-                                    lock (Program.form1.listBox_PlayerList.Items)
-                                        Program.form1.listBox_PlayerList.Items.Remove(name);
+                                    lock (Program.mainForm.listBox_PlayerList.Items)
+                                        Program.mainForm.listBox_PlayerList.Items.Remove(name);
                                     lock (leftPlayerList)
                                     {
                                         if (leftPlayerList.ContainsKey(tempKey))
@@ -381,7 +383,7 @@ namespace OstBot_2_
                     break;
                 case "access":
                     hasCode = true;
-                    Program.console.WriteLine("Code Cracked!");
+                    Program.mainForm.WriteToConsole("Code Cracked!");
                     //connection.Send("say", "I know the code.");
                     break;
                 case "m":
@@ -437,34 +439,34 @@ namespace OstBot_2_
                 nameList.Clear();
                 playerList.Clear();
             }
-            lock (Program.form1.lambdaFunctionQueue)
+            lock (Program.mainForm.lambdaFunctionQueue)
             {
-                Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                Program.mainForm.lambdaFunctionQueue.Enqueue((MainForm mainForm) =>
                     {
-                        lock (Program.form1.listBox_PlayerList.Items)
-                            Program.form1.listBox_PlayerList.Items.Clear();
+                        lock (Program.mainForm.listBox_PlayerList.Items)
+                            Program.mainForm.listBox_PlayerList.Items.Clear();
                     });
             }
 
-            Program.console.WriteLine("Disconnected by " + sender.ToString() + " with reason: " + reason);
+            Program.mainForm.WriteToConsole("Disconnected by " + sender.ToString() + " with reason: " + reason);
 
-            if (Program.form1.checkBox_Reconnect.Checked)
+            if (Program.mainForm.checkBox_Reconnect.Checked)
             {
-                Program.form1.button_Connect.Enabled = false;
-                Program.console.WriteLine("Reconnecting...");
+                Program.mainForm.button_Connect.Enabled = false;
+                Program.mainForm.WriteToConsole("Reconnecting...");
                 Connect();
-                Program.form1.button_Connect.Enabled = true;
+                Program.mainForm.button_Connect.Enabled = true;
             }
             else
             {
-                lock (Program.form1.lambdaFunctionQueue)
+                lock (Program.mainForm.lambdaFunctionQueue)
                 {
-                    Program.form1.lambdaFunctionQueue.Enqueue((Form1 form1) =>
+                    Program.mainForm.lambdaFunctionQueue.Enqueue((MainForm mainForm) =>
                         {
-                            lock (Program.form1.button_Connect.Text)
-                                Program.form1.button_Connect.Text = "Connect";
-                            Program.form1.comboBox_RoomType.Enabled = true;
-                            Program.form1.comboBox_WorldId.Enabled = true;
+                            lock (Program.mainForm.button_Connect.Text)
+                                Program.mainForm.button_Connect.Text = "Connect";
+                            Program.mainForm.comboBox_RoomType.Enabled = true;
+                            Program.mainForm.comboBox_WorldId.Enabled = true;
                         });
                 }
             }
@@ -537,8 +539,8 @@ namespace OstBot_2_
 
                 default:
                     return 0;
-                    Console.WriteLine("Type '{0}' not found!", type);
-                    break;
+                    //Console.WriteLine("Type '{0}' not found!", type);
+                    //break;
             }
         }
     }

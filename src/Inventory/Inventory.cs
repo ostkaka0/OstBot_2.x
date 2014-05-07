@@ -181,20 +181,31 @@ namespace OstBot_2_
         public Pair<IFormatter, Stream> Save(string path)
         {
             IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
-            formatter.Serialize(stream, (string)"Version: 0");
-            formatter.Serialize(stream, storedItems);
-            return new Pair<IFormatter, Stream>(formatter, stream);
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            try
+            {
+                Stream stream = new FileStream(path, FileMode.Create, FileAccess.Write, FileShare.None);
+                formatter.Serialize(stream, (string)"Version: 0");
+                formatter.Serialize(stream, storedItems);
+                return new Pair<IFormatter, Stream>(formatter, stream);
+            }
+            catch { }
+            return null;
         }
 
         public Pair<IFormatter, Stream> Load(string path)
         {
-            IFormatter formatter = new BinaryFormatter();
-            Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
-            string version = (string)formatter.Deserialize(stream);
-            //Console.WriteLine("Loaded inventory version: " + version);
-            storedItems = (Dictionary<int, Pair<InventoryItem, int>>)formatter.Deserialize(stream);
-            return new Pair<IFormatter, Stream>(formatter, stream);
+            if (File.Exists(path))
+            {
+                IFormatter formatter = new BinaryFormatter();
+                Stream stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.None);
+                string version = (string)formatter.Deserialize(stream);
+                //Console.WriteLine("Loaded inventory version: " + version);
+                storedItems = (Dictionary<int, Pair<InventoryItem, int>>)formatter.Deserialize(stream);
+                return new Pair<IFormatter, Stream>(formatter, stream);
+            }
+            return null;
         }
     }
 
